@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useNavigate } from "react-router"
 import { Button } from "../../components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
@@ -11,41 +11,45 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Alert, AlertDescription } from "../../components/ui/alert"
 import { ArrowLeft, Upload, X, Loader2 } from "lucide-react"
 import { propertiesAPI } from "../../services/api"
+import { Checkbox } from "@/components/ui/checkbox"
+import { da } from "date-fns/locale"
+import { toast, Toaster } from "sonner"
 
 const AddProperty = () => {
   const navigate = useNavigate()
+  const formRef = useRef();
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [images, setImages] = useState([])
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    price: "",
-    location: "",
-    type: "",
-    beds: "",
-    baths: "",
-    sqft: "",
-    yearBuilt: "",
-    features: "",
-    amenities: "",
-  })
+  // const [formData, setFormData] = useState({
+  //   title: "",
+  //   description: "",
+  //   price: "",
+  //   location: "",
+  //   type: "",
+  //   beds: "",
+  //   baths: "",
+  //   sqft: "",
+  //   yearBuilt: "",
+  //   features: "",
+  //   amenities: "",
+  // })
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
-    if (error) setError("")
-  }
+  // const handleChange = (e) => {
+  //   setFormData({
+  //     ...formData,
+  //     [e.target.name]: e.target.value,
+  //   })
+  //   if (error) setError("")
+  // }
 
-  const handleSelectChange = (name, value) => {
-    setFormData({
-      ...formData,
-      [name]: value,
-    })
-    if (error) setError("")
-  }
+  // const handleSelectChange = (name, value) => {
+  //   setFormData({
+  //     ...formData,
+  //     [name]: value,
+  //   })
+  //   if (error) setError("")
+  // }
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files)
@@ -62,6 +66,7 @@ const AddProperty = () => {
     newImages.splice(index, 1)
     setImages(newImages)
   }
+  // Store form data 
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -69,24 +74,75 @@ const AddProperty = () => {
     setError("")
 
     try {
-      // Create FormData for file upload
-      const submitData = new FormData()
+      const formData = new FormData(formRef.current);
 
-      // Add form fields
-      Object.keys(formData).forEach((key) => {
-        submitData.append(key, formData[key])
-      })
+      const data = Object.fromEntries(formData.entries());
+      console.log(data);
 
-      // Add images
+      if (!data.title?.trim() || !data.description?.trim() || !data.price?.trim() ||
+        !data.location?.trim() || !data.type?.trim() || !data.beds?.trim() ||
+        !data.baths?.trim() || !data.sqft?.trim()) {
+        toast.error("Validation Error", {
+          description: "Please fill in all required fields.",
+        })
+        setError("Please fill in all required fields.")
+        setLoading(false)
+        return;
+      }
+
+      const price = parseFloat(data.price);
+      const beds = parseInt(data.beds);
+      const baths = parseFloat(data.baths);
+      const sqft = parseInt(data.sqft);
+      const yearBuilt = data.yearBuilt ? parseInt(data.yearBuilt) : null;
+      const garage = data.garage ? parseInt(data.garage) : null;
+
+      if (isNaN(price) || isNaN(beds) || isNaN(baths) || isNaN(sqft) ||
+        (yearBuilt && isNaN(yearBuilt)) || (garage && isNaN(garage))) {
+        toast.error("Validation Error", {
+          description: "Please enter valid numeric values for Price, Bedrooms, Bathrooms, Square Feet, Year Built, and Garage.",
+        })
+        setError("Please enter valid numeric values for Price, Bedrooms, Bathrooms, Square Feet, Year Built, and Garage.")
+        setLoading(false)
+        return;
+      }
+
+      if (yearBuilt && (yearBuilt < 1800 || yearBuilt > new Date().getFullYear())) {
+        toast.error("Validation Error", {
+          description: `Year Built must be between 1800 and ${new Date().getFullYear()}.`,
+        })
+        setError(`Year Built must be between 1800 and ${new Date().getFullYear()}.`)
+        setLoading(false)
+        return;
+      }
+
       images.forEach((image, index) => {
-        submitData.append(`images[${index}]`, image.file)
+        formData.append(`images[${index}]`, image.file)
       })
+      
+      const checkboxes = ['has_pool', 'has_garden', 'has_garage', 'has_parking', 'has_security', 'has_air_conditioning', 'has_heating'];
 
-      await propertiesAPI.create(submitData)
+      checkboxes.forEach(checkboxName => {
+        // If checkbox is not in formData, add it as false
+        if (!formData.has(checkboxName)) {
+          formData.append(checkboxName, '0'); 
+        } else {
+          formData.set(checkboxName, '1'); 
+        }
+      });
+      const toastId = toast.loading("Adding property...");
+      await propertiesAPI.create(formData)
+      toast.dismiss(toastId);
+      toast.success("Success!", {
+        description: "Property added successfully!",
+      });
       navigate("/admin", {
         state: { message: "Property added successfully!" },
       })
     } catch (err) {
+      toast.error("Error", {
+        description: err.response?.data?.message || "Failed to add property. Please try again.",
+      })
       setError(err.response?.data?.message || "Failed to add property. Please try again.")
     } finally {
       setLoading(false)
@@ -108,11 +164,12 @@ const AddProperty = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
           {error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
+            <Toaster position="top-right" />
+            // <Alert variant="destructive">
+            //   <AlertDescription>{error}</AlertDescription>
+            // </Alert>
           )}
 
           {/* Basic Information */}
@@ -129,9 +186,9 @@ const AddProperty = () => {
                     id="title"
                     name="title"
                     placeholder="e.g., Modern Downtown Loft"
-                    value={formData.title}
-                    onChange={handleChange}
-                    required
+                    // value={formData.title}
+                    // onChange={handleChange}
+                    // required
                     disabled={loading}
                   />
                 </div>
@@ -142,9 +199,9 @@ const AddProperty = () => {
                     name="price"
                     type="number"
                     placeholder="e.g., 850000"
-                    value={formData.price}
-                    onChange={handleChange}
-                    required
+                    // value={formData.price}
+                    // onChange={handleChange}
+                    // required
                     disabled={loading}
                   />
                 </div>
@@ -156,11 +213,62 @@ const AddProperty = () => {
                   id="location"
                   name="location"
                   placeholder="e.g., Downtown District, City Name"
-                  value={formData.location}
-                  onChange={handleChange}
-                  required
+                  // value={formData.location}
+                  // onChange={handleChange}
+                  // required
                   disabled={loading}
                 />
+              </div>
+
+              <div className="grid md:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="city">City *</Label>
+                  <Input
+                    id="city"
+                    name="city"
+                    placeholder="e.g., New york"
+                    // value={formData.title}
+                    // onChange={handleChange}
+                    // required
+                    disabled={loading}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="state">State *</Label>
+                  <Input
+                    id="state"
+                    name="state"
+                    placeholder="e.g., "
+                    // value={formData.price}
+                    // onChange={handleChange}
+                    // required
+                    disabled={loading}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="country">Country *</Label>
+                  <Input
+                    id="country"
+                    name="country"
+                    placeholder="e.g., USA"
+                    // value={formData.price}
+                    // onChange={handleChange}
+                    // required
+                    disabled={loading}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="zipcode">Zip Code *</Label>
+                  <Input
+                    id="zipcode"
+                    name="zipcode"
+                    placeholder="e.g., 122547"
+                    // value={formData.price}
+                    // onChange={handleChange}
+                    // required
+                    disabled={loading}
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -169,9 +277,9 @@ const AddProperty = () => {
                   id="description"
                   name="description"
                   placeholder="Describe your property in detail..."
-                  value={formData.description}
-                  onChange={handleChange}
-                  required
+                  // value={formData.description}
+                  // onChange={handleChange}
+                  // required
                   disabled={loading}
                   rows={4}
                 />
@@ -190,8 +298,11 @@ const AddProperty = () => {
                 <div className="space-y-2">
                   <Label htmlFor="type">Property Type *</Label>
                   <Select
-                    value={formData.type}
-                    onValueChange={(value) => handleSelectChange("type", value)}
+                    name="type"
+                    id="type"
+                    // required
+                    // value={formData.type}
+                    // onValueChange={(value) => handleSelectChange("type", value)}
                     disabled={loading}
                   >
                     <SelectTrigger>
@@ -214,9 +325,9 @@ const AddProperty = () => {
                     name="beds"
                     type="number"
                     placeholder="e.g., 2"
-                    value={formData.beds}
-                    onChange={handleChange}
-                    required
+                    // value={formData.beds}
+                    // onChange={handleChange}
+                    // required
                     disabled={loading}
                     min="0"
                   />
@@ -230,9 +341,9 @@ const AddProperty = () => {
                     type="number"
                     step="0.5"
                     placeholder="e.g., 2"
-                    value={formData.baths}
-                    onChange={handleChange}
-                    required
+                    // value={formData.baths}
+                    // onChange={handleChange}
+                    // required
                     disabled={loading}
                     min="0"
                   />
@@ -245,9 +356,9 @@ const AddProperty = () => {
                     name="sqft"
                     type="number"
                     placeholder="e.g., 1200"
-                    value={formData.sqft}
-                    onChange={handleChange}
-                    required
+                    // value={formData.sqft}
+                    // onChange={handleChange}
+                    // required
                     disabled={loading}
                     min="0"
                   />
@@ -261,11 +372,24 @@ const AddProperty = () => {
                   name="yearBuilt"
                   type="number"
                   placeholder="e.g., 2020"
-                  value={formData.yearBuilt}
-                  onChange={handleChange}
+                  // value={formData.yearBuilt}
+                  // onChange={handleChange}
                   disabled={loading}
-                  min="1800"
-                  max={new Date().getFullYear()}
+                // min="1800"
+                // max={new Date().getFullYear()}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="garage">Garage Spaces</Label>
+                <Input
+                  id="garage"
+                  name="garage"
+                  type="number"
+                  placeholder="e.g., 2"
+                  // value={formData.garage}
+                  // onChange={handleChange}
+                  disabled={loading}
+                  min="0"
                 />
               </div>
             </CardContent>
@@ -284,25 +408,107 @@ const AddProperty = () => {
                   id="features"
                   name="features"
                   placeholder="e.g., Hardwood floors, Granite countertops, Walk-in closet"
-                  value={formData.features}
-                  onChange={handleChange}
+                  // value={formData.features}
+                  // onChange={handleChange}
                   disabled={loading}
                   rows={3}
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-4">
+                <Label>Amenities</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="has_pool"
+                      name="has_pool"
+                      // checked={formData.has_pool}
+                      // onCheckedChange={(checked) => handleCheckboxChange("has_pool", checked)}
+                      disabled={loading}
+                    />
+                    <Label htmlFor="has_pool" className="cursor-pointer">Swimming Pool</Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="has_garden"
+                      name="has_garden"
+                      // checked={formData.has_garden}
+                      // onCheckedChange={(checked) => handleCheckboxChange("has_garden", checked)}
+                      disabled={loading}
+                    />
+                    <Label htmlFor="has_garden" className="cursor-pointer">Garden</Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="has_garage"
+                      name="has_garage"
+                      // checked={formData.has_garage}
+                      // onCheckedChange={(checked) => handleCheckboxChange("has_garage", checked)}
+                      disabled={loading}
+                    />
+                    <Label htmlFor="has_garage" className="cursor-pointer">Garage</Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="has_parking"
+                      name="has_parking"
+                      // checked={formData.has_parking}
+                      // onCheckedChange={(checked) => handleCheckboxChange("has_parking", checked)}
+                      disabled={loading}
+                    />
+                    <Label htmlFor="has_parking" className="cursor-pointer">Parking</Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="has_security"
+                      name="has_security"
+                      // checked={formData.has_security}
+                      // onCheckedChange={(checked) => handleCheckboxChange("has_security", checked)}
+                      disabled={loading}
+                    />
+                    <Label htmlFor="has_security" className="cursor-pointer">Security System</Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="has_air_conditioning"
+                      name="has_air_conditioning"
+                      // checked={formData.has_air_conditioning}
+                      // onCheckedChange={(checked) => handleCheckboxChange("has_air_conditioning", checked)}
+                      disabled={loading}
+                    />
+                    <Label htmlFor="has_air_conditioning" className="cursor-pointer">Air Conditioning</Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="has_heating"
+                      name="has_heating"
+                      // checked={formData.has_heating}
+                      // onCheckedChange={(checked) => handleCheckboxChange("has_heating", checked)}
+                      disabled={loading}
+                    />
+                    <Label htmlFor="has_heating" className="cursor-pointer">Heating System</Label>
+                  </div>
+                </div>
+              </div>
+
+              {/* <div className="space-y-2">
                 <Label htmlFor="amenities">Amenities</Label>
                 <Textarea
                   id="amenities"
                   name="amenities"
                   placeholder="e.g., Swimming pool, Gym, Parking, Pet-friendly"
-                  value={formData.amenities}
-                  onChange={handleChange}
+                  // value={formData.amenities}
+                  // onChange={handleChange}
                   disabled={loading}
                   rows={3}
                 />
-              </div>
+              </div> */}
             </CardContent>
           </Card>
 
