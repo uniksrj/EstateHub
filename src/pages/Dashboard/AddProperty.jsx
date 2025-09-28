@@ -1,55 +1,39 @@
 "use client"
 
-import { useRef, useState } from "react"
-import { useNavigate } from "react-router"
+import { useEffect, useRef, useState } from "react"
+import { useLocation, useNavigate, useParams } from "react-router"
 import { Button } from "../../components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
 import { Input } from "../../components/ui/input"
 import { Label } from "../../components/ui/label"
 import { Textarea } from "../../components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
-import { Alert, AlertDescription } from "../../components/ui/alert"
 import { ArrowLeft, Upload, X, Loader2 } from "lucide-react"
 import { propertiesAPI } from "../../services/api"
 import { Checkbox } from "@/components/ui/checkbox"
-import { da } from "date-fns/locale"
 import { toast, Toaster } from "sonner"
 
 const AddProperty = () => {
-  const navigate = useNavigate()
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = useParams()
+  const isEdit = location.pathname.includes('/edit');
+  console.log(isEdit);
+
   const formRef = useRef();
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [images, setImages] = useState([])
-  // const [formData, setFormData] = useState({
-  //   title: "",
-  //   description: "",
-  //   price: "",
-  //   location: "",
-  //   type: "",
-  //   beds: "",
-  //   baths: "",
-  //   sqft: "",
-  //   yearBuilt: "",
-  //   features: "",
-  //   amenities: "",
-  // })
-
-  // const handleChange = (e) => {
-  //   setFormData({
-  //     ...formData,
-  //     [e.target.name]: e.target.value,
-  //   })
-  //   if (error) setError("")
-  // }
-
-  // const handleSelectChange = (name, value) => {
-  //   setFormData({
-  //     ...formData,
-  //     [name]: value,
-  //   })
-  //   if (error) setError("")
-  // }
+  const [amenities, setAmenities] = useState({
+    has_pool: false,
+    has_garden: false,
+    has_garage: false,
+    has_parking: false,
+    has_security: false,
+    has_air_conditioning: false,
+    has_heating: false,
+  });
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files)
@@ -67,21 +51,76 @@ const AddProperty = () => {
     setImages(newImages)
   }
   // Store form data 
+  useEffect(() => {
+    if (isEdit && formRef.current) {
+      // Fetch property data and populate form
+      (async () => {
+        try {
+          const response = await propertiesAPI.getById(id);
+          const property = response.data;
+          setAmenities({
+            has_pool: property.has_pool === true,
+            has_garden: property.has_garden === true,
+            has_garage: property.has_garage === true,
+            has_parking: property.has_parking === true,
+            has_security: property.has_security === true,
+            has_air_conditioning: property.has_air_conditioning === true,
+            has_heating: property.has_heating === true,
+          });
+          for (const [key, value] of Object.entries(property)) {
+            // Skip amenities since we're handling them in state
+            if (key.startsWith('has_')) continue;
+
+            const input = formRef.current.querySelector(`[name="${key}"]`);
+            if (!input) continue;
+
+            if (input.type === 'checkbox') {
+              input.checked = Boolean(value);
+            } else {
+              input.value = value ?? "";
+            }
+            if (input.tagName === 'SELECT') {
+              const event = new Event('change', { bubbles: true });
+              input.dispatchEvent(event);
+            }
+          }
+        } catch (error) {
+          console.error("Failed to load property data:", error);
+          toast.error("Failed to load property data. Please try again.");
+        }
+      })();
+    }
+
+  }, [isEdit, id]);
+
+  const handleAmenityChange = (name, checked) => {
+    setAmenities(prev => ({
+      ...prev,
+      [name]: checked
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError("")
-
+    var btnTxt;
+    if (!isEdit) {
+      btnTxt = "Adding";
+    } else {
+      btnTxt = "Updating";
+    }
     try {
       const formData = new FormData(formRef.current);
 
       const data = Object.fromEntries(formData.entries());
-      console.log(data);
+      // console.log(data);
 
       if (!data.title?.trim() || !data.description?.trim() || !data.price?.trim() ||
         !data.address?.trim() || !data.property_type?.trim() || !data.bedrooms?.trim() ||
-        !data.bathrooms?.trim() || !data.sq_ft?.trim()) {
+        !data.bathrooms?.trim() || !data.sq_ft?.trim() || !data.city?.trim() ||
+        !data.state?.trim() || !data.country?.trim() || !data.zip_code?.trim()
+      ) {
         toast.error("Validation Error", {
           description: "Please fill in all required fields.",
         })
@@ -94,7 +133,7 @@ const AddProperty = () => {
       const beds = parseInt(data.bedrooms);
       const baths = parseFloat(data.bathrooms);
       const sqft = parseInt(data.sq_ft);
-      const yearBuilt = data.yearBuilt ? parseInt(data.yearBuilt) : null;
+      const yearBuilt = data.year_built ? parseInt(data.year_built) : null;
       const garage = data.garage ? parseInt(data.garage) : null;
 
       if (isNaN(price) || isNaN(beds) || isNaN(baths) || isNaN(sqft) ||
@@ -130,35 +169,32 @@ const AddProperty = () => {
           formData.set(checkboxName, '1');
         }
       });
-      const toastId = toast.loading("Adding property...");
-      await propertiesAPI.create(formData)
+      const toastId = toast.loading(`${btnTxt} property...`);
+      if (!isEdit) {
+        await propertiesAPI.create(formData)
+      } else {
+        await propertiesAPI.update(id, formData)
+      }
       toast.dismiss(toastId);
       toast.success("Success!", {
-        description: "Property added successfully!",
+        description: `Property ${btnTxt} successfully!`,
       });
       navigate("/admin", {
         state: { message: "Property added successfully!" },
       })
     } catch (err) {
-      let errorMessage = "Failed to add property. Please try again.";
-
-      if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.response?.data?.error) {
-        errorMessage = err.response.data.error;
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-
-      toast.error("Error", {
-        description: errorMessage,
-      });
-
-      setError(errorMessage);
+      console.log(err);            
+      // toast.error("Error", {
+      //   description: `(${err.data?.error_type}) Failed to ${btnTxt} property. Please try again.`,
+      // });
+      setError(err.response?.data?.error_type || `Failed to ${btnTxt} property. Please try again.`);
     } finally {
       setLoading(false)
     }
   }
+
+  console.log(loading);
+
 
   return (
     <div className="min-h-screen py-8">
@@ -170,8 +206,14 @@ const AddProperty = () => {
             Back to Dashboard
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">Add New Property</h1>
-            <p className="text-muted-foreground">Create a new property listing</p>
+            {
+              isEdit ? (
+                <h1 className="text-3xl font-bold">Edit Property</h1>
+              ) : (
+                <h1 className="text-3xl font-bold">Add New Property</h1>
+              )
+            }  
+            <p className="text-muted-foreground">Fill in the details below to {isEdit ? "update" : "add"} your property.</p>          
           </div>
         </div>
 
@@ -433,8 +475,8 @@ const AddProperty = () => {
                     <Checkbox
                       id="has_pool"
                       name="has_pool"
-                      // checked={formData.has_pool}
-                      // onCheckedChange={(checked) => handleCheckboxChange("has_pool", checked)}
+                      checked={amenities.has_pool}
+                      onCheckedChange={(checked) => handleAmenityChange("has_pool", checked)}
                       disabled={loading}
                     />
                     <Label htmlFor="has_pool" className="cursor-pointer">Swimming Pool</Label>
@@ -444,8 +486,8 @@ const AddProperty = () => {
                     <Checkbox
                       id="has_garden"
                       name="has_garden"
-                      // checked={formData.has_garden}
-                      // onCheckedChange={(checked) => handleCheckboxChange("has_garden", checked)}
+                      checked={amenities.has_garden}
+                      onCheckedChange={(checked) => handleAmenityChange("has_garden", checked)}
                       disabled={loading}
                     />
                     <Label htmlFor="has_garden" className="cursor-pointer">Garden</Label>
@@ -455,8 +497,8 @@ const AddProperty = () => {
                     <Checkbox
                       id="has_garage"
                       name="has_garage"
-                      // checked={formData.has_garage}
-                      // onCheckedChange={(checked) => handleCheckboxChange("has_garage", checked)}
+                      checked={amenities.has_garage}
+                      onCheckedChange={(checked) => handleAmenityChange("has_garage", checked)}
                       disabled={loading}
                     />
                     <Label htmlFor="has_garage" className="cursor-pointer">Garage</Label>
@@ -466,8 +508,8 @@ const AddProperty = () => {
                     <Checkbox
                       id="has_parking"
                       name="has_parking"
-                      // checked={formData.has_parking}
-                      // onCheckedChange={(checked) => handleCheckboxChange("has_parking", checked)}
+                      checked={amenities.has_parking}
+                      onCheckedChange={(checked) => handleAmenityChange("has_parking", checked)}
                       disabled={loading}
                     />
                     <Label htmlFor="has_parking" className="cursor-pointer">Parking</Label>
@@ -477,8 +519,8 @@ const AddProperty = () => {
                     <Checkbox
                       id="has_security"
                       name="has_security"
-                      // checked={formData.has_security}
-                      // onCheckedChange={(checked) => handleCheckboxChange("has_security", checked)}
+                      checked={amenities.has_security}
+                      onCheckedChange={(checked) => handleAmenityChange("has_security", checked)}
                       disabled={loading}
                     />
                     <Label htmlFor="has_security" className="cursor-pointer">Security System</Label>
@@ -488,8 +530,8 @@ const AddProperty = () => {
                     <Checkbox
                       id="has_air_conditioning"
                       name="has_air_conditioning"
-                      // checked={formData.has_air_conditioning}
-                      // onCheckedChange={(checked) => handleCheckboxChange("has_air_conditioning", checked)}
+                      checked={amenities.has_air_conditioning}
+                      onCheckedChange={(checked) => handleAmenityChange("has_air_conditioning", checked)}
                       disabled={loading}
                     />
                     <Label htmlFor="has_air_conditioning" className="cursor-pointer">Air Conditioning</Label>
@@ -499,8 +541,8 @@ const AddProperty = () => {
                     <Checkbox
                       id="has_heating"
                       name="has_heating"
-                      // checked={formData.has_heating}
-                      // onCheckedChange={(checked) => handleCheckboxChange("has_heating", checked)}
+                      checked={amenities.has_heating}
+                      onCheckedChange={(checked) => handleAmenityChange("has_heating", checked)}
                       disabled={loading}
                     />
                     <Label htmlFor="has_heating" className="cursor-pointer">Heating System</Label>
@@ -578,17 +620,17 @@ const AddProperty = () => {
 
           {/* Submit */}
           <div className="flex justify-end space-x-4">
-            <Button type="button" variant="outline" onClick={() => navigate("/admin")} disabled={loading}>
+            <Button type="button" variant="outline" disabled={loading}>
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Adding Property...
+                  {isEdit ? "Updating Property..." : "Adding Property..."}
                 </>
               ) : (
-                "Add Property"
+                isEdit ? "Update Property" : "Add Property"
               )}
             </Button>
           </div>

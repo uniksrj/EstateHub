@@ -4,6 +4,8 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 
 
 const ImageCarousel = ({ image , className = "" }) => {
+    console.log(image);
+    
     
     const imageArray = Array.isArray(image) ? image : [image];
 

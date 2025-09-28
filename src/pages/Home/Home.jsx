@@ -147,7 +147,7 @@ const Home = () => {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-accent">{property.price}</span>
-                      <Link to={`/properties/${property.id}`}>
+                      <Link to={`/properties/${property.id}/view`}>
                         <Button size="sm">View Details</Button>
                       </Link>
                     </div>

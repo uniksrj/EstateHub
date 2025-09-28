@@ -266,14 +266,16 @@ const ManageProperties = () => {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem asChild>
-                              <Link to={`/properties/${property.id}`}>
+                              <Link to={`/properties/${property.id}/view`}>
                                 <Eye className="mr-2 h-4 w-4" />
                                 View
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
+                               <Link to={`/properties/${property.id}/edit`}>
                               <Edit className="mr-2 h-4 w-4" />
                               Edit
+                              </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem className="text-destructive" onClick={() => setDeleteProperty(property)}>
                               <Trash2 className="mr-2 h-4 w-4" />

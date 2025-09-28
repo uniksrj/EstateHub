@@ -10,6 +10,8 @@ import { Plus, Home, Heart, TrendingUp, Users, MapPin, Edit, Trash2, Eye } from 
 import { useAuth } from "../../hooks/useAuth"
 import { userAPI } from "../../services/api"
 import ImageCarousel from "@/components/common/ImageCarousel"
+import { useDeleteProperty } from "@/hooks/commonP"
+import { Paginationlink } from "@/components/common/Pagination"
 
 const Dashboard = () => {
   const { user } = useAuth()
@@ -25,28 +27,47 @@ const Dashboard = () => {
   const [favoriteProperties, setFavoriteProperties] = useState([])
   const [recentActivity, setRecentActivity] = useState([])
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
 
   useEffect(() => {
     fetchDashboardData()
   }, [])
 
-  const fetchDashboardData = async () => {
+  const { deleteProperty, loadingDelete } = useDeleteProperty((deleted_id) => {
+    setMyProperties(prev => prev.data.filter(p => p.id !== deleted_id));
+  });
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    fetchDashboardData(page);
+  }
+  const fetchDashboardData = async (page="") => {
     setLoading(true)
     try {
-      const propertiesResponse = await userAPI.getProperties()
-      if (propertiesResponse.data){
+      const propertyDetails = {
+        page: currentPage,
+      };
+      const propertiesResponse = await userAPI.getProperties(propertyDetails)
+      console.log(propertiesResponse.data);
+
+      if (propertiesResponse.data && propertiesResponse.data.data) {
+        setMyProperties(propertiesResponse.data);
+        setLastPage(propertiesResponse.data.last_page);
+      }
+
+      if (propertiesResponse.data) {
         setMyProperties(propertiesResponse.data)
-      }else{
+      } else {
         setMyProperties([])
-      }     
-      
+      }
+
       const favoritesResponse = await userAPI.getFavorites()
-      if (favoritesResponse.data){
+      if (favoritesResponse.data) {
         setFavoriteProperties(favoritesResponse.data)
-      }else{
+      } else {
         setFavoriteProperties([])
-      }      
-      
+      }
+
       setStats({
         totalProperties: propertiesResponse.data.data.length,
         totalViews: propertiesResponse.data.data.reduce((sum, prop) => sum + (prop.views || 0), 0),
@@ -76,33 +97,14 @@ const Dashboard = () => {
       ])
     } catch (error) {
       console.error("Error fetching dashboard data:", error)
-      // Fallback to mock data
-      setMyProperties([
-        {
-          id: 1,
-          title: "Modern Downtown Loft",
-          price: 850000,
-          location: "Downtown District",
-          status: "active",
-          views: 45,
-          inquiries: 3,
-          images: "/modern-loft-interior.jpg",
-        },
-      ])
-      setFavoriteProperties([
-        {
-          id: 2,
-          title: "Luxury Family Estate",
-          price: 1250000,
-          location: "Hillside Heights",
-          images: "/luxury-family-home-exterior.jpg",
-        },
-      ])
+      setMyProperties([])
+      setFavoriteProperties([])
+      setRecentActivity([])
       setStats({
-        totalProperties: 1,
-        totalViews: 45,
-        totalInquiries: 3,
-        favoriteProperties: 1,
+        totalProperties: 0,
+        totalViews: 0,
+        totalInquiries: 0,
+        favoriteProperties: 0,
       })
     } finally {
       setLoading(false)
@@ -147,7 +149,7 @@ const Dashboard = () => {
       </div>
     )
   }
- 
+
   return (
     <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
@@ -228,7 +230,7 @@ const Dashboard = () => {
               </Link>
             </div>
 
-            {myProperties.data.length > 0 ? (
+            {myProperties.data && myProperties.data.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {myProperties.data.map((property) => (
                   <Card key={property.id} className="overflow-hidden">
@@ -240,7 +242,7 @@ const Dashboard = () => {
                       </div>
                       <div className="flex items-center text-muted-foreground mb-2">
                         <MapPin className="h-4 w-4 mr-1" />
-                        <span className="text-sm">{property.location}</span>
+                        <span className="text-sm">{`${property.address}, ${property.city}, ${property.state} (${property.zip_code})`}</span>
                       </div>
                       <div className="text-lg font-bold text-accent mb-3">{formatPrice(property.price)}</div>
                       <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
@@ -248,22 +250,27 @@ const Dashboard = () => {
                         <span>{property.inquiries || 0} inquiries</span>
                       </div>
                       <div className="flex space-x-2">
-                        <Link to={`/properties/${property.id}`} className="flex-1">
+                        <Link to={`/properties/${property.id}/view`} className="flex-1">
                           <Button variant="outline" size="sm" className="w-full bg-transparent">
                             <Eye className="mr-2 h-4 w-4" />
                             View
                           </Button>
                         </Link>
-                        <Button variant="outline" size="sm">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="sm">
+                        <Link to={`/properties/${property.id}/edit`} className="flex-1">
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <Button variant="outline" size="sm" onClick={() => deleteProperty(property.id)} disabled={loadingDelete} className="flex-1">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </CardContent>
                   </Card>
                 ))}
+                <div className="col-span-full flex justify-center mt-4">
+                  <Paginationlink currentPage={currentPage} lastPage={lastPage} onPageChange={handlePageChange} />
+                </div>
               </div>
             ) : (
               <Card>
@@ -297,13 +304,14 @@ const Dashboard = () => {
                         <span className="text-sm">{property.property.location}</span>
                       </div>
                       <div className="text-lg font-bold text-accent mb-3">{formatPrice(property.property.price)}</div>
-                      <Link to={`/properties/${property.property.id}`}>
+                      <Link to={`/properties/${property.property.id}/view`}>
                         <Button className="w-full">View Details</Button>
                       </Link>
                     </CardContent>
                   </Card>
                 ))}
               </div>
+
             ) : (
               <Card>
                 <CardContent className="text-center py-12">

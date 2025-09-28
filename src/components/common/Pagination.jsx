@@ -1,0 +1,40 @@
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination"
+
+
+export const Paginationlink = ({currentPage , lastPage , onPageChange}) => {
+
+    const render_page_number = () =>{
+        let pages = [];
+        for (let i = 1; i <= lastPage; i++) {
+            pages.push(
+                <PaginationItem key={i}>
+                    <PaginationLink isActive={i === currentPage} onClick={() => onPageChange(i)}>
+                        {i}
+                    </PaginationLink>
+                </PaginationItem>
+            );
+        }
+        return pages;
+    }
+
+    return (
+        <Pagination >
+            <PaginationContent>
+
+                <PaginationItem>
+                    <PaginationPrevious onClick={(e)=>{
+                        e.preventDefault();
+                        if(currentPage > 1) onPageChange(currentPage - 1);
+                    } } />
+                </PaginationItem>
+                {render_page_number()}               
+                <PaginationItem>
+                    <PaginationNext onClick={(e) => {
+                        e.preventDefault();
+                        if(currentPage < lastPage) onPageChange(currentPage + 1);
+                    }} />
+                </PaginationItem>
+            </PaginationContent>
+        </Pagination>
+    )
+}

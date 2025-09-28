@@ -36,8 +36,17 @@ export const router = createBrowserRouter([
             Component: PropertyList,
           },
           {
-            path: ":id",
+            path: ":id/view",
             Component: PropertyDetail,
+            errorElement: <div>Error loading property</div>,
+          },
+          {
+            path: ":id/edit",
+            element : (
+              <ProtectedRoute>
+                <AddProperty />
+              </ProtectedRoute>
+            ),
             errorElement: <div>Error loading property</div>,
           },
         ],
@@ -94,7 +103,7 @@ export const router = createBrowserRouter([
           {
             path: "manage-properties",
             Component: ManageProperties,
-          },
+          },          
         ],
       },
       {

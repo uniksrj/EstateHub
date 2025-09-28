@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Badge } from "../../components/ui/badge"
 import { Search, MapPin, Star, SlidersHorizontal } from "lucide-react"
 import { propertiesAPI } from "../../services/api"
+import ImageCarousel from "@/components/common/ImageCarousel"
 
 const PropertyList = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -16,10 +17,10 @@ const PropertyList = () => {
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState({
     search: searchParams.get("search") || "",
-    type: searchParams.get("type") || "all",
-    minPrice: searchParams.get("minPrice") || "",
-    maxPrice: searchParams.get("maxPrice") || "",
-    beds: searchParams.get("beds") || "any",
+    property_type: searchParams.get("property_type") || "all",
+    min_price: searchParams.get("min_price") || "",
+    max_price: searchParams.get("max_price") || "",
+    bedrooms: searchParams.get("bedrooms") || "any",
     location: searchParams.get("location") || "",
   })
 
@@ -31,57 +32,13 @@ const PropertyList = () => {
     setLoading(true)
     try {
       const params = Object.fromEntries(searchParams)
-      const response = await propertiesAPI.getAll(params)
+      const response = await propertiesAPI.getAll(params)      
+      console.log(response.data);
+      
       setProperties(response.data)
     } catch (error) {
       console.error("Error fetching properties:", error)
-      // Fallback to mock data
-      setProperties([
-        {
-          id: 1,
-          title: "Modern Downtown Loft",
-          price: 850000,
-          location: "Downtown District",
-          beds: 2,
-          baths: 2,
-          sqft: 1200,
-          type: "apartment",
-          image: "./../../../public/modern-loft-interior.jpg",
-        },
-        {
-          id: 2,
-          title: "Luxury Family Estate",
-          price: 1250000,
-          location: "Hillside Heights",
-          beds: 4,
-          baths: 3,
-          sqft: 2800,
-          type: "house",
-          image: "./../../../public//luxury-family-home-exterior.jpg",
-        },
-        {
-          id: 3,
-          title: "Cozy Garden Apartment",
-          price: 425000,
-          location: "Garden District",
-          beds: 1,
-          baths: 1,
-          sqft: 750,
-          type: "apartment",
-          image: "./../../../public/cozy-apartment-garden-view.jpg",
-        },
-        {
-          id: 4,
-          title: "Spacious Suburban Home",
-          price: 675000,
-          location: "Maple Heights",
-          beds: 3,
-          baths: 2,
-          sqft: 1800,
-          type: "house",
-          image: "./../../../public/suburban-family-home.png",
-        },
-      ])
+      setProperties({ data: [], total: 0 })
     } finally {
       setLoading(false)
     }
@@ -102,10 +59,10 @@ const PropertyList = () => {
   const clearFilters = () => {
     setFilters({
       search: "",
-      type: "all",
-      minPrice: "",
-      maxPrice: "",
-      beds: "any",
+      property_type: "",
+      min_price: "",
+      max_price: "",
+      bedrooms: "",
       location: "",
     })
     setSearchParams({})
@@ -118,6 +75,7 @@ const PropertyList = () => {
       minimumFractionDigits: 0,
     }).format(price)
   }
+console.log("state save data",properties);
 
   return (
     <div className="min-h-screen py-8">
@@ -147,7 +105,7 @@ const PropertyList = () => {
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Property Type</label>
-                <Select value={filters.type} onValueChange={(value) => handleFilterChange("type", value)}>
+                <Select value={filters.property_type} onValueChange={(value) => handleFilterChange("property_type", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="All Types" />
                   </SelectTrigger>
@@ -163,7 +121,7 @@ const PropertyList = () => {
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Bedrooms</label>
-                <Select value={filters.beds} onValueChange={(value) => handleFilterChange("beds", value)}>
+                <Select value={filters.bedrooms} onValueChange={(value) => handleFilterChange("bedrooms", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Any" />
                   </SelectTrigger>
@@ -193,8 +151,8 @@ const PropertyList = () => {
                 <Input
                   type="number"
                   placeholder="Min price"
-                  value={filters.minPrice}
-                  onChange={(e) => handleFilterChange("minPrice", e.target.value)}
+                  value={filters.min_price}
+                  onChange={(e) => handleFilterChange("min_price", e.target.value)}
                 />
               </div>
               <div>
@@ -202,8 +160,8 @@ const PropertyList = () => {
                 <Input
                   type="number"
                   placeholder="Max price"
-                  value={filters.maxPrice}
-                  onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
+                  value={filters.max_price}
+                  onChange={(e) => handleFilterChange("max_price", e.target.value)}
                 />
               </div>
             </div>
@@ -211,7 +169,7 @@ const PropertyList = () => {
             <div className="flex justify-between items-center">
               <div className="flex items-center space-x-2">
                 <SlidersHorizontal className="h-4 w-4" />
-                <span className="text-sm text-muted-foreground">{properties.length} properties found</span>
+                <span className="text-sm text-muted-foreground">{properties.total} properties found</span>
               </div>
               <Button variant="outline" onClick={clearFilters}>
                 Clear Filters
@@ -238,16 +196,20 @@ const PropertyList = () => {
               </Card>
             ))}
           </div>
-        ) : properties.length > 0 ? (
+        ) : properties.total > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.map((property) => (
+            {properties.data.map((property) => (
               <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="aspect-video bg-muted relative">
-                  <img
-                    src={property.image || "/placeholder.svg"}
-                    alt={property.title}
-                    className="w-full h-full object-cover"
-                  />
+                  {
+                    property.images ? (
+                      <ImageCarousel image={property.images} />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-muted-foreground">
+                        No Image
+                      </div>
+                    )                    
+                  }                 
                   <Badge className="absolute top-3 left-3 capitalize">{property.type}</Badge>
                 </div>
                 <CardContent className="p-6">
@@ -260,16 +222,16 @@ const PropertyList = () => {
                   </div>
                   <div className="flex items-center text-muted-foreground mb-3">
                     <MapPin className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{property.location}</span>
+                    <span className="text-sm">{property.address + ', ' + property.city + ', ' + property.state + ' (' + property.zip_code + ')'}</span>                    
                   </div>
                   <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
-                    <span>{property.beds} beds</span>
-                    <span>{property.baths} baths</span>
-                    <span>{property.sqft?.toLocaleString()} sqft</span>
+                    <span>{property.bedrooms} beds</span>
+                    <span>{property.bathrooms} baths</span>
+                    <span>{property.sq_ft?.toLocaleString()} sqft</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-accent">{formatPrice(property.price)}</span>
-                    <Link to={`/properties/${property.id}`}>
+                    <Link to={`/properties/${property.id}/view`}>
                       <Button size="sm">View Details</Button>
                     </Link>
                   </div>

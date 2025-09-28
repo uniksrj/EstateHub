@@ -66,11 +66,11 @@ export const authAPI = {
 
 // Properties API calls
 export const propertiesAPI = {
-  getAll: (params) => api.get("/properties", { params }),
+  getAll: (params) => api.get("/api/properties", { params }),
   getById: (id) => api.get(`/api/properties/${id}`),
   create: (propertyData) => api.post("/api/property/add", propertyData),
   update: (id, propertyData) => api.put(`/api/properties/${id}`, propertyData),
-  delete: (id) => api.delete(`/properties/${id}`),
+  delete: (id) => api.delete(`/api/properties/${id}`),
   search: (searchParams) => api.get("/properties/search", { params: searchParams }),
   getFeatured: () => api.get("/properties/featured"),
 }
