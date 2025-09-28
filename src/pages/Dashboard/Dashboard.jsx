@@ -9,15 +9,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/ta
 import { Plus, Home, Heart, TrendingUp, Users, MapPin, Edit, Trash2, Eye } from "lucide-react"
 import { useAuth } from "../../hooks/useAuth"
 import { userAPI } from "../../services/api"
+import ImageCarousel from "@/components/common/ImageCarousel"
 
 const Dashboard = () => {
   const { user } = useAuth()
+
   const [stats, setStats] = useState({
     totalProperties: 0,
     totalViews: 0,
     totalInquiries: 0,
     favoriteProperties: 0,
   })
+
   const [myProperties, setMyProperties] = useState([])
   const [favoriteProperties, setFavoriteProperties] = useState([])
   const [recentActivity, setRecentActivity] = useState([])
@@ -30,23 +33,27 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     setLoading(true)
     try {
-      // Fetch user's properties
       const propertiesResponse = await userAPI.getProperties()
-      setMyProperties(propertiesResponse.data)
-
-      // Fetch favorite properties
+      if (propertiesResponse.data){
+        setMyProperties(propertiesResponse.data)
+      }else{
+        setMyProperties([])
+      }     
+      
       const favoritesResponse = await userAPI.getFavorites()
-      setFavoriteProperties(favoritesResponse.data)
-
-      // Update stats
+      if (favoritesResponse.data){
+        setFavoriteProperties(favoritesResponse.data)
+      }else{
+        setFavoriteProperties([])
+      }      
+      
       setStats({
-        totalProperties: propertiesResponse.data.length,
-        totalViews: propertiesResponse.data.reduce((sum, prop) => sum + (prop.views || 0), 0),
-        totalInquiries: propertiesResponse.data.reduce((sum, prop) => sum + (prop.inquiries || 0), 0),
-        favoriteProperties: favoritesResponse.data.length,
+        totalProperties: propertiesResponse.data.data.length,
+        totalViews: propertiesResponse.data.data.reduce((sum, prop) => sum + (prop.views || 0), 0),
+        totalInquiries: propertiesResponse.data.data.reduce((sum, prop) => sum + (prop.inquiries || 0), 0),
+        favoriteProperties: favoritesResponse.data.favorites.length,
       })
 
-      // Mock recent activity
       setRecentActivity([
         {
           id: 1,
@@ -79,7 +86,7 @@ const Dashboard = () => {
           status: "active",
           views: 45,
           inquiries: 3,
-          image: "/modern-loft-interior.jpg",
+          images: "/modern-loft-interior.jpg",
         },
       ])
       setFavoriteProperties([
@@ -88,7 +95,7 @@ const Dashboard = () => {
           title: "Luxury Family Estate",
           price: 1250000,
           location: "Hillside Heights",
-          image: "/luxury-family-home-exterior.jpg",
+          images: "/luxury-family-home-exterior.jpg",
         },
       ])
       setStats({
@@ -140,7 +147,7 @@ const Dashboard = () => {
       </div>
     )
   }
-
+ 
   return (
     <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
@@ -221,17 +228,11 @@ const Dashboard = () => {
               </Link>
             </div>
 
-            {myProperties.length > 0 ? (
+            {myProperties.data.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {myProperties.map((property) => (
+                {myProperties.data.map((property) => (
                   <Card key={property.id} className="overflow-hidden">
-                    <div className="aspect-video bg-muted">
-                      <img
-                        src={property.image || "/placeholder.svg"}
-                        alt={property.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                    <ImageCarousel image={property.images} className="h-48" />
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-semibold">{property.title}</h3>
@@ -284,25 +285,19 @@ const Dashboard = () => {
           <TabsContent value="favorites" className="space-y-6">
             <h2 className="text-xl font-semibold">Favorite Properties</h2>
 
-            {favoriteProperties.length > 0 ? (
+            {favoriteProperties.favorites.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {favoriteProperties.map((property) => (
-                  <Card key={property.id} className="overflow-hidden">
-                    <div className="aspect-video bg-muted">
-                      <img
-                        src={property.image || "/placeholder.svg"}
-                        alt={property.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                {favoriteProperties.favorites.map((property) => (
+                  <Card key={property.favorite_id} className="overflow-hidden">
+                    <ImageCarousel image={property.property.images} className="h-48" />
                     <CardContent className="p-4">
-                      <h3 className="font-semibold mb-2">{property.title}</h3>
+                      <h3 className="font-semibold mb-2">{property.property.title}</h3>
                       <div className="flex items-center text-muted-foreground mb-2">
                         <MapPin className="h-4 w-4 mr-1" />
-                        <span className="text-sm">{property.location}</span>
+                        <span className="text-sm">{property.property.location}</span>
                       </div>
-                      <div className="text-lg font-bold text-accent mb-3">{formatPrice(property.price)}</div>
-                      <Link to={`/properties/${property.id}`}>
+                      <div className="text-lg font-bold text-accent mb-3">{formatPrice(property.property.price)}</div>
+                      <Link to={`/properties/${property.property.id}`}>
                         <Button className="w-full">View Details</Button>
                       </Link>
                     </CardContent>

@@ -80,8 +80,8 @@ const AddProperty = () => {
       console.log(data);
 
       if (!data.title?.trim() || !data.description?.trim() || !data.price?.trim() ||
-        !data.location?.trim() || !data.type?.trim() || !data.beds?.trim() ||
-        !data.baths?.trim() || !data.sqft?.trim()) {
+        !data.address?.trim() || !data.property_type?.trim() || !data.bedrooms?.trim() ||
+        !data.bathrooms?.trim() || !data.sq_ft?.trim()) {
         toast.error("Validation Error", {
           description: "Please fill in all required fields.",
         })
@@ -91,9 +91,9 @@ const AddProperty = () => {
       }
 
       const price = parseFloat(data.price);
-      const beds = parseInt(data.beds);
-      const baths = parseFloat(data.baths);
-      const sqft = parseInt(data.sqft);
+      const beds = parseInt(data.bedrooms);
+      const baths = parseFloat(data.bathrooms);
+      const sqft = parseInt(data.sq_ft);
       const yearBuilt = data.yearBuilt ? parseInt(data.yearBuilt) : null;
       const garage = data.garage ? parseInt(data.garage) : null;
 
@@ -119,15 +119,15 @@ const AddProperty = () => {
       images.forEach((image, index) => {
         formData.append(`images[${index}]`, image.file)
       })
-      
+
       const checkboxes = ['has_pool', 'has_garden', 'has_garage', 'has_parking', 'has_security', 'has_air_conditioning', 'has_heating'];
 
       checkboxes.forEach(checkboxName => {
         // If checkbox is not in formData, add it as false
         if (!formData.has(checkboxName)) {
-          formData.append(checkboxName, '0'); 
+          formData.append(checkboxName, '0');
         } else {
-          formData.set(checkboxName, '1'); 
+          formData.set(checkboxName, '1');
         }
       });
       const toastId = toast.loading("Adding property...");
@@ -140,10 +140,21 @@ const AddProperty = () => {
         state: { message: "Property added successfully!" },
       })
     } catch (err) {
+      let errorMessage = "Failed to add property. Please try again.";
+
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.response?.data?.error) {
+        errorMessage = err.response.data.error;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
       toast.error("Error", {
-        description: err.response?.data?.message || "Failed to add property. Please try again.",
-      })
-      setError(err.response?.data?.message || "Failed to add property. Please try again.")
+        description: errorMessage,
+      });
+
+      setError(errorMessage);
     } finally {
       setLoading(false)
     }
@@ -208,10 +219,10 @@ const AddProperty = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="location">Location *</Label>
+                <Label htmlFor="address">Location *</Label>
                 <Input
-                  id="location"
-                  name="location"
+                  id="address"
+                  name="address"
                   placeholder="e.g., Downtown District, City Name"
                   // value={formData.location}
                   // onChange={handleChange}
@@ -258,10 +269,10 @@ const AddProperty = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="zipcode">Zip Code *</Label>
+                  <Label htmlFor="zip_code">Zip Code *</Label>
                   <Input
-                    id="zipcode"
-                    name="zipcode"
+                    id="zip_code"
+                    name="zip_code"
                     placeholder="e.g., 122547"
                     // value={formData.price}
                     // onChange={handleChange}
@@ -296,10 +307,10 @@ const AddProperty = () => {
             <CardContent className="space-y-4">
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="type">Property Type *</Label>
+                  <Label htmlFor="property_type">Property Type *</Label>
                   <Select
-                    name="type"
-                    id="type"
+                    name="property_type"
+                    id="property_type"
                     // required
                     // value={formData.type}
                     // onValueChange={(value) => handleSelectChange("type", value)}
@@ -319,10 +330,10 @@ const AddProperty = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="beds">Bedrooms *</Label>
+                  <Label htmlFor="bedrooms">Bedrooms *</Label>
                   <Input
-                    id="beds"
-                    name="beds"
+                    id="bedrooms"
+                    name="bedrooms"
                     type="number"
                     placeholder="e.g., 2"
                     // value={formData.beds}
@@ -334,10 +345,10 @@ const AddProperty = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="baths">Bathrooms *</Label>
+                  <Label htmlFor="bathrooms">Bathrooms *</Label>
                   <Input
-                    id="baths"
-                    name="baths"
+                    id="bathrooms"
+                    name="bathrooms"
                     type="number"
                     step="0.5"
                     placeholder="e.g., 2"
@@ -350,10 +361,10 @@ const AddProperty = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="sqft">Square Feet *</Label>
+                  <Label htmlFor="sq_ft">Square Feet *</Label>
                   <Input
-                    id="sqft"
-                    name="sqft"
+                    id="sq_ft"
+                    name="sq_ft"
                     type="number"
                     placeholder="e.g., 1200"
                     // value={formData.sqft}
@@ -366,10 +377,10 @@ const AddProperty = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="yearBuilt">Year Built</Label>
+                <Label htmlFor="year_built">Year Built</Label>
                 <Input
-                  id="yearBuilt"
-                  name="yearBuilt"
+                  id="year_built"
+                  name="year_built"
                   type="number"
                   placeholder="e.g., 2020"
                   // value={formData.yearBuilt}
@@ -407,7 +418,7 @@ const AddProperty = () => {
                 <Textarea
                   id="features"
                   name="features"
-                  placeholder="e.g., Hardwood floors, Granite countertops, Walk-in closet"
+                  placeholder="e.g, Hardwood floors, Granite countertops, Walk-in closet"
                   // value={formData.features}
                   // onChange={handleChange}
                   disabled={loading}

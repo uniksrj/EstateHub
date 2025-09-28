@@ -46,7 +46,6 @@ const ManageProperties = () => {
       setProperties(response.data)
     } catch (error) {
       console.error("Error fetching properties:", error)
-      // Fallback to mock data
       setProperties([
         {
           id: 1,
@@ -116,6 +115,23 @@ const ManageProperties = () => {
       default:
         return "bg-gray-100 text-gray-800"
     }
+  }
+
+  if (!Array.isArray(properties)) {
+    return (
+      <div className="min-h-screen py-8">
+        <div className="container mx-auto px-4">
+          <Card>
+            <CardContent className="text-center py-12">
+              <h3 className="text-lg font-semibold mb-2">Error loading properties</h3>
+              <p className="text-muted-foreground mb-4">
+                There was an issue fetching your properties. Please try again later.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
   }
 
   const filteredProperties = properties.filter((property) => {

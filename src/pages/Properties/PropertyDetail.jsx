@@ -25,6 +25,8 @@ import {
 } from "lucide-react"
 import { propertiesAPI } from "../../services/api"
 import InquiryForm from "@/components/common/InquiryForm"
+import ImageCarousel from "@/components/common/ImageCarousel"
+import AmenityIcons from "@/components/common/AmenityIcons "
 
 const PropertyDetail = () => {
   const { id } = useParams()
@@ -40,51 +42,10 @@ const PropertyDetail = () => {
     setLoading(true)
     try {
       const response = await propertiesAPI.getById(id)
+      response.data.location = `${response.data.address}, ${response.data.city}, ${response.data.state} (${response.data.zip_code})`;
       setProperty(response.data)
     } catch (error) {
       console.error("Error fetching property:", error)
-      // Fallback to mock data
-      setProperty({
-        id: Number.parseInt(id),
-        title: "Modern Downtown Loft",
-        price: 850000,
-        location: "Downtown District",
-        beds: 2,
-        baths: 2,
-        sqft: 1200,
-        type: "apartment",
-        yearBuilt: 2020,
-        description:
-          "This stunning modern loft offers the perfect blend of luxury and convenience in the heart of downtown. With floor-to-ceiling windows, high-end finishes, and an open-concept design, this property is ideal for urban professionals seeking a sophisticated living experience.",
-        features: [
-          "Floor-to-ceiling windows",
-          "High-end appliances",
-          "Hardwood floors",
-          "In-unit laundry",
-          "Central air conditioning",
-          "Balcony with city views",
-        ],
-        amenities: [
-          "24/7 concierge",
-          "Fitness center",
-          "Rooftop terrace",
-          "Parking garage",
-          "Pet-friendly",
-          "High-speed internet",
-        ],
-        images: [
-          "/modern-loft-living-room.png",
-          "/modern-loft-kitchen.png",
-          "/modern-loft-bedroom.png",
-          "/modern-loft-bathroom.png",
-        ],
-        agent: {
-          name: "Sarah Johnson",
-          phone: "(555) 123-4567",
-          email: "sarah@estatehub.com",
-          image: "/professional-woman-realtor.jpg",
-        },
-      })
     } finally {
       setLoading(false)
     }
@@ -102,6 +63,9 @@ const PropertyDetail = () => {
     setIsFavorite(!isFavorite)
     // TODO: Call API to add/remove from favorites
   }
+
+  console.log(property);
+
 
   if (loading) {
     return (
@@ -157,24 +121,8 @@ const PropertyDetail = () => {
         </Link>
 
         {/* Property Images */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-8">
-          <div className="lg:col-span-3">
-            <img
-              src={property.images?.[0] || "/placeholder.svg?height=400&width=600&query=property main image"}
-              alt={property.title}
-              className="w-full h-96 object-cover rounded-lg"
-            />
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-            {property.images?.slice(1, 4).map((image, index) => (
-              <img
-                key={index}
-                src={image || "/placeholder.svg"}
-                alt={`${property.title} ${index + 2}`}
-                className="w-full h-28 lg:h-24 object-cover rounded-lg"
-              />
-            ))}
-          </div>
+        <div className="grid grid-cols-1 mb-8">
+          <ImageCarousel image={property.images} className="h-48" />
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -218,28 +166,28 @@ const PropertyDetail = () => {
                   <div className="flex items-center space-x-2">
                     <Bed className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <div className="font-semibold">{property.beds}</div>
+                      <div className="font-semibold">{property.bedrooms}</div>
                       <div className="text-sm text-muted-foreground">Bedrooms</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Bath className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <div className="font-semibold">{property.baths}</div>
+                      <div className="font-semibold">{property.bathrooms}</div>
                       <div className="text-sm text-muted-foreground">Bathrooms</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Square className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <div className="font-semibold">{property.sqft?.toLocaleString()}</div>
+                      <div className="font-semibold">{property.sq_ft?.toLocaleString()}</div>
                       <div className="text-sm text-muted-foreground">Sq Ft</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Calendar className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <div className="font-semibold">{property.yearBuilt}</div>
+                      <div className="font-semibold">{property.year_built}</div>
                       <div className="text-sm text-muted-foreground">Year Built</div>
                     </div>
                   </div>
@@ -254,15 +202,23 @@ const PropertyDetail = () => {
             </div>
 
             {/* Features */}
+
             <div>
               <h2 className="text-xl font-semibold mb-4">Features</h2>
               <div className="grid md:grid-cols-2 gap-2">
-                {property.features?.map((feature, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-accent rounded-full"></div>
-                    <span className="text-sm">{feature}</span>
-                  </div>
-                ))}
+                {property?.features && property.features.trim() !== '' ? (
+                  property.features.split(',')
+                    .map(f => f.trim())
+                    .filter(f => f !== '')
+                    .map((feature, index) => (
+                      <div key={index} className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-accent rounded-full"></div>
+                        <span className="text-sm">{feature}</span>
+                      </div>
+                    ))
+                ) : (
+                  <p className="text-sm text-muted-foreground">No features listed.</p>
+                )}
               </div>
             </div>
 
@@ -270,23 +226,7 @@ const PropertyDetail = () => {
             <div>
               <h2 className="text-xl font-semibold mb-4">Amenities</h2>
               <div className="grid md:grid-cols-2 gap-4">
-                {property.amenities?.map((amenity, index) => {
-                  const getIcon = (amenity) => {
-                    if (amenity.toLowerCase().includes("parking")) return Car
-                    if (amenity.toLowerCase().includes("internet")) return Wifi
-                    if (amenity.toLowerCase().includes("security")) return Shield
-                    if (amenity.toLowerCase().includes("fitness")) return Zap
-                    return Shield
-                  }
-                  const Icon = getIcon(amenity)
-
-                  return (
-                    <div key={index} className="flex items-center space-x-3">
-                      <Icon className="h-5 w-5 text-accent" />
-                      <span className="text-sm">{amenity}</span>
-                    </div>
-                  )
-                })}
+                <AmenityIcons property={property} />
               </div>
             </div>
           </div>
