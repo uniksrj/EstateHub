@@ -243,11 +243,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 👨‍💻 Author
 Suraj - Full Stack Web Developer
 
-GitHub: @suraj733
+GitHub: @uniksrj
 
-Portfolio: [Your Portfolio Link]
+Portfolio: 
 
-LinkedIn: [Your LinkedIn]
+LinkedIn: 
 
 🙏 Acknowledgments
 Laravel - The PHP framework
