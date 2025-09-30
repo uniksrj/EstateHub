@@ -23,10 +23,11 @@ import {
   Shield,
   Zap,
 } from "lucide-react"
-import { propertiesAPI } from "../../services/api"
+import { propertiesAPI, userAPI } from "../../services/api"
 import InquiryForm from "@/components/common/InquiryForm"
 import ImageCarousel from "@/components/common/ImageCarousel"
 import AmenityIcons from "@/components/common/AmenityIcons "
+import { se } from "date-fns/locale"
 
 const PropertyDetail = () => {
   const { id } = useParams()
@@ -59,9 +60,14 @@ const PropertyDetail = () => {
     }).format(price)
   }
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite)
-    // TODO: Call API to add/remove from favorites
+  const toggleFavorite = async() => {    
+    try {
+      const response = await userAPI.toggleFavorite({property_id : id})
+      setIsFavorite(response.data.is_favorite);
+    } catch (error) {
+      console.error("Error fetching property:", error)
+      setIsFavorite(false);
+    }
   }
 
   console.log(property);

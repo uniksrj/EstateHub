@@ -41,11 +41,12 @@ const Dashboard = () => {
     setCurrentPage(page);
     fetchDashboardData(page);
   }
+  
   const fetchDashboardData = async (page="") => {
     setLoading(true)
     try {
       const propertyDetails = {
-        page: currentPage,
+        page: page,
       };
       const propertiesResponse = await userAPI.getProperties(propertyDetails)
       console.log(propertiesResponse.data);
@@ -69,7 +70,7 @@ const Dashboard = () => {
       }
 
       setStats({
-        totalProperties: propertiesResponse.data.data.length,
+        totalProperties: propertiesResponse.data.total,
         totalViews: propertiesResponse.data.data.reduce((sum, prop) => sum + (prop.views || 0), 0),
         totalInquiries: propertiesResponse.data.data.reduce((sum, prop) => sum + (prop.inquiries || 0), 0),
         favoriteProperties: favoritesResponse.data.favorites.length,

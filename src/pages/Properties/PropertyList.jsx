@@ -10,6 +10,7 @@ import { Badge } from "../../components/ui/badge"
 import { Search, MapPin, Star, SlidersHorizontal } from "lucide-react"
 import { propertiesAPI } from "../../services/api"
 import ImageCarousel from "@/components/common/ImageCarousel"
+import { Paginationlink } from "@/components/common/Pagination"
 
 const PropertyList = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -22,19 +23,28 @@ const PropertyList = () => {
     max_price: searchParams.get("max_price") || "",
     bedrooms: searchParams.get("bedrooms") || "any",
     location: searchParams.get("location") || "",
+    page: parseInt(searchParams.get("page")) || 1,
   })
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page")) || 1);
+  const [lastPage, setLastPage] = useState(1);
 
   useEffect(() => {
     fetchProperties()
   }, [searchParams])
 
+  const handlePageChange = (page) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page);
+    setCurrentPage(page);
+    setSearchParams(params);
+  }
   const fetchProperties = async () => {
     setLoading(true)
     try {
       const params = Object.fromEntries(searchParams)
-      const response = await propertiesAPI.getAll(params)      
+      const response = await propertiesAPI.getAll(params)
       console.log(response.data);
-      
+      setLastPage(response.data.last_page);
       setProperties(response.data)
     } catch (error) {
       console.error("Error fetching properties:", error)
@@ -75,7 +85,7 @@ const PropertyList = () => {
       minimumFractionDigits: 0,
     }).format(price)
   }
-console.log("state save data",properties);
+  console.log("state save data", properties);
 
   return (
     <div className="min-h-screen py-8">
@@ -208,8 +218,8 @@ console.log("state save data",properties);
                       <div className="flex items-center justify-center h-full text-muted-foreground">
                         No Image
                       </div>
-                    )                    
-                  }                 
+                    )
+                  }
                   <Badge className="absolute top-3 left-3 capitalize">{property.type}</Badge>
                 </div>
                 <CardContent className="p-6">
@@ -222,7 +232,7 @@ console.log("state save data",properties);
                   </div>
                   <div className="flex items-center text-muted-foreground mb-3">
                     <MapPin className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{property.address + ', ' + property.city + ', ' + property.state + ' (' + property.zip_code + ')'}</span>                    
+                    <span className="text-sm">{property.address + ', ' + property.city + ', ' + property.state + ' (' + property.zip_code + ')'}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
                     <span>{property.bedrooms} beds</span>
@@ -238,6 +248,9 @@ console.log("state save data",properties);
                 </CardContent>
               </Card>
             ))}
+            <div className="col-span-full flex justify-center mt-4">
+              <Paginationlink currentPage={currentPage} lastPage={lastPage} onPageChange={handlePageChange} />
+            </div>
           </div>
         ) : (
           <div className="text-center py-12">

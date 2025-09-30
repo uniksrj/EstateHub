@@ -7,56 +7,91 @@ const api = axios.create({
     "Content-Type": "application/json",
     Accept: "application/json",
   },
-  withCredentials: true, 
+  withCredentials: true,
 });
 
-const getCsrfToken = async () => {
-  try {
+const getCsrfTokenFromCookie = () => {
+  const name = 'XSRF-TOKEN='
+  const decodedCookie = decodeURIComponent(document.cookie)
+  const ca = decodedCookie.split(';')
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i].trim()
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length)
+    }
+  }
+  return null
+}
+
+// Function to ensure CSRF token is available
+const ensureCsrfToken = async () => {
+  let token = getCsrfTokenFromCookie()
+  
+  if (!token) {
+    // If no token, get one from the server
     await axios.get(`${API_URL}/sanctum/csrf-cookie`, {
       withCredentials: true,
-    });
-  } catch (error) {
-    console.error("CSRF token fetch failed:", error);
+    })
+    token = getCsrfTokenFromCookie()
   }
-};
+  
+  return token
+}
 
-// Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("auth_token")
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    // Only add CSRF token for state-changing requests
+    if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase())) {
+      const token = getCsrfTokenFromCookie()
+      if (token) {
+        config.headers['X-XSRF-TOKEN'] = token
+        console.log('CSRF token added to request:', token.substring(0, 10) + '...')
+      } else {
+        console.warn('No CSRF token found for', config.method, 'request')
+      }
     }
     return config
   },
   (error) => {
     return Promise.reject(error)
-  },
+  }
 )
+
+// Request interceptor to add auth token token
+// api.interceptors.request.use(
+//   (config) => {
+//     const token = localStorage.getItem("auth_token")
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`
+//     }
+//     return config
+//   },
+//   (error) => {
+//     return Promise.reject(error)
+//   },
+// )
 
 // Response interceptor to handle errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem("auth_token")
       localStorage.removeItem("user")
       window.location.href = "/auth/login"
     }
     return Promise.reject(error)
-  },
+  }
 )
 
 // Auth API calls
 export const authAPI = {
-   login: async (credentials) => {
-    await getCsrfToken()
+  login: async (credentials) => {
+    await ensureCsrfToken()
     return await api.post("/api/auth/login", credentials)
   },
   register: async (userData) => {
-    await getCsrfToken()
-    return await api.post("/api/auth/register", userData,{ withCredentials: true })
+    await ensureCsrfToken()
+    return await api.post("/api/auth/register", userData, { withCredentials: true })
   },
   logout: () => api.post("/api/auth/logout"),
   forgotPassword: (email) => api.post("/auth/forgot-password", { email }),
@@ -81,7 +116,7 @@ export const userAPI = {
   updateProfile: (profileData) => api.put("/user/profile", profileData),
   getProperties: (propertyDetails) => api.post("/api/properties/get-user-properties", propertyDetails,),
   getFavorites: () => api.get("/api/properties/get-favorite-properties"),
-  addToFavorites: (propertyId) => api.post(`/user/favorites/${propertyId}`),
+  toggleFavorite: (details) => api.post(`/api/properties/toggle-favorite`,details),
   removeFromFavorites: (propertyId) => api.delete(`/user/favorites/${propertyId}`),
 }
 

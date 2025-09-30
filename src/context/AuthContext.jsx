@@ -2,7 +2,7 @@
 
 import { createContext, useState, useEffect } from "react"
 import { authAPI } from "../services/api"
-import { Navigate } from "react-router"
+import { toast } from "sonner"
 
 const AuthContext = createContext()
 
@@ -12,10 +12,10 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Check if user is logged in on app start
-    const token = localStorage.getItem("auth_token")
+    // const token = localStorage.getItem("auth_token")
     const savedUser = localStorage.getItem("user")
 
-    if (token && savedUser) {
+    if (savedUser) {
       setUser(JSON.parse(savedUser))
     }
     setLoading(false)
@@ -24,17 +24,28 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       const response = await authAPI.login(credentials)
-      const { user, token } = response.data
+      const { user } = response.data
+      console.log(user);
 
-      localStorage.setItem("auth_token", token)
+      // localStorage.setItem("auth_token", token)
       localStorage.setItem("user", JSON.stringify(user))
+      toast.success('Login successful!');
       setUser(user)
-
       return { success: true }
     } catch (error) {
+      console.error('Login error:', error)
+      console.error('Error response:', error.response)
+
+      if (error.response?.status === 419) {
+        return {
+          success: false,
+          error: "Session expired. Please try again.",
+        }
+      }
+
       return {
         success: false,
-        error: error.response?.data?.message || "Login failed",
+        error: error.response?.data?.message || error.response?.data?.error || "Login failed",
       }
     }
   }
@@ -42,9 +53,8 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const response = await authAPI.register(userData)
-      const { user, token } = response.data
+      const { user } = response.data
 
-      localStorage.setItem("auth_token", token)
       localStorage.setItem("user", JSON.stringify(user))
       setUser(user)
 
@@ -63,10 +73,8 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Logout error:", error)
     } finally {
-      localStorage.removeItem("auth_token")
       localStorage.removeItem("user")
       setUser(null)
-      Navigate('/auth/login');
     }
   }
 
