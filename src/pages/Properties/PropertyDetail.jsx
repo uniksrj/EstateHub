@@ -27,16 +27,16 @@ import { propertiesAPI, userAPI } from "../../services/api"
 import InquiryForm from "@/components/common/InquiryForm"
 import ImageCarousel from "@/components/common/ImageCarousel"
 import AmenityIcons from "@/components/common/AmenityIcons "
-import { se } from "date-fns/locale"
 
 const PropertyDetail = () => {
   const { id } = useParams()
   const [property, setProperty] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [isFavorite, setIsFavorite] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(null);
 
   useEffect(() => {
     fetchProperty()
+    toggleFavorite()
   }, [id])
 
   const fetchProperty = async () => {
@@ -69,8 +69,6 @@ const PropertyDetail = () => {
       setIsFavorite(false);
     }
   }
-
-  console.log(property);
 
 
   if (loading) {
@@ -154,7 +152,7 @@ const PropertyDetail = () => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm" onClick={toggleFavorite}>
+                  <Button variant="outline" size="sm" onClick={toggleFavorite}  disabled={isFavorite === null}>
                     <Heart className={`h-4 w-4 ${isFavorite ? "fill-current text-red-500" : ""}`} />
                   </Button>
                   <Button variant="outline" size="sm">

@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link, useNavigate, useLocation } from "react-router"
-import { Building2, Menu, X, User, LogOut, Home, Phone } from "lucide-react"
+import { Building2, Menu, X, User, LogOut, Home, Phone, Users, Info, ChevronDown } from "lucide-react"
 import { Button } from "../ui/button"
 import ThemeToggle from "../ThemeToggle"
 import { useAuth } from "../../hooks/useAuth"
@@ -12,6 +12,33 @@ const Header = () => {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const [openDropdown, setOpenDropdown] = useState(null)
+  const headerRef = useRef(null)
+
+  useEffect(() => {
+    const onDoCLick = (e) => {
+      if (headerRef.current && !headerRef.current.contains(e.target)) {
+        setOpenDropdown(null)
+      }
+    }
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setOpenDropdown(null)
+      }
+    }
+    document.addEventListener('mousedown', onDoCLick)
+    document.addEventListener('touchstart', onDoCLick)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDoCLick)
+      document.removeEventListener('touchstart', onDoCLick)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [])
+
+  const handleToggle = (key) => {
+    setOpenDropdown((prev) => (prev === key ? null : key))
+  }
 
   const handleLogout = () => {
     logout()
@@ -19,14 +46,16 @@ const Header = () => {
   }
 
   const isActive = (path) => location.pathname === path
-//  const navItems = [
-//     { href: "/", label: "Home", icon: Home },
-//     { href: "/properties", label: "Properties", icon: Building2 },
-//     { href: "/search", label: "Search", icon: Search },
-//     { href: "/contact", label: "Contact", icon: Phone },
-//   ]
+  //  const navItems = [
+  //     { href: "/", label: "Home", icon: Home },
+  //     { href: "/properties", label: "Properties", icon: Building2 },
+  //     { href: "/search", label: "Search", icon: Search },
+  //     { href: "/contact", label: "Contact", icon: Phone },
+  //   ]
+
+  const supportHover = typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header ref={headerRef} className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -36,50 +65,127 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">            
+          <nav className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
-              className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${
-                isActive("/") ? "text-accent" : "text-foreground"
-              }`}
+              className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/") ? "text-accent" : "text-foreground"
+                }`}
             >
               <Home className="h-4 w-4 mr-1" />
               Home
             </Link>
-            <Link
-              to="/properties"
-              className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${
-                isActive("/properties") ? "text-accent" : "text-foreground"
-              }`}
+            <div
+              className="relative"
+              onMouseEnter={() => supportHover && setOpenDropdown("properties")}
+              // onMouseLeave={() => supportHover && setOpenDropdown(null)}
             >
-              <Building2 className="h-4 w-4 mr-1" />
-              Properties
-            </Link>    
-                      
-            {user && (
+              <button
+                onClick={() => handleToggle("properties")}
+                aria-expanded={openDropdown === "properties"}
+                aria-controls="properties-menu"
+                className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/properties") ? "text-accent" : "text-foreground"
+                  }`}
+              >
+                <Building2 className="h-4 w-4 mr-1" /> Properties
+                <ChevronDown className="h-3 w-3 ml-1" />
+              </button>
+
+              {/* dropdown uses theme variable --popover for background so it matches theme */}
+              <div
+                id="properties-menu"
+                role="menu"
+                className={`absolute left-0 mt-2 w-48 rounded-lg shadow-md ring-1 ring-black/6 border border-border z-50 transform transition duration-150 origin-top-left
+                  ${openDropdown === "properties" ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}`}
+                style={{ backgroundColor: "var(--popover)" }}
+              >
+                <Link to="/properties/for-sale" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                  For Sale
+                </Link>
+                <Link to="/properties/for-rent" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                  For Rent
+                </Link>
+                <Link to="/properties/new" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                  New Listings
+                </Link>
+                <Link to="/properties/luxury" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                  Luxury Homes
+                </Link>
+              </div>
+            </div>
+
+            {/* {user && (
               <Link
                 to="/admin"
-                className={`text-sm font-medium transition-colors hover:text-accent ${
-                  location.pathname.startsWith("/admin") ? "text-accent" : "text-foreground"
-                }`}
+                className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith("/admin") ? "text-accent" : "text-foreground"
+                  }`}
               >
                 Admin
               </Link>
+            )} */}
+
+            {user && (
+              <>
+                {user.role === "admin" || user.role === "superadmin" ? (
+                  <Link to="/admin" className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith("/admin") ? "text-accent" : "text-foreground"}`}>
+                    Admin
+                  </Link>
+                ) : (
+                  <Link to="/admin" className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith(`/${user.role}`) ? "text-accent" : "text-foreground"}`}>
+                    Dashboard
+                  </Link>
+                )}
+              </>
             )}
-                <Link
+
+            <div
+              className="relative"
+              onMouseEnter={() => supportHover && setOpenDropdown("agents")}
+              // onMouseLeave={() => supportHover && setOpenDropdown(null)}
+            >
+              <button
+                onClick={() => handleToggle("agents")}
+                aria-expanded={openDropdown === "agents"}
+                aria-controls="agents-menu"
+                className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/agents") ? "text-accent" : "text-foreground"
+                  }`}
+              >
+                <Users className="h-4 w-4 mr-1" /> Agents
+                <ChevronDown className="h-3 w-3 ml-1" />
+              </button>
+
+              <div
+                id="agents-menu"
+                role="menu"
+                className={`absolute left-0 mt-2 w-48 rounded-lg shadow-md ring-1 ring-black/6 border border-border z-50 transform transition duration-150 origin-top-left
+                  ${openDropdown === "agents" ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
+                style={{ backgroundColor: "var(--popover)" }}
+              >
+                <Link to="/agents" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                  Find an Agent
+                </Link>
+                <Link to="/agents/top" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                  Top Rated Agents
+                </Link>
+              </div>
+            </div>
+
+            <Link to="/about" className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/about") ? "text-accent" : "text-foreground"}`}>
+              <Info className="h-4 w-4 mr-1" /> About
+            </Link>
+
+            <Link
               to="/contact"
-              className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${
-                isActive("/contact") ? "text-accent" : "text-foreground"
-              }`}
+              className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/contact") ? "text-accent" : "text-foreground"
+                }`}
             >
               <Phone className="h-4 w-4 mr-1" />
               Contact
-            </Link>      
+            </Link>
           </nav>
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-                        <ThemeToggle />
+            <ThemeToggle />
             {user ? (
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2 text-sm">
@@ -117,18 +223,16 @@ const Header = () => {
             <nav className="flex flex-col space-y-4">
               <Link
                 to="/"
-                className={`text-sm font-medium transition-colors hover:text-accent ${
-                  isActive("/") ? "text-accent" : "text-foreground"
-                }`}
+                className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/") ? "text-accent" : "text-foreground"
+                  }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 to="/properties"
-                className={`text-sm font-medium transition-colors hover:text-accent ${
-                  isActive("/properties") ? "text-accent" : "text-foreground"
-                }`}
+                className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/properties") ? "text-accent" : "text-foreground"
+                  }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Properties
@@ -136,9 +240,8 @@ const Header = () => {
               {user && (
                 <Link
                   to="/admin"
-                  className={`text-sm font-medium transition-colors hover:text-accent ${
-                    location.pathname.startsWith("/admin") ? "text-accent" : "text-foreground"
-                  }`}
+                  className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith("/admin") ? "text-accent" : "text-foreground"
+                    }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Admin
@@ -147,7 +250,7 @@ const Header = () => {
 
               {/* Mobile Auth */}
               <div className="pt-4 border-t border-border">
-                 <div className="mb-4">
+                <div className="mb-4">
                   <ThemeToggle />
                 </div>
                 {user ? (

@@ -12,7 +12,7 @@ const api = axios.create({
 
 const getCsrfTokenFromCookie = () => {
   const name = 'XSRF-TOKEN='
-  const decodedCookie = decodeURIComponent(document.cookie)
+  const decodedCookie = decodeURIComponent(document.cookie)  
   const ca = decodedCookie.split(';')
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i].trim()
@@ -25,8 +25,7 @@ const getCsrfTokenFromCookie = () => {
 
 // Function to ensure CSRF token is available
 const ensureCsrfToken = async () => {
-  let token = getCsrfTokenFromCookie()
-  
+  let token = getCsrfTokenFromCookie()  
   if (!token) {
     // If no token, get one from the server
     await axios.get(`${API_URL}/sanctum/csrf-cookie`, {

@@ -1,15 +1,19 @@
 import { Outlet } from "react-router"
 import { Building2, Plus, Settings, BarChart3 } from "lucide-react"
 import { Link, useLocation } from "react-router"
+import { sidebars } from "@/data/userType"
 
 const AdminLayout = () => {
   const location = useLocation()
 
-  const sidebarItems = [
-    { path: "/admin", label: "Dashboard", icon: BarChart3 },
-    { path: "/admin/add-property", label: "Add Property", icon: Plus },
-    { path: "/admin/manage-properties", label: "Manage Properties", icon: Settings },
-  ]
+  // const sidebarItems = [
+  //   { path: "/admin", label: "Dashboard", icon: BarChart3 },
+  //   { path: "/admin/add-property", label: "Add Property", icon: Plus },
+  //   { path: "/admin/manage-properties", label: "Manage Properties", icon: Settings },
+  // ]
+
+  const sidebarItems = sidebars.admin;
+
 
   return (
     <div className="min-h-screen bg-background">

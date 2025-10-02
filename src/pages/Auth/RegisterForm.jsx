@@ -19,39 +19,14 @@ import { Checkbox } from "@/components/ui/checkbox"
 
 const RegisterForm = () => {
     const formRef = useRef();
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        password_confirmation: '',
-        // New fields
-        user_type: '',
-        preferred_location: '',
-        min_budget: '',
-        max_budget: '',
-        property_type: '',
-        bedrooms: '',
-        bathrooms: '',
-        move_in_timeline: '',
-        newsletter: false,
-        terms: false
-    });
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
+    const [selectedRole, setSelectedRole] = useState("");
 
     const { register } = useAuth()
     const navigate = useNavigate()
-
-    // const handleChange = (e) => {
-    //     setFormData({
-    //         ...formData,
-    //         [e.target.name]: e.target.value,
-    //     })
-    //     if (error) setError("")
-    // }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -80,7 +55,7 @@ const RegisterForm = () => {
             data.newsletter = false;
         }
 
-        if(data.terms === 'on'){
+        if (data.terms === 'on') {
             data.terms = true;
         } else {
             data.terms = false;
@@ -94,14 +69,40 @@ const RegisterForm = () => {
                 setError(result.error);
             }
         } catch (err) {
+            console.error(err);
             setError("An unexpected error occurred. Please try again.");
         } finally {
             setLoading(false);
         }
     };
 
+    const handleRoleChange = (val) => {
+        setSelectedRole(val);
+    }
+
+    const showBuyerFields = ["buyer", "investor", "renter"].includes(selectedRole);
+
+    const showSellerFields = ['seller'].includes(selectedRole);
+
+    const showAgentFields = ['agent', 'broker'].includes(selectedRole);
+
+
+    const getRedirectPath = (userType) => {
+        switch (userType) {
+            case 'agent':
+            case 'broker':
+                return '/agent/dashboard';
+            case 'seller':
+                return '/seller/dashboard';
+            case 'investor':
+                return '/investor/dashboard';
+            default:
+                return '/buyer/dashboard';
+        }
+    };
+
     return (
-        <div className="h-full flex flex-col justify-center">
+        <div className="h-full flex flex-col justify-center p-4">
             <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold">Create Account</h2>
                 <p className="text-muted-foreground">Join EstateHub today</p>
@@ -163,7 +164,7 @@ const RegisterForm = () => {
                     <Select
                         name="user_type"
                         // value={formData.user_type}
-                        // onValueChange={(value) => handleChange({ target: { name: 'user_type', value } })}
+                        onValueChange={handleRoleChange}
                         disabled={loading}
                     >
                         <SelectTrigger>
@@ -175,143 +176,237 @@ const RegisterForm = () => {
                             <SelectItem value="investor">Real Estate Investor</SelectItem>
                             <SelectItem value="renter">Looking to Rent</SelectItem>
                             <SelectItem value="agent">Real Estate Agent</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
+                            <SelectItem value="broker">Broker</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
+                {showBuyerFields && (
+                    <div className="space-y-3">
+                        <hr />
+                        <h3 className="font-semibold text-lg">
+                            {selectedRole === 'investor' ? 'Investment Preferences' :
+                                selectedRole === 'renter' ? 'Rental Preferences' : 'Buying Preferences'}
+                        </h3>
+                        <div className="space-y-2">
+                            <Label htmlFor="preferred_location">Preferred Location</Label>
+                            <Input
+                                id="preferred_location"
+                                name="preferred_location"
+                                type="text"
+                                placeholder="City, State, or Neighborhood"
+                                // value={formData.preferred_location}
+                                // onChange={handleChange}
+                                disabled={loading}
+                            />
+                        </div>
 
-                <div className="space-y-2">
-                    <Label htmlFor="preferred_location">Preferred Location</Label>
-                    <Input
-                        id="preferred_location"
-                        name="preferred_location"
-                        type="text"
-                        placeholder="City, State, or Neighborhood"
-                        // value={formData.preferred_location}
-                        // onChange={handleChange}
-                        disabled={loading}
-                    />
-                </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="min_budget"> {selectedRole === 'renter' ? 'Minimum Rent ($)' : 'Minimum Budget ($)'}</Label>
+                                <Input
+                                    id="min_budget"
+                                    name="min_budget"
+                                    type="number"
+                                    placeholder="0"
+                                    // value={formData.min_budget}
+                                    // onChange={handleChange}
+                                    disabled={loading}
+                                    min="0"
+                                />
+                            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="min_budget">Minimum Budget ($)</Label>
-                        <Input
-                            id="min_budget"
-                            name="min_budget"
-                            type="number"
-                            placeholder="0"
-                            // value={formData.min_budget}
-                            // onChange={handleChange}
-                            disabled={loading}
-                            min="0"
-                        />
+                            <div className="space-y-2">
+                                <Label htmlFor="max_budget">{selectedRole === 'renter' ? 'Maximum Rent ($)' : 'Maximum Budget ($)'}</Label>
+                                <Input
+                                    id="max_budget"
+                                    name="max_budget"
+                                    type="number"
+                                    placeholder="0"
+                                    // value={formData.min_budget}
+                                    // onChange={handleChange}
+                                    disabled={loading}
+                                    min="0"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                                <Label htmlFor="property_type">{selectedRole === 'renter' ? 'Looking For' : 'Interested In'}</Label>
+                                <Select
+                                    name="property_type"
+                                    // value={formData.property_type}
+                                    // onValueChange={(value) => handleChange({ target: { name: 'property_type', value } })}
+                                    disabled={loading}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select property type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="house">Single Family Home</SelectItem>
+                                        <SelectItem value="apartment">Apartment</SelectItem>
+                                        <SelectItem value="condo">Condo</SelectItem>
+                                        <SelectItem value="townhouse">Townhouse</SelectItem>
+                                        <SelectItem value="villa">Villa</SelectItem>
+                                        {selectedRole !== 'renter' && (
+                                            <SelectItem value="commercial">Commercial Property</SelectItem>
+                                        )}
+                                        <SelectItem value="land">Land</SelectItem>
+                                        <SelectItem value="any">Any Type</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">                            
+
+                            <div className="space-y-2 ">
+                                <Label htmlFor="bedrooms">Bedrooms</Label>
+                                <Select
+                                    name="bedrooms"
+                                    // value={formData.bedrooms}
+                                    // onValueChange={(value) => handleChange({ target: { name: 'bedrooms', value } })}
+                                    disabled={loading}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Any" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="1">1+</SelectItem>
+                                        <SelectItem value="2">2+</SelectItem>
+                                        <SelectItem value="3">3+</SelectItem>
+                                        <SelectItem value="4">4+</SelectItem>
+                                        <SelectItem value="5">5+</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="bathrooms">Bathrooms</Label>
+                                <Select
+                                    name="bathrooms"
+                                    // value={formData.bathrooms}
+                                    // onValueChange={(value) => handleChange({ target: { name: 'bathrooms', value } })}
+                                    disabled={loading}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Any" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="1">1+</SelectItem>
+                                        <SelectItem value="2">2+</SelectItem>
+                                        <SelectItem value="3">3+</SelectItem>
+                                        <SelectItem value="4">4+</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                             <div className="space-y-2">
+                            <Label htmlFor="move_in_timeline">{selectedRole === 'renter' ? 'Move-in Date' : 'Timeline'}</Label>
+                            <Select
+                                name="move_in_timeline"
+                                // value={formData.move_in_timeline}
+                                // onValueChange={(value) => handleChange({ target: { name: 'move_in_timeline', value } })}
+                                disabled={loading}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select timeline" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="immediately">Immediately</SelectItem>
+                                    <SelectItem value="1_month">Within 1 Month</SelectItem>
+                                    <SelectItem value="3_months">Within 3 Months</SelectItem>
+                                    <SelectItem value="6_months">Within 6 Months</SelectItem>
+                                    <SelectItem value="1_year">Within 1 Year</SelectItem>
+                                    <SelectItem value="flexible">Flexible/Just Browsing</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        </div>
+
+                       
+                        <hr />
                     </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="max_budget">Maximum Budget ($)</Label>
-                        <Input
-                            id="max_budget"
-                            name="max_budget"
-                            type="number"
-                            placeholder="0"
-                            // value={formData.min_budget}
-                            // onChange={handleChange}
-                            disabled={loading}
-                            min="0"
-                        />
+                )}
+                {/* Seller Specific Fields */}
+                {showSellerFields && (
+                    <div className="space-y-3 ">
+                        <hr />
+                        <h3 className="font-semibold text-lg">Seller Information</h3>
+                        <div className="space-y-2">
+                            <Label htmlFor="property_address">Property Address (if ready to list)</Label>
+                            <Input
+                                id="property_address"
+                                name="property_address"
+                                type="text"
+                                placeholder="Enter property address"
+                                disabled={loading}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="selling_timeline">When do you plan to sell?</Label>
+                            <Select name="selling_timeline" disabled={loading}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select timeline" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="immediately">Immediately</SelectItem>
+                                    <SelectItem value="1_month">Within 1 Month</SelectItem>
+                                    <SelectItem value="3_months">Within 3 Months</SelectItem>
+                                    <SelectItem value="6_months">Within 6 Months</SelectItem>
+                                    <SelectItem value="just_researching">Just Researching</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <hr />
                     </div>
-                </div>
+                )}
 
-                <div className="space-y-2">
-                    <Label htmlFor="property_type">Interested In</Label>
-                    <Select
-                        name="property_type"
-                        // value={formData.property_type}
-                        // onValueChange={(value) => handleChange({ target: { name: 'property_type', value } })}
-                        disabled={loading}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select property type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="house">Single Family Home</SelectItem>
-                            <SelectItem value="apartment">Apartment</SelectItem>
-                            <SelectItem value="condo">Condo</SelectItem>
-                            <SelectItem value="townhouse">Townhouse</SelectItem>
-                            <SelectItem value="villa">Villa</SelectItem>
-                            <SelectItem value="commercial">Commercial Property</SelectItem>
-                            <SelectItem value="land">Land</SelectItem>
-                            <SelectItem value="any">Any Type</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
+                {/* Agent/Broker Specific Fields */}
+                {showAgentFields && (
+                    <div className="space-y-3">
+                        <hr />
+                        <h3 className="font-semibold text-lg">Professional Information</h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="bedrooms">Bedrooms</Label>
-                        <Select
-                            name="bedrooms"
-                            // value={formData.bedrooms}
-                            // onValueChange={(value) => handleChange({ target: { name: 'bedrooms', value } })}
-                            disabled={loading}
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Any" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="1">1+</SelectItem>
-                                <SelectItem value="2">2+</SelectItem>
-                                <SelectItem value="3">3+</SelectItem>
-                                <SelectItem value="4">4+</SelectItem>
-                                <SelectItem value="5">5+</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <div className="space-y-2">
+                            <Label htmlFor="license_number">Real Estate License Number</Label>
+                            <Input
+                                id="license_number"
+                                name="license_number"
+                                type="text"
+                                placeholder="Enter your license number"
+                                disabled={loading}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="brokerage">Brokerage/Company</Label>
+                            <Input
+                                id="brokerage"
+                                name="brokerage"
+                                type="text"
+                                placeholder="Enter your brokerage name"
+                                disabled={loading}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="years_experience">Years of Experience</Label>
+                            <Select name="years_experience" disabled={loading}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select experience" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="0-2">0-2 years</SelectItem>
+                                    <SelectItem value="3-5">3-5 years</SelectItem>
+                                    <SelectItem value="6-10">6-10 years</SelectItem>
+                                    <SelectItem value="10+">10+ years</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <hr />
                     </div>
+                )}
 
-                    <div className="space-y-2">
-                        <Label htmlFor="bathrooms">Bathrooms</Label>
-                        <Select
-                            name="bathrooms"
-                            // value={formData.bathrooms}
-                            // onValueChange={(value) => handleChange({ target: { name: 'bathrooms', value } })}
-                            disabled={loading}
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Any" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="1">1+</SelectItem>
-                                <SelectItem value="2">2+</SelectItem>
-                                <SelectItem value="3">3+</SelectItem>
-                                <SelectItem value="4">4+</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </div>
-
-                <div className="space-y-2">
-                    <Label htmlFor="move_in_timeline">Move-in Timeline</Label>
-                    <Select
-                        name="move_in_timeline"
-                        // value={formData.move_in_timeline}
-                        // onValueChange={(value) => handleChange({ target: { name: 'move_in_timeline', value } })}
-                        disabled={loading}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select timeline" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="immediately">Immediately</SelectItem>
-                            <SelectItem value="1_month">Within 1 Month</SelectItem>
-                            <SelectItem value="3_months">Within 3 Months</SelectItem>
-                            <SelectItem value="6_months">Within 6 Months</SelectItem>
-                            <SelectItem value="1_year">Within 1 Year</SelectItem>
-                            <SelectItem value="flexible">Flexible/Just Browsing</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-
+                {/* Newsletter & Terms - Always Show */}
                 <div className="space-y-2">
                     <Label htmlFor="newsletter">
                         <div className="flex items-center space-x-2">

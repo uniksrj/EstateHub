@@ -18,7 +18,7 @@ const AuthPage = () => {
     
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-background to-muted/20">
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-6xl">
         
         <div className="flex items-center justify-center space-x-2 mb-8">
           <Building2 className="h-8 w-8 text-accent" />
