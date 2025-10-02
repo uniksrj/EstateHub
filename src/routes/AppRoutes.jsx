@@ -14,6 +14,7 @@ import ContactPage from "@/pages/Contact/ContactPage"
 import PrivacyPolicy from "@/pages/misc/PrivacyPolicy "
 import TermsOfService from "@/pages/misc/TermsOfService "
 import NotFound from "@/pages/misc/NotFound"
+import AdminDashboard from "@/pages/Dashboard/Admin/Dashboard"
 
 // Create the data router
 export const router = createBrowserRouter([
@@ -92,7 +93,7 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            Component: Dashboard,
+            Component: AdminDashboard,
           },
           {
             path: "add-property",
