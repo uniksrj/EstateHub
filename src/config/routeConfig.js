@@ -14,8 +14,8 @@ export const USER_ROLES = {
 export const ADMIN_PANEL_ACCESS = [
   USER_ROLES.SUPERADMIN,
   USER_ROLES.ADMIN,
-  USER_ROLES.AGENT,
-  USER_ROLES.BROKER
+  // USER_ROLES.AGENT,
+  // USER_ROLES.BROKER
 ]
 
 // Define specific route permissions

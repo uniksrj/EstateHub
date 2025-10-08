@@ -3,6 +3,7 @@
 import { createContext, useState, useEffect } from "react"
 import { authAPI } from "../services/api"
 import { toast } from "sonner"
+import { fi } from "date-fns/locale"
 
 const AuthContext = createContext()
 
@@ -70,13 +71,14 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await authAPI.logout()
+      return { success: true }
     } catch (error) {
       console.error("Logout error:", error)
     } finally {
       localStorage.removeItem("user")
       setUser(null)
     }
-  }
+  } 
 
   const value = {
     user,

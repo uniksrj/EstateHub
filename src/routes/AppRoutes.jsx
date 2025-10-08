@@ -5,7 +5,6 @@ import PropertyList from "../pages/Properties/PropertyList"
 import PropertyDetail from "../pages/Properties/PropertyDetail"
 import AuthPage from "../pages/Auth/AuthPage"
 import ForgotPassword from "../pages/Auth/ForgotPassword"
-import Dashboard from "../pages/Dashboard/Dashboard"
 import AddProperty from "../pages/Dashboard/AddProperty"
 import ManageProperties from "../pages/Dashboard/ManageProperties"
 import ProtectedRoute from "../components/common/ProtectedRoute"
@@ -14,7 +13,11 @@ import ContactPage from "@/pages/Contact/ContactPage"
 import PrivacyPolicy from "@/pages/misc/PrivacyPolicy "
 import TermsOfService from "@/pages/misc/TermsOfService "
 import NotFound from "@/pages/misc/NotFound"
-import AdminDashboard from "@/pages/Dashboard/Admin/Dashboard"
+import AdminDashboard from "@/pages/Dashboard/Admin/Analytics/Dashboard"
+import Dashboard from "@/components/dashboard/Dashboard"
+import UserManagementPage from "@/pages/Dashboard/Admin/User/Users"
+import { USER_ROLES } from "@/config/routeConfig"
+import Unauthorized from "@/pages/misc/Unauthorized"
 
 // Create the data router
 export const router = createBrowserRouter([
@@ -41,7 +44,7 @@ export const router = createBrowserRouter([
           },
           {
             path: ":id/edit",
-            element : (
+            element: (
               <ProtectedRoute>
                 <AddProperty />
               </ProtectedRoute>
@@ -51,17 +54,17 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "contact", Component : ContactPage
+        path: "contact", Component: ContactPage
       },
       {
-        path: "privacy-policy", Component : PrivacyPolicy
+        path: "privacy-policy", Component: PrivacyPolicy
       },
       {
-        path: "terms-of-service", Component : TermsOfService
+        path: "terms-of-service", Component: TermsOfService
       },
       {
         path: "auth",
-        
+
         children: [
           {
             index: true,
@@ -69,12 +72,12 @@ export const router = createBrowserRouter([
           },
           {
             path: "login",
-            Component : AuthPage
+            Component: AuthPage
             // Component: Login,
           },
           {
             path: "register",
-            Component : AuthPage
+            Component: AuthPage
             // Component: Register,
           },
           {
@@ -84,7 +87,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "admin",
+        path: "dashboard",
         element: (
           <ProtectedRoute>
             <AdminLayout />
@@ -93,7 +96,7 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            Component: AdminDashboard,
+            Component: Dashboard,
           },
           {
             path: "add-property",
@@ -102,13 +105,25 @@ export const router = createBrowserRouter([
           {
             path: "manage-properties",
             Component: ManageProperties,
-          },          
+          },
+          {
+          path: "users",
+          element: (
+            <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
+              <UserManagementPage />
+            </ProtectedRoute>
+          )
+          },
         ],
       },
       {
         path: "*",
         Component: NotFound,
       },
+      {
+        path:"unauthorized",
+        Component :Unauthorized
+      }
     ],
   },
 ])

@@ -2,8 +2,9 @@
 
 import { Navigate, useLocation } from "react-router"
 import { useAuth } from "../../hooks/useAuth"
+import { ADMIN_PANEL_ACCESS, ROUTE_PERMISSIONS } from "@/config/routeConfig"
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const { user, loading } = useAuth()
   const location = useLocation()
 
@@ -15,11 +16,33 @@ const ProtectedRoute = ({ children }) => {
     )
   }
 
-  if (!user) {
-    // Redirect to login page with return url
+  if (!user) {    
     return <Navigate to="/auth/login" state={{ from: location }} replace />
   }
 
+  if(allowedRoles.length === 0){
+    return children
+  }
+  const usertype = user.role_id || user.userType_id;
+  // Check if this is an admin panel route and user has access
+
+  if (location.pathname.startsWith('/dashboard')){
+    const adminAccessRoles = ADMIN_PANEL_ACCESS.includes(usertype);
+    if (!adminAccessRoles) {
+      return <Navigate to="/" replace />;
+    }
+  }
+
+  // Check route-specific permissions
+  const routeAllowedRoles = ROUTE_PERMISSIONS[location.pathname];
+  if (routeAllowedRoles && !routeAllowedRoles.includes(usertype)) {
+    return <Navigate to="/unauthorized" replace />
+  }
+
+  // Check component-specific allowed roles
+  if (allowedRoles.length > 0 && !allowedRoles.includes(usertype)) {
+    return <Navigate to="/unauthorized" replace />
+  }
   return children
 }
 

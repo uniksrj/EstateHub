@@ -21,12 +21,12 @@ import {
 
 export const sidebars = {
   superadmin: [
-    { label: "Platform Analytics", path: "/admin/analytics", icon: BarChart3 },
-    { label: "User Management", path: "/admin/users", icon: Users },
-    { label: "Financial Reports", path: "/admin/finance", icon: DollarSign },
-    { label: "System Settings", path: "/admin/system", icon: Settings },
-    { label: "All Properties", path: "/admin/properties", icon: Home },
-    { label: "Content Management", path: "/admin/content", icon: FileText },
+    { label: "Platform Analytics", path: "/dashboard", icon: BarChart3 },
+    { label: "User Management", path: "/dashboard/users", icon: Users },
+    { label: "Financial Reports", path: "/dashboard/finance", icon: DollarSign },
+    { label: "System Settings", path: "/dashboard/system", icon: Settings },
+    { label: "All Properties", path: "/dashboard/properties", icon: Home },
+    { label: "Content Management", path: "/dashboard/content", icon: FileText },
   ],
 
   admin: [
@@ -71,4 +71,32 @@ export const sidebars = {
     { label: "Market Trends", path: "/investor/trends", icon: TrendingUp },
     { label: "Deal Alerts", path: "/investor/alerts", icon: Bell },
   ],
+  renter: [
+    { label: "Dashboard", path: "/renter/dashboard", icon: LayoutDashboard },
+    { label: "Browse Properties", path: "/renter/properties", icon: Home },
+    { label: "Saved Listings", path: "/renter/saved", icon: Heart },
+    { label: "Rental Applications", path: "/renter/applications", icon: FileText },
+    { label: "Messages", path: "/renter/messages", icon: MessageSquare },
+  ],
 };
+
+export const filterOptions = {
+    roles: [
+      { label: 'All Roles', value: 'All' },
+      { label: 'Admin', value: '2' },
+      { label: 'Agent', value: '3' },
+      { label: 'Broker', value: '4' },
+      { label: 'Buyer', value: '5' },
+      { label: 'Seller', value: '6' },
+      { label: 'Investor', value: '7' },
+      { label: 'Renter', value: '8' }
+    ],
+
+    statuses: [
+      { label: 'All Statuses', value: 'All' },
+      { label: 'Active', value: '1' },
+      { label: 'Inactive', value: '0' },
+      { label: 'Pending Verification', value: 'pending' },
+      { label: 'Suspended', value: 'suspended' }
+    ]
+  };

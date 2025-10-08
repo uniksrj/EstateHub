@@ -3,7 +3,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
 import { Home, Eye, Tag, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Link } from "react-router-dom"
+import { Link } from "react-router"
 
 const viewsData = [
   { day: "Mon", views: 45 },

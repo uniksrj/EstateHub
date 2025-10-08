@@ -179,7 +179,7 @@ const AddProperty = () => {
       toast.success("Success!", {
         description: `Property ${btnTxt} successfully!`,
       });
-      navigate("/admin", {
+      navigate("/dashboard", {
         state: { message: "Property added successfully!" },
       })
     } catch (err) {
@@ -201,7 +201,7 @@ const AddProperty = () => {
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="flex items-center mb-8">
-          <Button variant="ghost" onClick={() => navigate("/admin")} className="mr-4">
+          <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mr-4">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>

@@ -14,6 +14,7 @@ const Header = () => {
   const location = useLocation()
   const [openDropdown, setOpenDropdown] = useState(null)
   const headerRef = useRef(null)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const onDoCLick = (e) => {
@@ -40,9 +41,18 @@ const Header = () => {
     setOpenDropdown((prev) => (prev === key ? null : key))
   }
 
-  const handleLogout = () => {
-    logout()
-    navigate("/")
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+      navigate("/");
+    }
+
   }
 
   const isActive = (path) => location.pathname === path
@@ -77,7 +87,7 @@ const Header = () => {
             <div
               className="relative"
               onMouseEnter={() => supportHover && setOpenDropdown("properties")}
-              // onMouseLeave={() => supportHover && setOpenDropdown(null)}
+            // onMouseLeave={() => supportHover && setOpenDropdown(null)}
             >
               <button
                 onClick={() => handleToggle("properties")}
@@ -125,50 +135,53 @@ const Header = () => {
 
             {user && (
               <>
-                {user.role === "admin" || user.role === "superadmin" ? (
-                  <Link to="/admin" className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith("/admin") ? "text-accent" : "text-foreground"}`}>
+                {user.role_id === 1 || user.role === 2 ? (
+                  <Link to="/dashboard" className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith("/dashboard") ? "text-accent" : "text-foreground"}`}>
                     Admin
                   </Link>
                 ) : (
-                  <Link to="/admin" className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith(`/${user.role}`) ? "text-accent" : "text-foreground"}`}>
+                  <Link to="/dashboard" className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith(`/${user.role_id}`) ? "text-accent" : "text-foreground"}`}>
                     Dashboard
                   </Link>
                 )}
               </>
             )}
+            {(user?.role_id === 5 || !user) && (
 
-            <div
-              className="relative"
-              onMouseEnter={() => supportHover && setOpenDropdown("agents")}
-              // onMouseLeave={() => supportHover && setOpenDropdown(null)}
-            >
-              <button
-                onClick={() => handleToggle("agents")}
-                aria-expanded={openDropdown === "agents"}
-                aria-controls="agents-menu"
-                className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/agents") ? "text-accent" : "text-foreground"
-                  }`}
-              >
-                <Users className="h-4 w-4 mr-1" /> Agents
-                <ChevronDown className="h-3 w-3 ml-1" />
-              </button>
 
               <div
-                id="agents-menu"
-                role="menu"
-                className={`absolute left-0 mt-2 w-48 rounded-lg shadow-md ring-1 ring-black/6 border border-border z-50 transform transition duration-150 origin-top-left
-                  ${openDropdown === "agents" ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
-                style={{ backgroundColor: "var(--popover)" }}
+                className="relative"
+                onMouseEnter={() => supportHover && setOpenDropdown("agents")}
+              // onMouseLeave={() => supportHover && setOpenDropdown(null)}
               >
-                <Link to="/agents" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
-                  Find an Agent
-                </Link>
-                <Link to="/agents/top" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
-                  Top Rated Agents
-                </Link>
-              </div>
-            </div>
+                <button
+                  onClick={() => handleToggle("agents")}
+                  aria-expanded={openDropdown === "agents"}
+                  aria-controls="agents-menu"
+                  className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/agents") ? "text-accent" : "text-foreground"
+                    }`}
+                >
+                  <Users className="h-4 w-4 mr-1" /> Agents
+                  <ChevronDown className="h-3 w-3 ml-1" />
+                </button>
 
+                <div
+                  id="agents-menu"
+                  role="menu"
+                  className={`absolute left-0 mt-2 w-48 rounded-lg shadow-md ring-1 ring-black/6 border border-border z-50 transform transition duration-150 origin-top-left
+                  ${openDropdown === "agents" ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
+                  style={{ backgroundColor: "var(--popover)" }}
+                >
+                  <Link to="/agents" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                    Find an Agent
+                  </Link>
+                  <Link to="/agents/top" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                    Top Rated Agents
+                  </Link>
+                </div>
+              </div>
+            )
+            }
             <Link to="/about" className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/about") ? "text-accent" : "text-foreground"}`}>
               <Info className="h-4 w-4 mr-1" /> About
             </Link>
@@ -239,8 +252,8 @@ const Header = () => {
               </Link>
               {user && (
                 <Link
-                  to="/admin"
-                  className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith("/admin") ? "text-accent" : "text-foreground"
+                  to="/dashboard"
+                  className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith("/dashboard") ? "text-accent" : "text-foreground"
                     }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -260,8 +273,17 @@ const Header = () => {
                       <span>{user.name}</span>
                     </div>
                     <Button variant="ghost" size="sm" onClick={handleLogout} className="w-full justify-start">
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Logout
+                      {loading ? (
+                        <>
+                          <span className="animate-spin h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full"></span>
+                          Logging out...
+                        </>
+                      ) : (
+                        <>
+                          <LogOut className="h-4 w-4 mr-2" />
+                          Logout
+                        </>
+                      )}
                     </Button>
                   </div>
                 ) : (

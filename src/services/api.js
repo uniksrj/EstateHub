@@ -12,7 +12,7 @@ const api = axios.create({
 
 const getCsrfTokenFromCookie = () => {
   const name = 'XSRF-TOKEN='
-  const decodedCookie = decodeURIComponent(document.cookie)  
+  const decodedCookie = decodeURIComponent(document.cookie)
   const ca = decodedCookie.split(';')
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i].trim()
@@ -25,7 +25,7 @@ const getCsrfTokenFromCookie = () => {
 
 // Function to ensure CSRF token is available
 const ensureCsrfToken = async () => {
-  let token = getCsrfTokenFromCookie()  
+  let token = getCsrfTokenFromCookie()
   if (!token) {
     // If no token, get one from the server
     await axios.get(`${API_URL}/sanctum/csrf-cookie`, {
@@ -33,7 +33,7 @@ const ensureCsrfToken = async () => {
     })
     token = getCsrfTokenFromCookie()
   }
-  
+
   return token
 }
 
@@ -95,7 +95,7 @@ export const authAPI = {
   logout: () => api.post("/api/auth/logout"),
   forgotPassword: (email) => api.post("/auth/forgot-password", { email }),
   resetPassword: (data) => api.post("/auth/reset-password", data),
-  getUser: () => api.get("/auth/user"),
+  getUser: () => api.get("/api/auth/user"),
 }
 
 // Properties API calls
@@ -115,8 +115,19 @@ export const userAPI = {
   updateProfile: (profileData) => api.put("/user/profile", profileData),
   getProperties: (propertyDetails) => api.post("/api/properties/get-user-properties", propertyDetails,),
   getFavorites: () => api.get("/api/properties/get-favorite-properties"),
-  toggleFavorite: (details) => api.post(`/api/properties/toggle-favorite`,details),
+  toggleFavorite: (details) => api.post(`/api/properties/toggle-favorite`, details),
   removeFromFavorites: (propertyId) => api.delete(`/user/favorites/${propertyId}`),
+  getUser_metrics: (params) => api.get("/api/auth/user_metrics", { params }),
+}
+
+export const superAdminAPI = {
+  // User Management
+  getAllUsers: (params) => api.get("/api/admin/users", { params }),
+  getUserById: (id) => api.get(`/admin/users/${id}`),
+  createUser: (userData) => api.post("/api/admin/users", userData),
+  updateUser: (id, userData) => api.put(`/api/admin/users/${id}`, userData),
+  deleteUser: (id) => api.delete(`/api/admin/users/${id}`),
+  changeUserStatus: (id, status) =>  api.patch(`/api/admin/users/${id}/status`, { status }),
 }
 
 export default api

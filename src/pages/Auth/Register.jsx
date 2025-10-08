@@ -49,7 +49,7 @@ const Register = () => {
     try {
       const result = await register(formData)
       if (result.success) {
-        navigate("/admin")
+        navigate("/dashboard")
       } else {
         setError(result.error)
       }

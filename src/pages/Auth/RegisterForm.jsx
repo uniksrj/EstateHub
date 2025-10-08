@@ -16,6 +16,7 @@ import {
     SelectItem
 } from "../../components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import { toast } from "sonner"
 
 const RegisterForm = () => {
     const formRef = useRef();
@@ -64,8 +65,13 @@ const RegisterForm = () => {
         try {
             const result = await register(data);
             if (result.success) {
-                navigate("/admin");
+                navigate("/dashboard");
             } else {
+                toast({
+                    title: "Registration Notice",
+                    description: result.error || "Registration failed. Please try again.",
+                    variant: "destructive",
+                })
                 setError(result.error);
             }
         } catch (err) {
@@ -231,32 +237,32 @@ const RegisterForm = () => {
                         </div>
 
                         <div className="space-y-2">
-                                <Label htmlFor="property_type">{selectedRole === 'renter' ? 'Looking For' : 'Interested In'}</Label>
-                                <Select
-                                    name="property_type"
-                                    // value={formData.property_type}
-                                    // onValueChange={(value) => handleChange({ target: { name: 'property_type', value } })}
-                                    disabled={loading}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select property type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="house">Single Family Home</SelectItem>
-                                        <SelectItem value="apartment">Apartment</SelectItem>
-                                        <SelectItem value="condo">Condo</SelectItem>
-                                        <SelectItem value="townhouse">Townhouse</SelectItem>
-                                        <SelectItem value="villa">Villa</SelectItem>
-                                        {selectedRole !== 'renter' && (
-                                            <SelectItem value="commercial">Commercial Property</SelectItem>
-                                        )}
-                                        <SelectItem value="land">Land</SelectItem>
-                                        <SelectItem value="any">Any Type</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                            <Label htmlFor="property_type">{selectedRole === 'renter' ? 'Looking For' : 'Interested In'}</Label>
+                            <Select
+                                name="property_type"
+                                // value={formData.property_type}
+                                // onValueChange={(value) => handleChange({ target: { name: 'property_type', value } })}
+                                disabled={loading}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select property type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="house">Single Family Home</SelectItem>
+                                    <SelectItem value="apartment">Apartment</SelectItem>
+                                    <SelectItem value="condo">Condo</SelectItem>
+                                    <SelectItem value="townhouse">Townhouse</SelectItem>
+                                    <SelectItem value="villa">Villa</SelectItem>
+                                    {selectedRole !== 'renter' && (
+                                        <SelectItem value="commercial">Commercial Property</SelectItem>
+                                    )}
+                                    <SelectItem value="land">Land</SelectItem>
+                                    <SelectItem value="any">Any Type</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">                            
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
                             <div className="space-y-2 ">
                                 <Label htmlFor="bedrooms">Bedrooms</Label>
@@ -299,30 +305,30 @@ const RegisterForm = () => {
                                 </Select>
                             </div>
 
-                             <div className="space-y-2">
-                            <Label htmlFor="move_in_timeline">{selectedRole === 'renter' ? 'Move-in Date' : 'Timeline'}</Label>
-                            <Select
-                                name="move_in_timeline"
-                                // value={formData.move_in_timeline}
-                                // onValueChange={(value) => handleChange({ target: { name: 'move_in_timeline', value } })}
-                                disabled={loading}
-                            >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select timeline" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="immediately">Immediately</SelectItem>
-                                    <SelectItem value="1_month">Within 1 Month</SelectItem>
-                                    <SelectItem value="3_months">Within 3 Months</SelectItem>
-                                    <SelectItem value="6_months">Within 6 Months</SelectItem>
-                                    <SelectItem value="1_year">Within 1 Year</SelectItem>
-                                    <SelectItem value="flexible">Flexible/Just Browsing</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="move_in_timeline">{selectedRole === 'renter' ? 'Move-in Date' : 'Timeline'}</Label>
+                                <Select
+                                    name="move_in_timeline"
+                                    // value={formData.move_in_timeline}
+                                    // onValueChange={(value) => handleChange({ target: { name: 'move_in_timeline', value } })}
+                                    disabled={loading}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select timeline" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="immediately">Immediately</SelectItem>
+                                        <SelectItem value="1_month">Within 1 Month</SelectItem>
+                                        <SelectItem value="3_months">Within 3 Months</SelectItem>
+                                        <SelectItem value="6_months">Within 6 Months</SelectItem>
+                                        <SelectItem value="1_year">Within 1 Year</SelectItem>
+                                        <SelectItem value="flexible">Flexible/Just Browsing</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
 
-                       
+
                         <hr />
                     </div>
                 )}

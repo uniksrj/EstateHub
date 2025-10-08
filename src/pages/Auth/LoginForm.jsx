@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from "../../components/ui/alert"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
 import { useAuth } from "../../hooks/useAuth"
 
-const LoginForm = () => { // Debugging line
+const LoginForm = () => { 
     
     const [formData, setFormData] = useState({
         email: "",
@@ -23,7 +23,7 @@ const LoginForm = () => { // Debugging line
     const navigate = useNavigate()
     const location = useLocation()
 
-    const from = location.state?.from?.pathname || "/admin"
+    const from = location.state?.from?.pathname || "/dashboard"
 
     const handleChange = (e) => {
         setFormData({
