@@ -18,6 +18,8 @@ import Dashboard from "@/components/dashboard/Dashboard"
 import UserManagementPage from "@/pages/Dashboard/Admin/User/Users"
 import { USER_ROLES } from "@/config/routeConfig"
 import Unauthorized from "@/pages/misc/Unauthorized"
+import ResetPassword from "@/pages/Auth/ResetPassword"
+import Propertiespage from "@/pages/Dashboard/Admin/Properties/Propertiespage"
 
 // Create the data router
 export const router = createBrowserRouter([
@@ -84,6 +86,10 @@ export const router = createBrowserRouter([
             path: "forgot-password",
             Component: ForgotPassword,
           },
+          {
+            path: "reset-password",
+            Component: ResetPassword,
+          },
         ],
       },
       {
@@ -110,7 +116,15 @@ export const router = createBrowserRouter([
           path: "users",
           element: (
             <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
-              <UserManagementPage />
+              <UserManagementPage />              
+            </ProtectedRoute>
+          )
+          },
+          {
+          path: "properties",
+          element: (
+            <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
+              <Propertiespage />              
             </ProtectedRoute>
           )
           },

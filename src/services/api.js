@@ -94,7 +94,10 @@ export const authAPI = {
   },
   logout: () => api.post("/api/auth/logout"),
   forgotPassword: (email) => api.post("/auth/forgot-password", { email }),
-  resetPassword: (data) => api.post("/auth/reset-password", data),
+  resetPassword: async (data) => {
+    await ensureCsrfToken()
+    await api.post("/api/reset-password", data)
+  },
   getUser: () => api.get("/api/auth/user"),
 }
 
@@ -127,7 +130,8 @@ export const superAdminAPI = {
   createUser: (userData) => api.post("/api/admin/users", userData),
   updateUser: (id, userData) => api.put(`/api/admin/users/${id}`, userData),
   deleteUser: (id) => api.delete(`/api/admin/users/${id}`),
-  changeUserStatus: (id, status) =>  api.patch(`/api/admin/users/${id}/status`, { status }),
+  changeUserStatus: (id, status) => api.patch(`/api/admin/users/${id}/status`, { status }),
+  getAllProperties: (params) => api.get("/api/admin/properties", { params }),
 }
 
 export default api

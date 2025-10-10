@@ -8,6 +8,7 @@ import UserRoleDistribution from "@/components/admin/users/UserRoleDistribution"
 import DateRangePicker from "@/components/common/DateRangePicker";
 import MetricCard from "@/components/common/MetricCard";
 import { userAPI } from "@/services/api";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
 export default function UserManagementPage() {
@@ -68,25 +69,37 @@ export default function UserManagementPage() {
                     <div className="space-y-6">
                         {/* User Metrics */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <MetricCard title="Total Users" value={userData.metrics.total_users.value.toLocaleString()} change={`${userData.metrics.total_users.change >= 0 ? '+' : ''}${userData.metrics.total_users.change}%`}  icon={User} />
-                            <MetricCard title="Active Users" value={userData.metrics.active_users.value.toLocaleString()} change={`${userData.metrics.active_users.change >= 0 ? '+' : ''}${userData.metrics.active_users.change}%`}  icon={UserCheck} />
-                            <MetricCard title="New This Month" value={userData.metrics.new_users_this_month.value.toLocaleString()} change={`${userData.metrics.new_users_this_month.change >= 0 ? '+' : ''}${userData.metrics.new_users_this_month.change}%`}  icon={TrendingUp} />
-                            <MetricCard title="Conversion Rate" value={`${userData.metrics.conversion_rate.value}%`} change={`${userData.metrics.conversion_rate.change >= 0 ? '+' : ''}${userData.metrics.conversion_rate.change}%`}  icon={UserX} />
+                            <MetricCard title="Total Users" value={userData.metrics.total_users.value.toLocaleString()} change={`${userData.metrics.total_users.change >= 0 ? '+' : ''}${userData.metrics.total_users.change}%`} icon={User} />
+                            <MetricCard title="Active Users" value={userData.metrics.active_users.value.toLocaleString()} change={`${userData.metrics.active_users.change >= 0 ? '+' : ''}${userData.metrics.active_users.change}%`} icon={UserCheck} />
+                            <MetricCard title="New This Month" value={userData.metrics.new_users_this_month.value.toLocaleString()} change={`${userData.metrics.new_users_this_month.change >= 0 ? '+' : ''}${userData.metrics.new_users_this_month.change}%`} icon={TrendingUp} />
+                            <MetricCard title="Conversion Rate" value={`${userData.metrics.conversion_rate.value}%`} change={`${userData.metrics.conversion_rate.change >= 0 ? '+' : ''}${userData.metrics.conversion_rate.change}%`} icon={UserX} />
                         </div>
+                        <Tabs defaultValue="overview" className="space-y-6">
+                            <TabsList className="bg-muted p-1">
+                                <TabsTrigger value="overview" className="data-[state=active]:bg-background">
+                                    Overview
+                                </TabsTrigger>
+                                <TabsTrigger value="management" className="data-[state=active]:bg-background">
+                                    User Management
+                                </TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="overview" className="space-y-6">
+                                {/* User Analytics */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <UserGrowthChart value={userData.charts} />
+                                    <UserRetentionChart retentionData={userData.charts.retention_rates} />
+                                </div>
 
-                        {/* User Analytics */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <UserGrowthChart  value={userData.charts}/>
-                            <UserRetentionChart retentionData={userData.charts.retention_rates} />
-                        </div>
-
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <ActiveVsInactiveUsers activeInactive={userData.metrics} />
-                            <UserRoleDistribution distributionRole={userData.roles}/>
-                        </div>
-
-                        {/* User Table */}
-                        <UserManagementTable user_list={userData.user_list}/>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <ActiveVsInactiveUsers activeInactive={userData.metrics} />
+                                    <UserRoleDistribution distributionRole={userData.roles} />
+                                </div>
+                            </TabsContent>
+                            {/* User Table */}
+                            <TabsContent value="management" className="space-y-6">
+                                <UserManagementTable user_list={userData.user_list} />
+                            </TabsContent>
+                        </Tabs>
                     </div>
                 </main>
             </div>
