@@ -20,6 +20,8 @@ import { USER_ROLES } from "@/config/routeConfig"
 import Unauthorized from "@/pages/misc/Unauthorized"
 import ResetPassword from "@/pages/Auth/ResetPassword"
 import Propertiespage from "@/pages/Dashboard/Admin/Properties/Propertiespage"
+import ListingPage from "@/pages/Dashboard/Seller/properties/ListingPage"
+import FindProperties from "@/pages/Dashboard/Buyer/FindProperties"
 
 // Create the data router
 export const router = createBrowserRouter([
@@ -113,21 +115,82 @@ export const router = createBrowserRouter([
             Component: ManageProperties,
           },
           {
-          path: "users",
-          element: (
-            <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
-              <UserManagementPage />              
-            </ProtectedRoute>
-          )
+            path: "users",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
+                <UserManagementPage />
+              </ProtectedRoute>
+            )
           },
           {
-          path: "properties",
-          element: (
-            <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
-              <Propertiespage />              
-            </ProtectedRoute>
-          )
+            path: "properties",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
+                <Propertiespage />
+              </ProtectedRoute>
+            )
           },
+        ],
+      },
+      {
+        path: "seller",
+        element: (
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        ),
+        children: [
+          {
+            index: true,
+            Component: Dashboard,
+          },
+          {
+            path: "add-property",
+            Component: AddProperty,
+          },
+          {
+            path: "manage-properties",
+            Component: ManageProperties,
+          },
+          {
+            path: "properties",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.SELLER]}>
+                <ListingPage />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: "properties/:id/edit",
+            element: (
+              <ProtectedRoute>
+                <AddProperty />
+              </ProtectedRoute>
+            ),
+            errorElement: <div>Error loading property</div>,
+          },
+        ],
+      },
+      {
+        path: "buyer",
+        element: (
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        ),
+        children: [
+          {
+            index: true,
+            Component: Dashboard,
+          },   
+          {
+            path : "/buyer/search",
+            element:(
+              <ProtectedRoute allowedRoles={[USER_ROLES.BUYER]}>
+                <FindProperties />
+              </ProtectedRoute>
+            )
+          },         
         ],
       },
       {
@@ -135,8 +198,8 @@ export const router = createBrowserRouter([
         Component: NotFound,
       },
       {
-        path:"unauthorized",
-        Component :Unauthorized
+        path: "unauthorized",
+        Component: Unauthorized
       }
     ],
   },

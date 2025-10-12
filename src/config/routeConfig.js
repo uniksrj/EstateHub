@@ -36,4 +36,5 @@ export const ROUTE_PERMISSIONS = {
   
   // Buyers, Sellers, Investors, Renters (No admin panel access)
   '/dashboard': ADMIN_PANEL_ACCESS // Main dashboard access
+  
 }

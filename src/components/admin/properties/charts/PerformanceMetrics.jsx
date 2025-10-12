@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 
 const PerformanceMetrics = ({ data }) => {
+  console.log("performance data :",data);
+  
   return (
     <Card className="bg-card border-border">
       <CardHeader>

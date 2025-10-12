@@ -4,19 +4,16 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { Building } from 'lucide-react';
 import { useChartColors } from '@/hooks/useTheme';
 
-const PropertyTypesChart = ({ data }) => {
+const PropertyTypesChart = ({ data }) => {  
+  
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;      
-      
       return (
         <div className="bg-card dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-lg shadow-lg">
           <p className="font-semibold">{data.name}</p>
           <p className="text-sm" style={{ color: data.color }}>
-            Count: {data.count}
-          </p>
-          <p className="text-sm text-gray-600">
-            Percentage: {payload[0].value.toFixed(1)}%
+            Count: {data.value}
           </p>
         </div>
       );

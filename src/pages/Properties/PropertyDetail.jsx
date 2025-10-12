@@ -37,8 +37,17 @@ const PropertyDetail = () => {
   useEffect(() => {
     fetchProperty()
     toggleFavorite()
+    trackPropertyView(id);
   }, [id])
 
+
+  const trackPropertyView = async (propertyId,source='direct') => {
+    try {
+      await propertiesAPI.saveViewById(propertyId, {view_source: source})
+    } catch (error) {
+      console.error('Error tracking view:', error)
+    }
+  }
   const fetchProperty = async () => {
     setLoading(true)
     try {

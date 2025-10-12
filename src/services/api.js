@@ -104,12 +104,15 @@ export const authAPI = {
 // Properties API calls
 export const propertiesAPI = {
   getAll: (params) => api.get("/api/properties", { params }),
-  getById: (id) => api.get(`/api/properties/${id}`),
   create: (propertyData) => api.post("/api/property/add", propertyData),
+  getById: (id) => api.get(`/api/properties/${id}`),
+  saveViewById: (id,details) => api.post(`/api/properties/${id}`,details),
   update: (id, propertyData) => api.put(`/api/properties/${id}`, propertyData),
   delete: (id) => api.delete(`/api/properties/${id}`),
   search: (searchParams) => api.get("/properties/search", { params: searchParams }),
   getFeatured: () => api.get("/properties/featured"),
+  getPropertyListByUser :(searchData) => api.get("/api/propertiesList", {searchData}),
+  getDashboardListByUser :(searchData) => api.get("/api/seller/dashboard", {searchData}),
 }
 
 // User API calls

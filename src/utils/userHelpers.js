@@ -42,3 +42,29 @@
       default: return 'bg-gray-100 text-gray-800 border border-gray-200'; // Unknown
     }
   };
+
+  export function getStatusColor(status) {
+  const colors = {
+    'for_sale': 'bg-green-100 text-green-800',
+    'under_contract': 'bg-yellow-100 text-yellow-800',
+    'sold': 'bg-gray-100 text-gray-800'
+  }
+  return colors[status] || 'bg-gray-100 text-gray-800'
+}
+
+export function getStatusText(status) {
+  const texts = {
+    'for_sale': 'For Sale',
+    'under_contract': 'Under Contract',
+    'sold': 'Sold'
+  }
+  return texts[status] || status
+}
+
+export  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+    }).format(price)
+  }

@@ -17,6 +17,7 @@ import {
   Briefcase,
   Calculator,
   TrendingUp,
+  User,
 } from "lucide-react";
 
 export const sidebars = {
@@ -54,14 +55,17 @@ export const sidebars = {
     { label: "Property Alerts", path: "/buyer/alerts", icon: Bell },
     { label: "My Inquiries", path: "/buyer/inquiries", icon: MessageSquare },
     { label: "Schedule Tours", path: "/buyer/tours", icon: Calendar },
+    { label: "My Offers", path: "/buyer/offers", icon: Tag }, // ← ADD THIS
   ],
 
   seller: [
-    { label: "Sell Property", path: "/seller/list", icon: Plus },
+    { label: "Dashboard", path: "/seller", icon: LayoutDashboard },
     { label: "My Listings", path: "/seller/properties", icon: Home },
-    { label: "Offers", path: "/seller/offers", icon: Tag },
+    { label: "Offers & Inquiries", path: "/seller/offers", icon: Tag },
     { label: "Property Views", path: "/seller/analytics", icon: BarChart3 },
+    { label: "Messages", path: "/seller/messages", icon: MessageSquare },
     { label: "Documents", path: "/seller/documents", icon: FileText },
+    { label: "Profile", path: "/seller/profile", icon: User },
   ],
 
   investor: [
@@ -81,22 +85,22 @@ export const sidebars = {
 };
 
 export const filterOptions = {
-    roles: [
-      { label: 'All Roles', value: 'All' },
-      { label: 'Admin', value: '2' },
-      { label: 'Agent', value: '3' },
-      { label: 'Broker', value: '4' },
-      { label: 'Buyer', value: '5' },
-      { label: 'Seller', value: '6' },
-      { label: 'Investor', value: '7' },
-      { label: 'Renter', value: '8' }
-    ],
+  roles: [
+    { label: 'All Roles', value: 'All' },
+    { label: 'Admin', value: '2' },
+    { label: 'Agent', value: '3' },
+    { label: 'Broker', value: '4' },
+    { label: 'Buyer', value: '5' },
+    { label: 'Seller', value: '6' },
+    { label: 'Investor', value: '7' },
+    { label: 'Renter', value: '8' }
+  ],
 
-    statuses: [
-      { label: 'All Statuses', value: 'All' },
-      { label: 'Active', value: '1' },
-      { label: 'Inactive', value: '0' },
-      { label: 'Pending Verification', value: 'pending' },
-      { label: 'Suspended', value: 'suspended' }
-    ]
-  };
+  statuses: [
+    { label: 'All Statuses', value: 'All' },
+    { label: 'Active', value: '1' },
+    { label: 'Inactive', value: '0' },
+    { label: 'Pending Verification', value: 'pending' },
+    { label: 'Suspended', value: 'suspended' }
+  ]
+};

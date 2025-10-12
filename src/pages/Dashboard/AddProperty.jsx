@@ -121,10 +121,10 @@ const AddProperty = () => {
         !data.bathrooms?.trim() || !data.sq_ft?.trim() || !data.city?.trim() ||
         !data.state?.trim() || !data.country?.trim() || !data.zip_code?.trim()
       ) {
+        setError("Please fill in all required fields.")
         toast.error("Validation Error", {
           description: "Please fill in all required fields.",
         })
-        setError("Please fill in all required fields.")
         setLoading(false)
         return;
       }
@@ -138,19 +138,19 @@ const AddProperty = () => {
 
       if (isNaN(price) || isNaN(beds) || isNaN(baths) || isNaN(sqft) ||
         (yearBuilt && isNaN(yearBuilt)) || (garage && isNaN(garage))) {
+        setError("Please enter valid numeric values for Price, Bedrooms, Bathrooms, Square Feet, Year Built, and Garage.")
         toast.error("Validation Error", {
           description: "Please enter valid numeric values for Price, Bedrooms, Bathrooms, Square Feet, Year Built, and Garage.",
         })
-        setError("Please enter valid numeric values for Price, Bedrooms, Bathrooms, Square Feet, Year Built, and Garage.")
         setLoading(false)
         return;
       }
 
       if (yearBuilt && (yearBuilt < 1800 || yearBuilt > new Date().getFullYear())) {
+        setError(`Year Built must be between 1800 and ${new Date().getFullYear()}.`)
         toast.error("Validation Error", {
           description: `Year Built must be between 1800 and ${new Date().getFullYear()}.`,
         })
-        setError(`Year Built must be between 1800 and ${new Date().getFullYear()}.`)
         setLoading(false)
         return;
       }
@@ -183,11 +183,12 @@ const AddProperty = () => {
         state: { message: "Property added successfully!" },
       })
     } catch (err) {
-      console.log(err);            
-      // toast.error("Error", {
-      //   description: `(${err.data?.error_type}) Failed to ${btnTxt} property. Please try again.`,
-      // });
+      console.log(err);
       setError(err.response?.data?.error_type || `Failed to ${btnTxt} property. Please try again.`);
+      toast.error("Error", {
+        description: `(${err.data?.error_type}) Failed to ${btnTxt} property. Please try again.`,
+      });
+
     } finally {
       setLoading(false)
     }
@@ -212,17 +213,14 @@ const AddProperty = () => {
               ) : (
                 <h1 className="text-3xl font-bold">Add New Property</h1>
               )
-            }  
-            <p className="text-muted-foreground">Fill in the details below to {isEdit ? "update" : "add"} your property.</p>          
+            }
+            <p className="text-muted-foreground">Fill in the details below to {isEdit ? "update" : "add"} your property.</p>
           </div>
         </div>
 
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
           {error && (
             <Toaster position="top-right" />
-            // <Alert variant="destructive">
-            //   <AlertDescription>{error}</AlertDescription>
-            // </Alert>
           )}
 
           {/* Basic Information */}
