@@ -14,14 +14,16 @@ export default function FavoritePage() {
     const [properties, setProperties] = useState([])
     const [loading, setLoading] = useState(false)
     const [lastPage, setLastPage] = useState(1);
-    const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page")) || 1);
-    const [favorites, setFavorites] = useState([])
+    const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page")) || 1); 
+    const params = new URLSearchParams(searchParams);  
+    params.set('isUserFavorite', true);
 
     useEffect(() => {
         const fetchProperties = async () => {
             setLoading(true)
             try {
                 const params = Object.fromEntries(searchParams)
+                params.isUserFavorite = true
                 const response = await propertiesAPI.getAll(params)
                 setLastPage(response.data.last_page)
                 let settleData = response.data.data;
@@ -58,9 +60,15 @@ export default function FavoritePage() {
         <div className="min-h-screen bg-background">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-12">
-                <div className="container mx-auto px-4">
-                    <h1 className="text-4xl font-bold mb-4">Find Your Dream Home</h1>
-                    <p className="text-xl opacity-90">Discover {properties.length} properties matching your criteria</p>
+                <div className="container mx-auto px-4 text-center">
+                    <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
+                        Your Favorite Properties
+                    </h1>
+                    <p className="text-lg md:text-xl opacity-90">
+                        You’ve saved <span className="font-semibold">{properties.length}</span>
+                        {properties.length === 1 ? " property" : " properties"} you love.
+                        Explore them anytime and make your dream home a reality.
+                    </p>
                 </div>
             </div>
 
