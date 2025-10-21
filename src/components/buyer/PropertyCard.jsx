@@ -6,24 +6,50 @@ import { Badge, Bath, Bed, Calendar, Eye, Heart, MapPin, Square } from "lucide-r
 import { Button } from "../ui/button"
 import { userAPI } from "@/services/api"
 import ContactSellerDialog from "./ContactSellerDialog"
+import { useAuth } from "@/hooks/useAuth"
+import { toast, Toaster } from "sonner"
 
 
-export function PropertyCard({ property, formatPrice }) {
-    const [isSaved, setIsSaved] = useState(false)
+export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
+    const { user } = useAuth()
+    const [isSaved, setIsSaved] = useState(
+        property.favorites?.[0]?.user_id === user.id
+    )
 
-    const handleSaveProperty = async (e) => {
+    const handleFavoriteProperty = async (e) => {
         e.preventDefault()
         e.stopPropagation()
+        const optimisticValue = !isSaved
+        setIsSaved(optimisticValue)
+        handleFavoriteChange?.(property.id, optimisticValue)
         try {
-            await userAPI.toggleFavorite({ property_id: property.id })
-            setIsSaved(!isSaved)
+            setIsSaved(prev => !prev)
+            let resData = await userAPI.toggleFavorite({ property_id: property.id });
+            setIsSaved(resData.data.is_favorite)
+            handleFavoriteChange?.(property.id, resData.data.is_favorite)
         } catch (error) {
             console.error(error);
+            setIsSaved(prev => !prev)
+            toast.error("Failed to change favorite status.");
         }
     }
 
     return (
         <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
+                toastOptions={{
+                    style: {
+                        borderRadius: '8px',
+                        padding: '16px',
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        background: '#f56565',
+                        border: 'none',
+                    },
+                }}
+            />
             <Link to={`/properties/${property.id}/view`}>
                 <div className="relative">
                     <img
@@ -101,7 +127,7 @@ export function PropertyCard({ property, formatPrice }) {
                         variant="ghost"
                         size="sm"
                         className="border"
-                        onClick={handleSaveProperty}
+                        onClick={handleFavoriteProperty}
                     >
                         <Heart className={`h-4 w-4 ${isSaved ? "fill-red-500 text-red-500" : ""}`} />
                     </Button>

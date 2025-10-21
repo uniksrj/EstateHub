@@ -22,7 +22,7 @@ import ResetPassword from "@/pages/Auth/ResetPassword"
 import Propertiespage from "@/pages/Dashboard/Admin/Properties/Propertiespage"
 import ListingPage from "@/pages/Dashboard/Seller/properties/ListingPage"
 import FindProperties from "@/pages/Dashboard/Buyer/FindProperties"
-
+import FavoritePage from "@/pages/Dashboard/Buyer/FavoritePage"
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -174,23 +174,14 @@ export const router = createBrowserRouter([
       {
         path: "buyer",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={[USER_ROLES.BUYER]}>
             <AdminLayout />
           </ProtectedRoute>
         ),
         children: [
-          {
-            index: true,
-            Component: Dashboard,
-          },   
-          {
-            path : "/buyer/search",
-            element:(
-              <ProtectedRoute allowedRoles={[USER_ROLES.BUYER]}>
-                <FindProperties />
-              </ProtectedRoute>
-            )
-          },         
+          { index: true, Component: Dashboard },
+          { path: "search", Component: FindProperties } ,
+          {path : "favorites", Component : FavoritePage}
         ],
       },
       {

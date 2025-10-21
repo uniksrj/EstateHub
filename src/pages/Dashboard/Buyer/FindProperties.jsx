@@ -27,6 +27,7 @@ export default function FindProperties() {
         city: "all",
         status: "for_sale"
     })
+    const [favorites, setFavorites] = useState([])
 
     useEffect(() => {
         const fetchProperties = async () => {
@@ -103,6 +104,14 @@ export default function FindProperties() {
         setSearchParams(params);
     }
 
+    const handleFavoriteChange = (propertyId, isNowFavorite) => {
+        setFavorites(prev =>
+            isNowFavorite
+                ? prev 
+                : prev.filter(p => p.id !== propertyId) 
+        )
+    }
+    
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
@@ -115,8 +124,10 @@ export default function FindProperties() {
 
             <div className="container mx-auto px-4 py-8">
                 <div className="flex flex-col lg:flex-row gap-8">
+
                     {/* Filters Sidebar */}
                     <Filtersidebar filteredProperties={filteredProperties} resetFilters={resetFilters} filters={filters} handleFilterChange={handleFilterChange} properties={properties} />
+
                     {/* Properties Grid */}
                     <div className="lg:w-3/4">
 
@@ -130,10 +141,12 @@ export default function FindProperties() {
                         {!loading && (
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                 {filteredProperties.map(property => (
-                                    <PropertyCard key={property.id} property={property} formatPrice={formatPrice} />
+                                    <PropertyCard key={property.id} property={property} formatPrice={formatPrice} handleFavoriteChange={handleFavoriteChange}/>
                                 ))}
                             </div>
                         )}
+
+                        {/* Pagination Link */}
                         <div className="col-span-full flex justify-center mt-4">
                             <Paginationlink currentPage={currentPage} lastPage={lastPage} onPageChange={handlePageChange} />
                         </div>
