@@ -124,6 +124,7 @@ export const userAPI = {
   toggleFavorite: (details) => api.post(`/api/properties/toggle-favorite`, details),
   removeFromFavorites: (propertyId) => api.delete(`/user/favorites/${propertyId}`),
   getUser_metrics: (params) => api.get("/api/auth/user_metrics", { params }),
+  storeBuyerInquiry : (details) => api.post(`/api/user/store-inquiry`, details),
 }
 
 export const superAdminAPI = {

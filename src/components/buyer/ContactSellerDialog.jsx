@@ -18,8 +18,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { MapPin, Bed, Bath, Square, Mail, Phone, Calendar, Home, User, MessageSquare, Clock, Send } from "lucide-react"
 import { PropertySidebar } from "./PropertySidebar"
+import { userAPI } from "@/services/api"
 
 const ContactSellerDialog = ({ property, triggerButton = null }) => {
+    console.log("this is project id details : ", property);
+    
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
@@ -34,7 +37,8 @@ const ContactSellerDialog = ({ property, triggerButton = null }) => {
         preferred_location: "",
         bedrooms: "",
         bathrooms: "",
-        additional_requirements: ""
+        additional_requirements: "",
+        property_id : ""
     })
 
     const handleInputChange = (field, value) => {
@@ -44,25 +48,14 @@ const ContactSellerDialog = ({ property, triggerButton = null }) => {
         }))
     }
 
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
-
-        try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500))
-
-            // In real app, you would call:
-            // await fetch('/api/inquiries', {
-            //   method: 'POST',
-            //   headers: { 'Content-Type': 'application/json' },
-            //   body: JSON.stringify({
-            //     property_id: property.id,
-            //     ...formData
-            //   })
-            // })
-
-            // Success - close dialog and show success message
+        const dataToSend = { ...formData, property_id: property.id }
+        try {             
+            const response = await userAPI.storeBuyerInquiry(dataToSend);
+            setLoading(false);
             setOpen(false)
             alert('Message sent successfully! The seller will contact you soon.')
 
@@ -79,7 +72,8 @@ const ContactSellerDialog = ({ property, triggerButton = null }) => {
                 preferred_location: "",
                 bedrooms: "",
                 bathrooms: "",
-                additional_requirements: ""
+                additional_requirements: "",
+                property_id : ""
             })
 
         } catch (error) {
