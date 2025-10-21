@@ -3,7 +3,6 @@
 import { createContext, useState, useEffect } from "react"
 import { authAPI } from "../services/api"
 import { toast } from "sonner"
-import { fi } from "date-fns/locale"
 
 const AuthContext = createContext()
 
