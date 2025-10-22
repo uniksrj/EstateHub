@@ -26,10 +26,12 @@ import {
 import { propertiesAPI, userAPI } from "../../services/api"
 import InquiryForm from "@/components/common/InquiryForm"
 import ImageCarousel from "@/components/common/ImageCarousel"
-import AmenityIcons from "@/components/common/AmenityIcons "
+import AmenityIcons from "@/components/common/AmenityIcons"
+import { useAuth } from "@/hooks/useAuth"
 
 const PropertyDetail = () => {
   const { id } = useParams()
+  const { user } = useAuth()
   const [property, setProperty] = useState(null)
   const [loading, setLoading] = useState(true)
   const [isFavorite, setIsFavorite] = useState(null);
@@ -40,10 +42,11 @@ const PropertyDetail = () => {
     trackPropertyView(id);
   }, [id])
 
+  console.log("This is user details :", user);
 
-  const trackPropertyView = async (propertyId,source='direct') => {
+  const trackPropertyView = async (propertyId, source = 'direct') => {
     try {
-      await propertiesAPI.saveViewById(propertyId, {view_source: source})
+      await propertiesAPI.saveViewById(propertyId, { view_source: source })
     } catch (error) {
       console.error('Error tracking view:', error)
     }
@@ -69,9 +72,9 @@ const PropertyDetail = () => {
     }).format(price)
   }
 
-  const toggleFavorite = async() => {    
+  const toggleFavorite = async () => {
     try {
-      const response = await userAPI.toggleFavorite({property_id : id})
+      const response = await userAPI.toggleFavorite({ property_id: id })
       setIsFavorite(response.data.is_favorite);
     } catch (error) {
       console.error("Error fetching property:", error)
@@ -161,7 +164,7 @@ const PropertyDetail = () => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm" onClick={toggleFavorite}  disabled={isFavorite === null}>
+                  <Button variant="outline" size="sm" onClick={toggleFavorite} disabled={isFavorite === null}>
                     <Heart className={`h-4 w-4 ${isFavorite ? "fill-current text-red-500" : ""}`} />
                   </Button>
                   <Button variant="outline" size="sm">
@@ -243,56 +246,48 @@ const PropertyDetail = () => {
               </div>
             </div>
           </div>
+          {user.role_id !== 6 && (
+            <div className="space-y-6">
+              <Card className="sticky top-8">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold mb-4">Contact Agent</h3>
 
-          {/* Contact Card */}
-          <div className="space-y-6">
-            <Card className="sticky top-8">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Contact Agent</h3>
-
-                {/* Agent Info */}
-                <div className="flex items-center space-x-3 mb-6">
-                  <img
-                    src={property.agent?.image || "/placeholder.svg?height=60&width=60&query=professional realtor"}
-                    alt={property.agent?.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <div className="font-semibold">{property.agent?.name}</div>
-                    <div className="text-sm text-muted-foreground">Licensed Agent</div>
+                  {/* Agent Info */}
+                  <div className="flex items-center space-x-3 mb-6">
+                    <img
+                      src={property.agent?.image || "/placeholder.svg?height=60&width=60&query=professional realtor"}
+                      alt={property.agent?.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">{property.agent?.name}</div>
+                      <div className="text-sm text-muted-foreground">Licensed Agent</div>
+                    </div>
                   </div>
-                </div>
 
-                <Separator className="mb-6" />
+                  <Separator className="mb-6" />
 
-                {/* Contact Buttons */}
-                <div className="space-y-3">
-                  <Button className="w-full">
-                    <Phone className="mr-2 h-4 w-4" />
-                    Call {property.agent?.phone}
-                  </Button>
-                  <Button variant="outline" className="w-full bg-transparent">
-                    <Mail className="mr-2 h-4 w-4" />
-                    Send Email
-                  </Button>
-                </div>
+                  {/* Contact Buttons */}
+                  <div className="space-y-3">
+                    <Button className="w-full">
+                      <Phone className="mr-2 h-4 w-4" />
+                      Call {property.agent?.phone}
+                    </Button>
+                    <Button variant="outline" className="w-full bg-transparent">
+                      <Mail className="mr-2 h-4 w-4" />
+                      Send Email
+                    </Button>
+                  </div>
 
-                <Separator className="my-6" />
-                <div className="">
-                  <InquiryForm propertyId={property.id} propertyTitle={property.title} />
-                </div>
+                  <Separator className="my-6" />
 
-                {/* Schedule Tour */}
-                {/* <div>
-                  <h4 className="font-semibold mb-3">Schedule a Tour</h4>
-                  <Button variant="outline" className="w-full mb-2 bg-transparent">
-                    Request Showing
-                  </Button>
-                  <p className="text-xs text-muted-foreground text-center">Available 7 days a week</p>
-                </div> */}
-              </CardContent>
-            </Card>
-          </div>
+                  <div>
+                    <InquiryForm propertyId={property.id} propertyTitle={property.title} />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
         {/* <div className="mt-12">
           <InquiryForm propertyId={property.id} propertyTitle={property.title}/>

@@ -23,6 +23,8 @@ import Propertiespage from "@/pages/Dashboard/Admin/Properties/Propertiespage"
 import ListingPage from "@/pages/Dashboard/Seller/properties/ListingPage"
 import FindProperties from "@/pages/Dashboard/Buyer/FindProperties"
 import FavoritePage from "@/pages/Dashboard/Buyer/FavoritePage"
+import { SellerInquiryPage } from "@/pages/Dashboard/Seller/SellerInquiry"
+import { BuyerInquiryPage } from "@/pages/Dashboard/Buyer/BuyerInquiry"
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -135,39 +137,35 @@ export const router = createBrowserRouter([
       {
         path: "seller",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={[USER_ROLES.SELLER]}>
             <AdminLayout />
           </ProtectedRoute>
         ),
         children: [
           {
             index: true,
-            Component: Dashboard,
+            element: <Dashboard />,
           },
           {
             path: "add-property",
-            Component: AddProperty,
+            element: <AddProperty />,
           },
           {
             path: "manage-properties",
-            Component: ManageProperties,
+            element: <ManageProperties />,
           },
           {
             path: "properties",
-            element: (
-              <ProtectedRoute allowedRoles={[USER_ROLES.SELLER]}>
-                <ListingPage />
-              </ProtectedRoute>
-            )
+            element: <ListingPage />,
           },
           {
             path: "properties/:id/edit",
-            element: (
-              <ProtectedRoute>
-                <AddProperty />
-              </ProtectedRoute>
-            ),
+            element: <AddProperty />,
             errorElement: <div>Error loading property</div>,
+          },
+          {
+            path: "inquiries",
+            element: <SellerInquiryPage />,
           },
         ],
       },
@@ -180,8 +178,12 @@ export const router = createBrowserRouter([
         ),
         children: [
           { index: true, Component: Dashboard },
-          { path: "search", Component: FindProperties } ,
-          {path : "favorites", Component : FavoritePage}
+          { path: "search", Component: FindProperties },
+          { path: "favorites", Component: FavoritePage },
+          {
+            path: "inquiries",
+            element: <BuyerInquiryPage />,
+          },
         ],
       },
       {

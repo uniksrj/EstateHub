@@ -63,7 +63,7 @@ export const sidebars = {
     { label: "My Listings", path: "/seller/properties", icon: Home },
     { label: "Offers & Inquiries", path: "/seller/offers", icon: Tag },
     { label: "Property Views", path: "/seller/analytics", icon: BarChart3 },
-    { label: "Messages", path: "/seller/messages", icon: MessageSquare },
+    { label: "Messages", path: "/seller/inquiries", icon: MessageSquare },
     { label: "Documents", path: "/seller/documents", icon: FileText },
     { label: "Profile", path: "/seller/profile", icon: User },
   ],

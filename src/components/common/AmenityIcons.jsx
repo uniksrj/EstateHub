@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 
 const AmenityIcons = ({ property }) => {
-    console.log('Property in AmenityIcons:', property);
     
   const amenityConfig = [
     { field: 'has_parking', icon: Car, label: 'Parking' },

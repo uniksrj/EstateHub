@@ -302,3 +302,114 @@ export const demoPropertiesList = [
     is_featured: false
   }
 ]
+
+// Demo data that will work immediately
+export const demoInquiries = [
+  {
+    id: 1,
+    buyerName: "John Smith",
+    buyerEmail: "john.smith@email.com",
+    buyerPhone: "+1 (555) 123-4567",
+    propertyTitle: "Modern Downtown Apartment",
+    propertyId: 101,
+    message: "I'm very interested in this property. Could you please provide more details about the parking situation and recent renovations?",
+    timeline: "1-3 months",
+    budget_min: "300000",
+    budget_max: "400000",
+    status: "new",
+    important: true,
+    createdAt: "2024-01-15T10:30:00Z",
+    responses: []
+  },
+  {
+    id: 2,
+    buyerName: "Sarah Johnson",
+    buyerEmail: "sarah.j@email.com",
+    buyerPhone: "+1 (555) 987-6543",
+    propertyTitle: "Luxury Villa with Pool",
+    propertyId: 102,
+    message: "This villa looks perfect for our family! We'd like to schedule a viewing next week. What are your available times?",
+    timeline: "immediate",
+    budget_min: "1000000",
+    budget_max: "1500000",
+    status: "responded",
+    important: false,
+    createdAt: "2024-01-14T14:20:00Z",
+    responses: [
+      {
+        id: 1,
+        message: "Thank you for your interest! I'm available for viewings on Tuesday and Thursday afternoons. Would either of those work for you?",
+        timestamp: "2024-01-14T16:45:00Z",
+        sender: "seller"
+      }
+    ]
+  },
+  {
+    id: 3,
+    buyerName: "Mike Chen",
+    buyerEmail: "mike.chen@email.com",
+    buyerPhone: "+1 (555) 456-7890",
+    propertyTitle: "Modern Downtown Apartment",
+    propertyId: 101,
+    message: "Is the apartment pet-friendly? We have two small dogs. Also, what utilities are included in the HOA fees?",
+    timeline: "3-6 months",
+    budget_min: "350000",
+    budget_max: "380000",
+    status: "new",
+    important: false,
+    createdAt: "2024-01-13T09:15:00Z",
+    responses: []
+  },
+  {
+    id: 4,
+    buyerName: "Emily Davis",
+    buyerEmail: "emily.davis@email.com",
+    buyerPhone: "+1 (555) 234-5678",
+    propertyTitle: "Luxury Villa with Pool",
+    propertyId: 102,
+    message: "We're very serious buyers and have pre-approval. Could you share the HOA rules and recent utility costs?",
+    timeline: "immediate",
+    budget_min: "1200000",
+    budget_max: "1400000",
+    status: "closed",
+    important: true,
+    createdAt: "2024-01-10T11:45:00Z",
+    responses: [
+      {
+        id: 1,
+        message: "Great to hear you're pre-approved! I've sent the HOA documents to your email. The average utilities run about $300-400 monthly.",
+        timestamp: "2024-01-10T13:20:00Z",
+        sender: "seller"
+      },
+      {
+        id: 2,
+        message: "Thank you for the information. We've decided to move forward with another property, but appreciate your help!",
+        timestamp: "2024-01-12T10:30:00Z",
+        sender: "buyer"
+      }
+    ]
+  },
+  {
+    id: 5,
+    buyerName: "Robert Wilson",
+    buyerEmail: "robert.w@email.com",
+    buyerPhone: "+1 (555) 345-6789",
+    propertyTitle: "Modern Downtown Apartment",
+    propertyId: 101,
+    message: "I'm an investor looking for rental properties. What's the current rental market like in this area and potential ROI?",
+    timeline: "1-3 months",
+    budget_min: "320000",
+    budget_max: "360000",
+    status: "responded",
+    important: false,
+    createdAt: "2024-01-12T16:30:00Z",
+    responses: [
+      {
+        id: 1,
+        message: "The rental market is very strong in this area. Similar units rent for $2,800-3,200/month. Would you like me to send you a detailed ROI analysis?",
+        timestamp: "2024-01-13T09:00:00Z",
+        sender: "seller"
+      }
+    ]
+  }
+];
