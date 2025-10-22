@@ -1,27 +1,21 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   MessageSquare,
-  Calendar,
-  User,
-  Mail,
-  Phone,
-  Send,
-  Trash2,
-  Star,
-  Loader2
 } from 'lucide-react';
 import { inquiryWebhookService } from '@/services/webhook';
 import { toast } from 'sonner';
 import { demoInquiries } from '@/data/demoData';
-import { formatDate, formatDateTime } from '@/lib/utils';
 import { HeaderLine } from './inquiry/HeaderLine';
 import { FilterInquiryPage } from './inquiry/FilterInquiryPAge';
 import { InquiryList } from './inquiry/InquiryList';
+import { SidebarHeaderText } from './inquiry/SidebarHeaderText';
+import { BuyerInfo } from './inquiry/BuyerInfo';
+import { OriginalMsg } from './inquiry/OriginalMsg';
+import { HistoryInquiry } from './inquiry/HistoryInquiry';
+import { ActionButton } from './inquiry/ActionButton';
+import { ResponseInquiry } from './inquiry/ResponseInquiry';
 
 export const InquiryPage = ({
   userId,
@@ -194,142 +188,47 @@ export const InquiryPage = ({
             <>
               <Card>
                 <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-xl">{selectedInquiry.buyerName}</CardTitle>
-                      <CardDescription className="text-base">
-                        Inquiry about {selectedInquiry.propertyTitle}
-                      </CardDescription>
-                    </div>
-                    <Badge variant={
-                      selectedInquiry.status === 'new' ? 'default' :
-                        selectedInquiry.status === 'responded' ? 'secondary' : 'outline'
-                    }>
-                      {selectedInquiry.status}
-                    </Badge>
-                  </div>
+                  {/* Header Text  */}
+                  <SidebarHeaderText 
+                  selectedInquiry={selectedInquiry}
+                  />
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Buyer Information */}
-                  <div>
-                    <h4 className="font-semibold mb-3 text-lg border-b pb-2">Buyer Information</h4>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex items-center gap-2 p-2 bg-muted rounded-lg">
-                        <User className="h-4 w-4 text-muted-foreground" />
-                        <span><strong>Name:</strong> {selectedInquiry.buyerName}</span>
-                      </div>
-                      <div className="flex items-center gap-2 p-2 bg-muted rounded-lg">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
-                        <span><strong>Email:</strong> {selectedInquiry.buyerEmail}</span>
-                      </div>
-                      <div className="flex items-center gap-2 p-2 bg-muted rounded-lg">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
-                        <span><strong>Phone:</strong> {selectedInquiry.buyerPhone}</span>
-                      </div>
-                      <div className="flex items-center gap-2 p-2 bg-muted rounded-lg">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        <span><strong>Timeline:</strong> {selectedInquiry.timeline}</span>
-                      </div>
-                      <div className="p-2 bg-muted rounded-lg">
-                        <strong>Budget Range:</strong> ${parseInt(selectedInquiry.budget_min).toLocaleString()} - ${parseInt(selectedInquiry.budget_max).toLocaleString()}
-                      </div>
-                    </div>
-                  </div>
+                  <BuyerInfo 
+                  selectedInquiry={selectedInquiry}
+                  />
 
                   {/* Original Message */}
-                  <div>
-                    <h4 className="font-semibold mb-3 text-lg border-b pb-2">Original Message</h4>
-                    <div className="bg-muted p-4 rounded-lg">
-                      <p className="text-sm whitespace-pre-wrap">{selectedInquiry.message}</p>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        Received: {formatDateTime(selectedInquiry.createdAt)}
-                      </p>
-                    </div>
-                  </div>
+                  <OriginalMsg 
+                  selectedInquiry={selectedInquiry}
+                  />
 
                   {/* Conversation History */}
                   {selectedInquiry.responses && selectedInquiry.responses.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold mb-3 text-lg border-b pb-2">Conversation History</h4>
-                      <div className="space-y-3 max-h-60 overflow-y-auto">
-                        {selectedInquiry.responses.map((response) => (
-                          <div
-                            key={response.id}
-                            className={`p-3 rounded-lg ${response.sender === 'seller'
-                                ? 'bg-primary text-primary-foreground ml-8'
-                                : 'bg-muted mr-8'
-                              }`}
-                          >
-                            <p className="text-sm whitespace-pre-wrap">{response.message}</p>
-                            <p className={`text-xs mt-1 ${response.sender === 'seller' ? 'text-primary-foreground/80' : 'text-muted-foreground'
-                              }`}>
-                              {formatDateTime(response.timestamp)} • {response.sender === 'seller' ? 'You' : selectedInquiry.buyerName}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                    <HistoryInquiry 
+                    selectedInquiry={selectedInquiry}
+                    />
                   )}
 
                   {/* Response Input */}
                   {enableActions && (
-                    <div>
-                      <h4 className="font-semibold mb-3 text-lg border-b pb-2">Your Response</h4>
-                      <Textarea
-                        placeholder="Type your response to the buyer..."
-                        value={responseMessage}
-                        onChange={(e) => setResponseMessage(e.target.value)}
-                        rows={5}
-                        className="resize-vertical text-base p-3"
-                      />
-                    </div>
+                    <ResponseInquiry 
+                    responseMessage={responseMessage}
+                    setResponseMessage={setResponseMessage}
+                    />
                   )}
 
                   {/* Action Buttons */}
                   {enableActions && (
-                    <div className="flex gap-3 pt-4">
-                      <Button
-                        onClick={() => sendResponse(selectedInquiry.id)}
-                        disabled={!responseMessage.trim()}
-                        className="flex-1 h-12 text-base"
-                        size="lg"
-                      >
-                        <Send className="h-5 w-5 mr-2" />
-                        Send Response
-                      </Button>
-
-                      <Select
-                        value={selectedInquiry.status}
-                        onValueChange={(value) => updateInquiryStatus(selectedInquiry.id, value)}
-                      >
-                        <SelectTrigger className="w-36 h-12">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="new">New</SelectItem>
-                          <SelectItem value="responded">Responded</SelectItem>
-                          <SelectItem value="closed">Closed</SelectItem>
-                        </SelectContent>
-                      </Select>
-
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        className="h-12 px-3"
-                        onClick={() => toggleImportant(selectedInquiry.id, selectedInquiry.important)}
-                      >
-                        <Star className={`h-5 w-5 ${selectedInquiry.important ? 'fill-amber-500 text-amber-500' : ''}`} />
-                      </Button>
-
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        className="h-12 px-3"
-                        onClick={() => archiveInquiry(selectedInquiry.id)}
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </Button>
-                    </div>
+                    <ActionButton 
+                    sendResponse={sendResponse}
+                    selectedInquiry={selectedInquiry}
+                    responseMessage={responseMessage}
+                    updateInquiryStatus={updateInquiryStatus}
+                    toggleImportant={toggleImportant}
+                    archiveInquiry={archiveInquiry}
+                    />
                   )}
                 </CardContent>
               </Card>
