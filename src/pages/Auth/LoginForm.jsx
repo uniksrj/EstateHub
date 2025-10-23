@@ -22,8 +22,10 @@ const LoginForm = () => {
     const { login } = useAuth()
     const navigate = useNavigate()
     const location = useLocation()
+    console.log("location inside data :", location);
+    
 
-    const from = location.state?.from?.pathname || "/"
+    // const from = location.state?.from?.pathname || "/"
 
     const handleChange = (e) => {
         setFormData({
@@ -41,11 +43,12 @@ const LoginForm = () => {
         try {
             const result = await login(formData)
             if (result.success) {
-                navigate(from, { replace: true })
+                navigate('/', { replace: true })
             } else {
                 setError(result.error)
             }
         } catch (err) {
+            console.error(err);
             setError("An unexpected error occurred. Please try again.")
         } finally {
             setLoading(false)

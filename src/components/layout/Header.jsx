@@ -44,7 +44,11 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       setLoading(true);
-      await logout();
+      let result = await logout();
+      if (result.success) {
+        navigate("/login", { replace: true, state: {} });
+      }
+
     } catch (error) {
       console.error('Logout error:', error);
       setLoading(false);

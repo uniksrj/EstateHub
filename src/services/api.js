@@ -138,4 +138,8 @@ export const superAdminAPI = {
   getAllProperties: (params) => api.get("/api/admin/properties", { params }),
 }
 
+export const webhookAPI = {
+  getInquiryList: (params) => api.get("/api/inquiries", { params }),
+}
+
 export default api

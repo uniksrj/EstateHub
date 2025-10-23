@@ -360,13 +360,21 @@ export const demoInquiries = [
     createdAt: "2024-01-13T09:15:00Z",
     responses: []
   },
-  {
+   {
     id: 4,
     buyerName: "Emily Davis",
-    buyerEmail: "emily.davis@email.com",
+    buyerEmail: "emily.davis@email.com", 
     buyerPhone: "+1 (555) 234-5678",
     propertyTitle: "Luxury Villa with Pool",
     propertyId: 102,
+    propertyPrice: 1400000,
+    propertyCity: "Los Angeles",
+    propertyState: "CA", 
+    propertyBedrooms: 4,
+    propertyBathrooms: 3,
+    propertySqft: 3200,
+    propertyType: "Villa",
+    propertyImage: "/api/placeholder/400/250",
     message: "We're very serious buyers and have pre-approval. Could you share the HOA rules and recent utility costs?",
     timeline: "immediate",
     budget_min: "1200000",
@@ -378,14 +386,18 @@ export const demoInquiries = [
       {
         id: 1,
         message: "Great to hear you're pre-approved! I've sent the HOA documents to your email. The average utilities run about $300-400 monthly.",
+        sender: "seller",
+        sender_id: 1,
         timestamp: "2024-01-10T13:20:00Z",
-        sender: "seller"
+        is_read: true
       },
       {
-        id: 2,
+        id: 2, 
         message: "Thank you for the information. We've decided to move forward with another property, but appreciate your help!",
-        timestamp: "2024-01-12T10:30:00Z",
-        sender: "buyer"
+        sender: "buyer",
+        sender_id: 4,
+        timestamp: "2024-01-12T10:30:00Z", 
+        is_read: true
       }
     ]
   },

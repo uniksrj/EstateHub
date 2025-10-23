@@ -1,16 +1,11 @@
+import { webhookAPI } from "./api";
+
 // Webhook API service for inquiries
 export const inquiryWebhookService = {
   // Get all inquiries for seller
   async getInquiries() {
     try {
-      const response = await fetch('/api/webhook/inquiries', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        }
-      });
-      
+      const response = await webhookAPI.getInquiryList();      
       if (!response.ok) throw new Error('Failed to fetch inquiries');
       return await response.json();
     } catch (error) {
