@@ -2,16 +2,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
+import { Loading } from "@/pages/misc/Loading";
 import { Loader2, Star } from "lucide-react";
 
 export const InquiryList = ({loading , filteredInquiries, setSelectedInquiry ,selectedInquiry , enableActions, toggleImportant}) => {
     return (
         <div className="lg:col-span-2 space-y-4">
             {loading ? (
-                <div className="flex justify-center items-center py-8">
-                    <Loader2 className="h-8 w-8 animate-spin" />
-                    <span className="ml-2">Loading inquiries...</span>
-                </div>
+               <Loading loading={loading} isLineLoader={true} />
             ) : (
                 <>
                     <div className="flex justify-between items-center">

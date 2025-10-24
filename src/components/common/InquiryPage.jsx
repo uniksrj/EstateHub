@@ -40,7 +40,7 @@ export const InquiryPage = ({
   const fetchInquiries = async () => {
     setLoading(true);
     try {
-      const data = await inquiryWebhookService.getInquiries(userId, userType);
+      const data = await inquiryWebhookService.getInquiries();
       setInquiries(data);
     } catch (error) {
       console.error(error);
@@ -73,7 +73,7 @@ export const InquiryPage = ({
     if (!responseMessage.trim()) return;
 
     try {
-      await inquiryWebhookService.sendResponse(inquiryId, responseMessage);
+      await inquiryWebhookService.sendResponse(inquiryId, {"message" : responseMessage});
 
       const newResponse = {
         id: Date.now(),
@@ -195,9 +195,13 @@ export const InquiryPage = ({
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Buyer Information */}
+                  {(!userType === "buyer" && 
                   <BuyerInfo 
                   selectedInquiry={selectedInquiry}
                   />
+                  )}
+                  
+                  
 
                   {/* Original Message */}
                   <OriginalMsg 
