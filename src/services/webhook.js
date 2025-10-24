@@ -5,9 +5,9 @@ export const inquiryWebhookService = {
   // Get all inquiries for seller
   async getInquiries() {
     try {
-      const response = await webhookAPI.getInquiryList();      
-      if (!response.ok) throw new Error('Failed to fetch inquiries');
-      return await response.json();
+      const response = await webhookAPI.getInquiryList();
+      if (response.status !== 200) throw new Error('Failed to fetch inquiries');
+      return response.data;
     } catch (error) {
       console.error('Webhook Error - Get Inquiries:', error);
       throw error;
@@ -25,7 +25,7 @@ export const inquiryWebhookService = {
         },
         body: JSON.stringify({ status })
       });
-      
+
       if (!response.ok) throw new Error('Failed to update status');
       return await response.json();
     } catch (error) {
@@ -37,20 +37,9 @@ export const inquiryWebhookService = {
   // Send response to buyer
   async sendResponse(inquiryId, message) {
     try {
-      const response = await fetch(`/api/webhook/inquiries/${inquiryId}/respond`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        },
-        body: JSON.stringify({ 
-          message,
-          timestamp: new Date().toISOString()
-        })
-      });
-      
-      if (!response.ok) throw new Error('Failed to send response');
-      return await response.json();
+      const response = await webhookAPI.inquiry_respond(inquiryId, message)
+      if (response.status !== 200) throw new Error('Failed to submit response');
+      return response.data;
     } catch (error) {
       console.error('Webhook Error - Send Response:', error);
       throw error;
@@ -68,7 +57,7 @@ export const inquiryWebhookService = {
         },
         body: JSON.stringify({ important })
       });
-      
+
       if (!response.ok) throw new Error('Failed to update important status');
       return await response.json();
     } catch (error) {
@@ -86,7 +75,7 @@ export const inquiryWebhookService = {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         }
       });
-      
+
       if (!response.ok) throw new Error('Failed to archive inquiry');
       return await response.json();
     } catch (error) {

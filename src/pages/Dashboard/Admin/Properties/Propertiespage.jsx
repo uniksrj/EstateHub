@@ -12,6 +12,7 @@ import PerformanceMetrics from '@/components/admin/properties/charts/Performance
 import QuickActions from '@/components/admin/properties/QuickActions';
 import SalesVsListingsChart from '@/components/admin/properties/charts/SalesVsListingsChart';
 import { superAdminAPI } from '@/services/api';
+import { Loading } from '@/pages/misc/Loading';
 
 const PropertiesPage = () => {
   const [propertiesData, setPropertiesData] = useState(null);
@@ -44,19 +45,7 @@ const PropertiesPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-8">
-        <div className="container mx-auto px-4">
-          <div className="animate-pulse">
-            <div className="h-8 bg-muted rounded mb-4 w-1/4"></div>
-            <div className="h-12 bg-muted rounded mb-6"></div>
-            <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-16 bg-muted rounded"></div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      < Loading loading={loading} isLineLoader={true} />
     )
   }
     if (!propertiesData) {

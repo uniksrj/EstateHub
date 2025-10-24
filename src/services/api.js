@@ -140,6 +140,7 @@ export const superAdminAPI = {
 
 export const webhookAPI = {
   getInquiryList: (params) => api.get("/api/inquiries", { params }),
+  inquiry_respond: (id, userData) => api.post(`/api/inquiries/${id}/respond`, userData),
 }
 
 export default api
