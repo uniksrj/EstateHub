@@ -7,9 +7,9 @@ export const BuyerInquiryPage = () => {
   return (
     <InquiryPage 
       userId={user.id}
-      userType="buyer"
+      userType={"buyer"}
       showFilters={true}
-      enableActions={false} 
+      enableActions={true} 
     />
   );
 };

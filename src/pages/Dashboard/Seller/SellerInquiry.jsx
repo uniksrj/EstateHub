@@ -7,7 +7,7 @@ export const SellerInquiryPage = () => {
   return (
     <InquiryPage 
       userId={user.id}
-      userType="seller"
+      userType={"seller"}
       showFilters={true}
       enableActions={true}
     />

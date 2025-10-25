@@ -8,7 +8,7 @@ export const ActionButton = ({sendResponse, selectedInquiry, responseMessage, up
             <Button
                 onClick={() => sendResponse(selectedInquiry.id)}
                 disabled={!responseMessage.trim()}
-                className="flex-1 h-12 text-base"
+                className="flex-1 h-9 text-base"
                 size="lg"
             >
                 <Send className="h-5 w-5 mr-2" />
@@ -19,7 +19,7 @@ export const ActionButton = ({sendResponse, selectedInquiry, responseMessage, up
                 value={selectedInquiry.status}
                 onValueChange={(value) => updateInquiryStatus(selectedInquiry.id, value)}
             >
-                <SelectTrigger className="w-36 h-12">
+                <SelectTrigger className="w-36 h-9 px-3">
                     <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -32,7 +32,7 @@ export const ActionButton = ({sendResponse, selectedInquiry, responseMessage, up
             <Button
                 variant="outline"
                 size="lg"
-                className="h-12 px-3"
+                className="h-9 px-3"
                 onClick={() => toggleImportant(selectedInquiry.id, selectedInquiry.important)}
             >
                 <Star className={`h-5 w-5 ${selectedInquiry.important ? 'fill-amber-500 text-amber-500' : ''}`} />
@@ -41,7 +41,8 @@ export const ActionButton = ({sendResponse, selectedInquiry, responseMessage, up
             <Button
                 variant="outline"
                 size="lg"
-                className="h-12 px-3"
+                className="h-9 px-3"
+                disabled
                 onClick={() => archiveInquiry(selectedInquiry.id)}
             >
                 <Trash2 className="h-5 w-5" />

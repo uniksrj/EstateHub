@@ -29,6 +29,7 @@ export const InquiryPage = ({
   const [responseMessage, setResponseMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
+  
 
   // Fetch inquiries for specific user
   useEffect(() => {
@@ -195,7 +196,7 @@ export const InquiryPage = ({
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Buyer Information */}
-                  {(!userType === "buyer" && 
+                  {(userType != "buyer" && 
                   <BuyerInfo 
                   selectedInquiry={selectedInquiry}
                   />
@@ -211,6 +212,7 @@ export const InquiryPage = ({
                   {/* Conversation History */}
                   {selectedInquiry.responses && selectedInquiry.responses.length > 0 && (
                     <HistoryInquiry 
+                    userId={userId}
                     selectedInquiry={selectedInquiry}
                     />
                   )}
