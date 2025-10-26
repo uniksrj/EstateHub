@@ -16,10 +16,11 @@ import { OriginalMsg } from './inquiry/OriginalMsg';
 import { HistoryInquiry } from './inquiry/HistoryInquiry';
 import { ActionButton } from './inquiry/ActionButton';
 import { ResponseInquiry } from './inquiry/ResponseInquiry';
+import echo from '../../echo.js';
 
 export const InquiryPage = ({
   userId,
-  userType = 'seller', 
+  userType = 'seller',
   showFilters = true,
   enableActions = true
 }) => {
@@ -29,7 +30,54 @@ export const InquiryPage = ({
   const [responseMessage, setResponseMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
+
+  // using echo broadcasting message
+  useEffect(() => {
+    if (!selectedInquiry?.id) return;
+
+    console.log('🔐 Setting up channel for inquiry:', selectedInquiry.id);
+
+    // Use ONLY the working channel name
+    const channelName = `inquiry.${selectedInquiry.id}`;
+
+    console.log('📡 Subscribing to:', channelName);
+
+    const channel = echo.private(channelName);
+
+    channel.subscribed(() => {
+      console.log('✅ ✅ ✅ SUCCESS: Subscribed to', channelName);
+    });
+
+    channel.error((error) => {
+      console.error('❌ Subscription failed for', channelName, error);
+    });
+
+    channel.listen('.response.created', (event) => {
+      console.log('📨 📨 📨 EVENT RECEIVED:', event);
+      console.log('🔍 Full event data:', JSON.stringify(event, null, 2));
+
+      // Update the state with the new response
+      setSelectedInquiry(prev => ({
+        ...prev,
+        responses: [...(prev.responses || []), event.response],
+      }));
+    });
+
+    // Also listen without the dot prefix (sometimes needed)
+    channel.listen('response.created', (event) => {
+      console.log('📨 EVENT RECEIVED (without dot):', event);
+    });
+
+    return () => {
+      console.log('🔴 Leaving channel:', channelName);
+      echo.leave(channelName);
+    };
+  }, [selectedInquiry?.id]);
+
+  console.log("this is echo  function :", echo);
+  console.log("new updated inquiry every time :", selectedInquiry);
+
 
   // Fetch inquiries for specific user
   useEffect(() => {
@@ -65,7 +113,7 @@ export const InquiryPage = ({
 
       toast.success('Status updated successfully');
     } catch (error) {
-      console.error("Failed to update status", error);      
+      console.error("Failed to update status", error);
       toast.error('Failed to update status');
     }
   };
@@ -74,7 +122,7 @@ export const InquiryPage = ({
     if (!responseMessage.trim()) return;
 
     try {
-      await inquiryWebhookService.sendResponse(inquiryId, {"message" : responseMessage});
+      await inquiryWebhookService.sendResponse(inquiryId, { "message": responseMessage });
 
       const newResponse = {
         id: Date.now(),
@@ -104,7 +152,7 @@ export const InquiryPage = ({
       setResponseMessage('');
       toast.success('Response sent successfully');
     } catch (error) {
-      console.error("Failed to send response", error);    
+      console.error("Failed to send response", error);
       toast.error('Failed to send response');
     }
   };
@@ -123,7 +171,7 @@ export const InquiryPage = ({
 
       toast.success('Important status updated');
     } catch (error) {
-      console.error(error);  
+      console.error(error);
       toast.error('Failed to update important status');
     }
   };
@@ -141,7 +189,7 @@ export const InquiryPage = ({
 
       toast.success('Inquiry archived successfully');
     } catch (error) {
-      console.error(error);  
+      console.error(error);
       toast.error('Failed to archive inquiry');
     }
   };
@@ -163,24 +211,24 @@ export const InquiryPage = ({
         <HeaderLine userType={userType} />
 
         {/* Filter Header */}
-        <FilterInquiryPage 
-        showFilters={showFilters} 
-        searchTerm={searchTerm} 
-        setSearchTerm={setSearchTerm} 
-        statusFilter={statusFilter} 
-        setStatusFilter={setStatusFilter}
+        <FilterInquiryPage
+          showFilters={showFilters}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
         />
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Inquiry List */}
-        <InquiryList 
-        loading={loading}
-        filteredInquiries={filteredInquiries}
-        setSelectedInquiry={setSelectedInquiry}
-        selectedInquiry={selectedInquiry}
-        enableActions={enableActions}
-        toggleImportant={toggleImportant}
+        <InquiryList
+          loading={loading}
+          filteredInquiries={filteredInquiries}
+          setSelectedInquiry={setSelectedInquiry}
+          selectedInquiry={selectedInquiry}
+          enableActions={enableActions}
+          toggleImportant={toggleImportant}
         />
 
         {/* Details Sidebar */}
@@ -190,50 +238,50 @@ export const InquiryPage = ({
               <Card>
                 <CardHeader>
                   {/* Header Text  */}
-                  <SidebarHeaderText 
-                  selectedInquiry={selectedInquiry}
+                  <SidebarHeaderText
+                    selectedInquiry={selectedInquiry}
                   />
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Buyer Information */}
-                  {(userType != "buyer" && 
-                  <BuyerInfo 
-                  selectedInquiry={selectedInquiry}
-                  />
+                  {(userType != "buyer" &&
+                    <BuyerInfo
+                      selectedInquiry={selectedInquiry}
+                    />
                   )}
-                  
-                  
+
+
 
                   {/* Original Message */}
-                  <OriginalMsg 
-                  selectedInquiry={selectedInquiry}
+                  <OriginalMsg
+                    selectedInquiry={selectedInquiry}
                   />
 
                   {/* Conversation History */}
                   {selectedInquiry.responses && selectedInquiry.responses.length > 0 && (
-                    <HistoryInquiry 
-                    userId={userId}
-                    selectedInquiry={selectedInquiry}
+                    <HistoryInquiry
+                      userId={userId}
+                      selectedInquiry={selectedInquiry}
                     />
                   )}
 
                   {/* Response Input */}
                   {enableActions && (
-                    <ResponseInquiry 
-                    responseMessage={responseMessage}
-                    setResponseMessage={setResponseMessage}
+                    <ResponseInquiry
+                      responseMessage={responseMessage}
+                      setResponseMessage={setResponseMessage}
                     />
                   )}
 
                   {/* Action Buttons */}
                   {enableActions && (
-                    <ActionButton 
-                    sendResponse={sendResponse}
-                    selectedInquiry={selectedInquiry}
-                    responseMessage={responseMessage}
-                    updateInquiryStatus={updateInquiryStatus}
-                    toggleImportant={toggleImportant}
-                    archiveInquiry={archiveInquiry}
+                    <ActionButton
+                      sendResponse={sendResponse}
+                      selectedInquiry={selectedInquiry}
+                      responseMessage={responseMessage}
+                      updateInquiryStatus={updateInquiryStatus}
+                      toggleImportant={toggleImportant}
+                      archiveInquiry={archiveInquiry}
                     />
                   )}
                 </CardContent>

@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+// import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
@@ -8,12 +8,12 @@ import router from './routes/AppRoutes'
 import { RouterProvider } from 'react-router'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <ThemeProvider>
       <AuthProvider>
         {/* <App /> */}
       <RouterProvider router={router} />
       </AuthProvider>
     </ThemeProvider>
-  </StrictMode>,
+  // </StrictMode>,
 )

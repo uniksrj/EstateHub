@@ -24,11 +24,12 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       const response = await authAPI.login(credentials)
-      const { user } = response.data
+      const { user, chatToken } = response.data
       console.log(user);
 
       // localStorage.setItem("auth_token", token)
       localStorage.setItem("user", JSON.stringify(user))
+      localStorage.setItem("chatToken",chatToken)
       toast.success('Login successful!');
       setUser(user)
       return { success: true }
