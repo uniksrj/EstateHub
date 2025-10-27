@@ -75,7 +75,6 @@ export const InquiryPage = ({
     };
   }, [selectedInquiry?.id]);
 
-  console.log("this is echo  function :", echo);
   console.log("new updated inquiry every time :", selectedInquiry);
 
 
@@ -122,14 +121,16 @@ export const InquiryPage = ({
     if (!responseMessage.trim()) return;
 
     try {
-      await inquiryWebhookService.sendResponse(inquiryId, { "message": responseMessage });
+      let { data } = await inquiryWebhookService.sendResponse(inquiryId, { "message": responseMessage });
+      let newResponse = data;
+      
 
-      const newResponse = {
-        id: Date.now(),
-        message: responseMessage,
-        timestamp: new Date().toISOString(),
-        sender: userType === 'seller' ? 'seller' : 'buyer'
-      };
+      // const newResponse = {
+      //   id: Date.now(),
+      //   message: responseMessage,
+      //   timestamp: new Date().toISOString(),
+      //   sender: userType === 'seller' ? 'seller' : 'buyer'
+      // };
 
       setInquiries(prev => prev.map(inquiry =>
         inquiry.id === inquiryId

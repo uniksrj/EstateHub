@@ -1,12 +1,20 @@
 import { formatDateTime } from "@/lib/utils";
+import { useEffect, useRef } from "react";
 
-export const HistoryInquiry = ({selectedInquiry,userId}) => {
-    console.log("im inside History Inquiry ",selectedInquiry);
-    
+export const HistoryInquiry = ({ selectedInquiry, userId }) => {
+    const bottomRef = useRef(null);
+
+     useEffect(() => {
+    const el = bottomRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight; 
+    }
+  }, [selectedInquiry?.responses]);
+
     return (
         <div>
             <h4 className="font-semibold mb-3 text-lg border-b pb-2">Conversation History</h4>
-            <div className="space-y-3 max-h-60 overflow-y-auto">
+            <div ref={bottomRef} className="space-y-3 max-h-60 overflow-y-auto">
                 {selectedInquiry.responses.map((response) => (
                     <div
                         key={response.id}
@@ -18,10 +26,11 @@ export const HistoryInquiry = ({selectedInquiry,userId}) => {
                         <p className="text-sm whitespace-pre-wrap">{response.message}</p>
                         <p className={`text-xs mt-1 ${response.sender_id === userId ? 'text-primary-foreground/80' : 'text-muted-foreground'
                             }`}>
-                            {formatDateTime(response.timestamp)} • {response.sender_id === userId ? 'You' : response.sender_name}
+                            {formatDateTime(response.timestamp ? response.timestamp : response.created_at)} • {response.sender_id === userId ? 'You' : response.sender_name ? response.sender_name : response.sender.name}
                         </p>
                     </div>
                 ))}
+                 <div ref={bottomRef} />
             </div>
         </div>
     );
