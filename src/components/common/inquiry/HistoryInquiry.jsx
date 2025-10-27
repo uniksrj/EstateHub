@@ -4,12 +4,12 @@ import { useEffect, useRef } from "react";
 export const HistoryInquiry = ({ selectedInquiry, userId }) => {
     const bottomRef = useRef(null);
 
-     useEffect(() => {
-    const el = bottomRef.current;
-    if (el) {
-      el.scrollTop = el.scrollHeight; 
-    }
-  }, [selectedInquiry?.responses]);
+    useEffect(() => {
+        const el = bottomRef.current;
+        if (el) {
+            el.scrollTop = el.scrollHeight;
+        }
+    }, [selectedInquiry?.responses]);
 
     return (
         <div>
@@ -30,7 +30,6 @@ export const HistoryInquiry = ({ selectedInquiry, userId }) => {
                         </p>
                     </div>
                 ))}
-                 <div ref={bottomRef} />
             </div>
         </div>
     );

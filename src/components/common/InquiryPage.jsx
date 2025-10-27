@@ -100,8 +100,13 @@ export const InquiryPage = ({
 
   const updateInquiryStatus = async (inquiryId, newStatus) => {
     try {
-      await inquiryWebhookService.updateStatus(inquiryId, newStatus);
-
+      if (newStatus === 3) {
+        let statusResponse = {
+          status : newStatus,
+          close_reason : "Conversation completed successfully"
+        }
+        await inquiryWebhookService.updateStatus(inquiryId,statusResponse);
+      }
       setInquiries(prev => prev.map(inquiry =>
         inquiry.id === inquiryId ? { ...inquiry, status: newStatus } : inquiry
       ));
@@ -121,16 +126,8 @@ export const InquiryPage = ({
     if (!responseMessage.trim()) return;
 
     try {
-      let { data } = await inquiryWebhookService.sendResponse(inquiryId, { "message": responseMessage });
+      let { data } = await inquiryWebhookService.sendResponse(inquiryId, { "message": responseMessage, selectedResponse: selectedInquiry.status });
       let newResponse = data;
-      
-
-      // const newResponse = {
-      //   id: Date.now(),
-      //   message: responseMessage,
-      //   timestamp: new Date().toISOString(),
-      //   sender: userType === 'seller' ? 'seller' : 'buyer'
-      // };
 
       setInquiries(prev => prev.map(inquiry =>
         inquiry.id === inquiryId
@@ -251,8 +248,6 @@ export const InquiryPage = ({
                     />
                   )}
 
-
-
                   {/* Original Message */}
                   <OriginalMsg
                     selectedInquiry={selectedInquiry}
@@ -269,6 +264,7 @@ export const InquiryPage = ({
                   {/* Response Input */}
                   {enableActions && (
                     <ResponseInquiry
+                      status={selectedInquiry.status}
                       responseMessage={responseMessage}
                       setResponseMessage={setResponseMessage}
                     />

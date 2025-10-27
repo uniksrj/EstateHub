@@ -1,3 +1,4 @@
+import { Webhook } from "lucide-react";
 import { webhookAPI } from "./api";
 
 // Webhook API service for inquiries
@@ -17,14 +18,7 @@ export const inquiryWebhookService = {
   // Update inquiry status
   async updateStatus(inquiryId, status) {
     try {
-      const response = await fetch(`/api/webhook/inquiries/${inquiryId}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        },
-        body: JSON.stringify({ status })
-      });
+      const response = await webhookAPI.inquiry_close(inquiryId, status)
 
       if (!response.ok) throw new Error('Failed to update status');
       return await response.json();
