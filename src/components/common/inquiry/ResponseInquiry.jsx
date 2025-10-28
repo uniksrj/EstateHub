@@ -17,10 +17,10 @@ export const ResponseInquiry = ({ status, responseMessage, setResponseMessage })
             ) : (
                 <div className="p-4 rounded-md bg-muted text-muted-foreground text-center">
                     <h4 className="font-semibold text-lg mb-1">This Inquiry Is Closed</h4>
-                    <p className="text-sm">
+                    {/* <p className="text-sm">
                         This conversation has been closed and no further responses can be sent.
                         Please contact an administrator if you believe this inquiry should be reopened.
-                    </p>
+                    </p> */}
                 </div>
             )}
         </div>

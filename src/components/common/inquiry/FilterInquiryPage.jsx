@@ -24,9 +24,10 @@ export const FilterInquiryPage = ({showFilters , searchTerm, setSearchTerm, stat
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">All Inquiries</SelectItem>
-                            <SelectItem value="new">New</SelectItem>
-                            <SelectItem value="responded">Responded</SelectItem>
-                            <SelectItem value="closed">Closed</SelectItem>
+                            <SelectItem value="0">New</SelectItem>
+                            <SelectItem value="1">Responded</SelectItem>
+                            <SelectItem value="2">Contacted</SelectItem>
+                            <SelectItem value="3">Closed</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
