@@ -25,6 +25,8 @@ import FindProperties from "@/pages/Dashboard/Buyer/FindProperties"
 import FavoritePage from "@/pages/Dashboard/Buyer/FavoritePage"
 import { SellerInquiryPage } from "@/pages/Dashboard/Seller/SellerInquiry"
 import { BuyerInquiryPage } from "@/pages/Dashboard/Buyer/BuyerInquiry"
+import AgentDashboard from "@/pages/Dashboard/Agent/Dashboard"
+import { AgentInquiry } from "@/pages/Dashboard/Agent/AgentInquiry"
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -184,6 +186,22 @@ export const router = createBrowserRouter([
             path: "inquiries",
             element: <BuyerInquiryPage />,
           },
+        ],
+      },
+      {
+        path: "agent",
+        element: (
+          <ProtectedRoute allowedRoles={[USER_ROLES.AGENT]}>
+            <AdminLayout />
+          </ProtectedRoute>
+        ),
+        children: [
+          { index: true, Component: AgentDashboard },
+          { path: "inquiries", Component: AgentInquiry },
+          { path: "add-property", element: <AddProperty />, },
+          { path: "manage-properties", element: <ManageProperties />, },
+          { path: "properties", element: <ListingPage />, },
+          { path: "properties/:id/edit", element: <AddProperty />, errorElement: <div>Error loading property</div>, },
         ],
       },
       {

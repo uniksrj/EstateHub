@@ -39,9 +39,9 @@ export const sidebars = {
   ],
 
   agent: [
-    { label: "My Dashboard", path: "/agent", icon: LayoutDashboard },
-    { label: "My Properties", path: "/agent/properties", icon: Home },
-    { label: "Add Property", path: "/agent/properties/add", icon: Plus },
+    { label: "Dashboard", path: "/agent", icon: LayoutDashboard },
+    { label: "Properties", path: "/agent/properties", icon: Home },
+    { label: "Add Property", path: "/agent/add-property", icon: Plus },
     { label: "My Clients", path: "/agent/clients", icon: Users },
     { label: "Inquiries", path: "/agent/inquiries", icon: MessageSquare },
     { label: "Schedule", path: "/agent/schedule", icon: Calendar },
@@ -60,7 +60,7 @@ export const sidebars = {
 
   seller: [
     { label: "Dashboard", path: "/seller", icon: LayoutDashboard },
-    { label: "My Listings", path: "/seller/properties", icon: Home },
+    { label: "Listings", path: "/seller/properties", icon: Home },
     { label: "Offers & Inquiries", path: "/seller/offers", icon: Tag },
     { label: "Property Views", path: "/seller/analytics", icon: BarChart3 },
     { label: "Messages", path: "/seller/inquiries", icon: MessageSquare },
