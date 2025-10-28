@@ -20,8 +20,8 @@ export const inquiryWebhookService = {
     try {
       const response = await webhookAPI.inquiry_close(inquiryId, status)
 
-      if (!response.ok) throw new Error('Failed to update status');
-      return await response.json();
+      if (response.status !== 200) throw new Error('Failed to update status');
+      return response.data;
     } catch (error) {
       console.error('Webhook Error - Update Status:', error);
       throw error;

@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Send, Star, Trash2 } from "lucide-react";
+import { ConversationActions } from "./ConversationActions";
 
-export const ActionButton = ({ sendResponse, selectedInquiry, responseMessage, updateInquiryStatus, toggleImportant, archiveInquiry }) => {
-    console.log("action button details :", selectedInquiry);
-
-
+export const ActionButton = ({ sendResponse, selectedInquiry, responseMessage, updateInquiryStatus, toggleImportant, archiveInquiry ,loading}) => {
+    
     return (
         <div className="flex gap-3 pt-4">
             {selectedInquiry.status !== 3 ? (
@@ -57,6 +56,7 @@ export const ActionButton = ({ sendResponse, selectedInquiry, responseMessage, u
                 </>
             ) : (
                 <>
+                <ConversationActions updateInquiryStatus={updateInquiryStatus} selectedInquiry={selectedInquiry} loading={loading}/>
                 </>
             )}
         </div>

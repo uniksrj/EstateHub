@@ -5,7 +5,7 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import { inquiryWebhookService } from '@/services/webhook';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import { demoInquiries } from '@/data/demoData';
 import { HeaderLine } from './inquiry/HeaderLine';
 import { FilterInquiryPage } from './inquiry/FilterInquiryPAge';
@@ -75,9 +75,6 @@ export const InquiryPage = ({
     };
   }, [selectedInquiry?.id]);
 
-  console.log("new updated inquiry every time :", selectedInquiry);
-
-
   // Fetch inquiries for specific user
   useEffect(() => {
     if (userId) {
@@ -97,15 +94,25 @@ export const InquiryPage = ({
       setLoading(false);
     }
   };
+//End Fetch inquiries for specific user
 
+// Change Inquiry response status
   const updateInquiryStatus = async (inquiryId, newStatus) => {
+    setLoading(true)
     try {
       if (newStatus === 3) {
         let statusResponse = {
-          status : newStatus,
-          close_reason : "Conversation completed successfully"
+          status: newStatus,
+          close_reason: "Conversation Closed successfully"
         }
-        await inquiryWebhookService.updateStatus(inquiryId,statusResponse);
+        await inquiryWebhookService.updateStatus(inquiryId, statusResponse);
+      } else if (newStatus === 'reopen') {
+        let statusResponse = {
+          status: 2,
+          close_reason: "Conversation Re-open successfully"
+        }
+        await inquiryWebhookService.updateStatus(inquiryId, statusResponse);
+        newStatus = 2;
       }
       setInquiries(prev => prev.map(inquiry =>
         inquiry.id === inquiryId ? { ...inquiry, status: newStatus } : inquiry
@@ -114,21 +121,24 @@ export const InquiryPage = ({
       if (selectedInquiry?.id === inquiryId) {
         setSelectedInquiry(prev => ({ ...prev, status: newStatus }));
       }
-
       toast.success('Status updated successfully');
     } catch (error) {
       console.error("Failed to update status", error);
       toast.error('Failed to update status');
+    } finally {
+      setLoading(false)
     }
   };
+//End Change Inquiry response status
+
 
   const sendResponse = async (inquiryId) => {
     if (!responseMessage.trim()) return;
 
     try {
       let { data } = await inquiryWebhookService.sendResponse(inquiryId, { "message": responseMessage, selectedResponse: selectedInquiry.status });
-      let newResponse = data;
 
+      let newResponse = data;
       setInquiries(prev => prev.map(inquiry =>
         inquiry.id === inquiryId
           ? {
@@ -192,9 +202,12 @@ export const InquiryPage = ({
     }
   };
 
+  console.log("full log Data :",inquiries);
+  
+
   // Filter inquiries based on user type
   const filteredInquiries = inquiries.filter(inquiry => {
-    const matchesStatus = statusFilter === 'all' || inquiry.status === statusFilter;
+    const matchesStatus = statusFilter === 'all' || inquiry.status === Number(statusFilter);
     const matchesSearch = inquiry.buyerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       inquiry.propertyTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       inquiry.message?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -204,7 +217,7 @@ export const InquiryPage = ({
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-
+        <Toaster position="top-right" />
         {/* Header Text */}
         <HeaderLine userType={userType} />
 
@@ -279,6 +292,7 @@ export const InquiryPage = ({
                       updateInquiryStatus={updateInquiryStatus}
                       toggleImportant={toggleImportant}
                       archiveInquiry={archiveInquiry}
+                      loading={loading}
                     />
                   )}
                 </CardContent>
