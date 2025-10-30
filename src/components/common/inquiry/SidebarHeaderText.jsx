@@ -1,7 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { CardDescription, CardTitle } from "@/components/ui/card";
+import { statusConfig } from "@/config/miscConfig";
 
-export const SidebarHeaderText = ({selectedInquiry}) => {
+export const SidebarHeaderText = ({ selectedInquiry }) => {    
     return (
         <div className="flex justify-between items-start">
             <div>
@@ -10,12 +11,12 @@ export const SidebarHeaderText = ({selectedInquiry}) => {
                     Inquiry about {selectedInquiry.propertyTitle}
                 </CardDescription>
             </div>
-            <Badge variant={
-                selectedInquiry.status === 'new' ? 'default' :
-                    selectedInquiry.status === 'responded' ? 'secondary' : 'outline'
-            }>
-                {selectedInquiry.status}
+            <Badge
+                variant={statusConfig[selectedInquiry.status]?.variant}
+                className={statusConfig[selectedInquiry.status]?.color}
+            >
+                {statusConfig[selectedInquiry.status]?.label}
             </Badge>
-        </div>
+        </div >
     );
 }

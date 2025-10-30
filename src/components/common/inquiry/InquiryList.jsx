@@ -1,11 +1,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { statusConfig } from "@/config/miscConfig";
 import { formatDate } from "@/lib/utils";
 import { Loading } from "@/pages/misc/Loading";
-import { Loader2, Star } from "lucide-react";
+import { Star } from "lucide-react";
 
 export const InquiryList = ({loading , filteredInquiries, setSelectedInquiry ,selectedInquiry , enableActions, toggleImportant}) => {
+    console.log("inquiry List :",filteredInquiries);
+    
     return (
         <div className="lg:col-span-2 space-y-4">
             {loading ? (
@@ -22,7 +25,7 @@ export const InquiryList = ({loading , filteredInquiries, setSelectedInquiry ,se
                         <Card
                             key={inquiry.id}
                             className={`cursor-pointer hover:shadow-md transition-shadow ${selectedInquiry?.id === inquiry.id ? 'border-primary border-2' : ''
-                                } ${inquiry.status === 'new' ? 'bg-blue-50/50' : ''}`}
+                                } ${inquiry.status == 0 ? 'bg-blue-50/50' : ''}`}
                             onClick={() => setSelectedInquiry(inquiry)}
                         >
                             <CardContent className="p-4">
@@ -31,11 +34,10 @@ export const InquiryList = ({loading , filteredInquiries, setSelectedInquiry ,se
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-2">
                                             <h3 className="font-semibold">{inquiry.buyerName}</h3>
-                                            <Badge variant={
-                                                inquiry.status === 'new' ? 'default' :
-                                                    inquiry.status === 'responded' ? 'secondary' : 'outline'
-                                            }>
-                                                {inquiry.status}
+                                            <Badge variant={statusConfig[inquiry?.status]?.variant}
+                                                    className={statusConfig[inquiry?.status]?.color}
+                                            >
+                                                {statusConfig[inquiry?.status]?.label}
                                             </Badge>
                                             {inquiry.important && (
                                                 <Badge variant="default" className="bg-amber-500">

@@ -11,11 +11,27 @@ export const HistoryInquiry = ({ selectedInquiry, userId }) => {
         }
     }, [selectedInquiry?.responses]);
 
+    const getResponses = () => {
+        if (!selectedInquiry || !selectedInquiry.responses || !Array.isArray(selectedInquiry.responses)) {
+            return [];
+        }
+
+        // Remove duplicates
+        const seenIds = new Set();
+        return selectedInquiry.responses.filter(response => {
+            if (!response?.id) return false;
+            if (seenIds.has(response.id)) return false;
+            seenIds.add(response.id);
+            return true;
+        });
+    };
+
+    const responses = getResponses();
     return (
         <div>
             <h4 className="font-semibold mb-3 text-lg border-b pb-2">Conversation History</h4>
             <div ref={bottomRef} className="space-y-3 max-h-60 overflow-y-auto">
-                {selectedInquiry.responses.map((response) => (
+                {responses.map((response) => (
                     <div
                         key={response.id}
                         className={`p-3 rounded-lg ${response.sender_id === userId

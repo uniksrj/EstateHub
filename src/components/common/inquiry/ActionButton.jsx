@@ -28,9 +28,9 @@ export const ActionButton = ({ sendResponse, selectedInquiry, responseMessage, u
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="0" disabled={selectedInquiry.status > 0}>New</SelectItem>
-                            <SelectItem value="1" disabled={selectedInquiry.status > 1}>Responded</SelectItem>
-                            <SelectItem value="2" disabled={selectedInquiry.status > 2}>Contacted</SelectItem>
+                            <SelectItem value="0" disabled={selectedInquiry.status >= 0}>New</SelectItem>
+                            <SelectItem value="1" disabled={selectedInquiry.status >= 1}>Responded</SelectItem>
+                            <SelectItem value="2" disabled={selectedInquiry.status >= 2}>Contacted</SelectItem>
                             <SelectItem value="3">Closed</SelectItem>
                         </SelectContent>
                     </Select>

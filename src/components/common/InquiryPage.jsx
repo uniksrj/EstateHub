@@ -139,24 +139,24 @@ export const InquiryPage = ({
       let { data } = await inquiryWebhookService.sendResponse(inquiryId, { "message": responseMessage, selectedResponse: selectedInquiry.status });
 
       let newResponse = data;
+      console.log("Inside Response Data :",newResponse);
+      
       setInquiries(prev => prev.map(inquiry =>
         inquiry.id === inquiryId
           ? {
             ...inquiry,
-            status: 'responded',
             responses: [...(inquiry.responses || []), newResponse]
           }
           : inquiry
       ));
-
+      console.log("Inside inquiries Data :",inquiries);
       if (selectedInquiry?.id === inquiryId) {
         setSelectedInquiry(prev => ({
           ...prev,
-          status: 'responded',
           responses: [...(prev.responses || []), newResponse]
         }));
       }
-
+console.log("Inside inquiries Data :",selectedInquiry);
       setResponseMessage('');
       toast.success('Response sent successfully');
     } catch (error) {
