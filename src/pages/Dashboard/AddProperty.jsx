@@ -200,6 +200,7 @@ const AddProperty = () => {
   return (
     <div className="min-h-screen py-8">
       <div className="container mx-auto px-4 max-w-4xl">
+        <Toaster position="top-right" />
         {/* Header */}
         <div className="flex items-center mb-8">
           <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mr-4">

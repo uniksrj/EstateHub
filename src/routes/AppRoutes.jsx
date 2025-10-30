@@ -27,6 +27,7 @@ import { SellerInquiryPage } from "@/pages/Dashboard/Seller/SellerInquiry"
 import { BuyerInquiryPage } from "@/pages/Dashboard/Buyer/BuyerInquiry"
 import AgentDashboard from "@/pages/Dashboard/Agent/Dashboard"
 import { AgentInquiry } from "@/pages/Dashboard/Agent/AgentInquiry"
+import AgentListing from "@/pages/Dashboard/Agent/AgentListing"
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -106,28 +107,17 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
         children: [
-          {
-            index: true,
-            Component: Dashboard,
-          },
-          {
-            path: "add-property",
-            Component: AddProperty,
-          },
-          {
-            path: "manage-properties",
-            Component: ManageProperties,
-          },
-          {
-            path: "users",
+          { index: true, Component: Dashboard,},
+          { path: "add-property", Component: AddProperty,},
+          { path: "manage-properties", Component: ManageProperties,},
+          { path: "users",
             element: (
               <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
                 <UserManagementPage />
               </ProtectedRoute>
             )
           },
-          {
-            path: "properties",
+          { path: "properties",
             element: (
               <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
                 <Propertiespage />
@@ -144,31 +134,12 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
         children: [
-          {
-            index: true,
-            element: <Dashboard />,
-          },
-          {
-            path: "add-property",
-            element: <AddProperty />,
-          },
-          {
-            path: "manage-properties",
-            element: <ManageProperties />,
-          },
-          {
-            path: "properties",
-            element: <ListingPage />,
-          },
-          {
-            path: "properties/:id/edit",
-            element: <AddProperty />,
-            errorElement: <div>Error loading property</div>,
-          },
-          {
-            path: "inquiries",
-            element: <SellerInquiryPage />,
-          },
+          { index: true, Component: Dashboard },
+          { path: "add-property", Component: AddProperty },
+          { path: "manage-properties", Component: ManageProperties },
+          { path: "properties", Component: ListingPage },
+          { path: "properties/:id/edit", Component: AddProperty, errorElement: <div>Error loading property</div>,},
+          { path: "inquiries", Component: SellerInquiryPage },
         ],
       },
       {
@@ -182,10 +153,7 @@ export const router = createBrowserRouter([
           { index: true, Component: Dashboard },
           { path: "search", Component: FindProperties },
           { path: "favorites", Component: FavoritePage },
-          {
-            path: "inquiries",
-            element: <BuyerInquiryPage />,
-          },
+          { path: "inquiries", Component: BuyerInquiryPage },
         ],
       },
       {
@@ -198,10 +166,10 @@ export const router = createBrowserRouter([
         children: [
           { index: true, Component: AgentDashboard },
           { path: "inquiries", Component: AgentInquiry },
-          { path: "add-property", element: <AddProperty />, },
-          { path: "manage-properties", element: <ManageProperties />, },
-          { path: "properties", element: <ListingPage />, },
-          { path: "properties/:id/edit", element: <AddProperty />, errorElement: <div>Error loading property</div>, },
+          { path: "add-property", Component: AddProperty },
+          { path: "manage-properties", Component: ManageProperties},
+          { path: "properties", Component: AgentListing},
+          { path: "properties/:id/edit", Component: AddProperty, errorElement: <div>Error loading property</div>, },
         ],
       },
       {

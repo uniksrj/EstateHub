@@ -1,8 +1,8 @@
 // components/seller/PropertyRow.jsx
 "use client"
 
-import { useState } from "react"
-import { Link } from "react-router"
+import { use, useState } from "react"
+import { Link, useLocation } from "react-router"
 import { TableCell, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -25,11 +25,10 @@ import {
 import { MoreHorizontal, Edit, Eye, Trash2, MapPin, Home, Tag, TrendingUp, AlertCircle } from "lucide-react"
 import { propertiesAPI } from "@/services/api"
 
-const PropertyRow = ({ property, onRefresh }) => {
-  console.log("this is inside from property list :",property);
-  
+const PropertyRow = ({ property, onRefresh }) => {  
   const [deleteDialog, setDeleteDialog] = useState(false)
-
+  const location = useLocation();
+ const userType = location.pathname.split('/')[1];
   const handleDelete = async () => {
     try {
       await propertiesAPI.delete(property.id)
@@ -154,7 +153,8 @@ const PropertyRow = ({ property, onRefresh }) => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to={`/seller/properties/${property.id}/edit`}>
+                
+                <Link to={`/${userType}/properties/${property.id}/edit`}>
                   <Edit className="mr-2 h-4 w-4" />
                   Edit
                 </Link>

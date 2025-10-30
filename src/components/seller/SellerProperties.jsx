@@ -36,8 +36,8 @@ const SellerProperties = () => {
             setLoading(false)
         }
     }
-    console.log("This is user property",properties );
-    
+    console.log("This is user property", properties);
+
     const handleFiltersChange = (newFilters) => {
         setFilters(newFilters)
     }
@@ -50,12 +50,15 @@ const SellerProperties = () => {
                     <h1 className="text-3xl font-bold text-foreground">My Listings</h1>
                     <p className="text-muted-foreground mt-2">Manage your property listings</p>
                 </div>
-                <Link to={user.role_id === 6 ? "/seller/add-property" : "/agent/add-property"}>
-                    <Button>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Add New Property
-                    </Button>
-                </Link>
+                {(user.role_id === 6) &&
+                    <Link to={user.role_id === 6 ? "/seller/add-property" : "/agent/add-property"}>
+                        <Button>
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add New Property
+                        </Button>
+                    </Link>
+                }
+
             </div>
 
             {/* Filters */}

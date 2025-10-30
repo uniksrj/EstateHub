@@ -81,6 +81,7 @@ const PropertyDetail = () => {
       setIsFavorite(false);
     }
   }
+console.log("property list", property);
 
 
   if (loading) {
@@ -246,7 +247,7 @@ const PropertyDetail = () => {
               </div>
             </div>
           </div>
-          {user.role_id !== 6 && (
+          {user.role_id !== 6 || user.role_id !== 3 && (
             <div className="space-y-6">
               <Card className="sticky top-8">
                 <CardContent className="p-6">
