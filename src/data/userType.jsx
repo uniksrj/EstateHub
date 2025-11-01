@@ -55,7 +55,7 @@ export const sidebars = {
     { label: "Property Alerts", path: "/buyer/alerts", icon: Bell },
     { label: "My Inquiries", path: "/buyer/inquiries", icon: MessageSquare },
     { label: "Schedule Tours", path: "/buyer/tours", icon: Calendar },
-    { label: "My Offers", path: "/buyer/offers", icon: Tag }, // ← ADD THIS
+    { label: "My Offers", path: "/buyer/offers", icon: Tag },
   ],
 
   seller: [
@@ -102,5 +102,13 @@ export const filterOptions = {
     { label: 'Inactive', value: '0' },
     { label: 'Pending Verification', value: 'pending' },
     { label: 'Suspended', value: 'suspended' }
+  ],
+
+  propertyStatusData: [
+    { status: "Available", count: 50, fill: "#3b82f6" },
+    { status: "Sold", count: 30, fill: "#10b981" },
+    { status: "Rented", count: 15, fill: "#f59e0b" },
+    { status: "Maintenance", count: 5, fill: "#ef4444" },
+    { status: "Pending", count: 10, fill: "#8b5cf6" },
   ]
 };

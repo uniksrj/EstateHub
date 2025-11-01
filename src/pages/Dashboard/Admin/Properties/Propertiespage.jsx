@@ -23,8 +23,8 @@ const PropertiesPage = () => {
       setLoading(true);
       try {
         const response = await superAdminAPI.getAllProperties();
-        setPropertiesData(response.data);    
-        setLoading(false);    
+        setPropertiesData(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching properties data:', error);
       } finally {
@@ -48,22 +48,8 @@ const PropertiesPage = () => {
       < Loading loading={loading} isLineLoader={true} />
     )
   }
-    if (!propertiesData) {
-    return (
-      <div className="min-h-screen py-8">
-        <div className="container mx-auto px-4">
-          <div className="animate-pulse">
-            <div className="h-8 bg-muted rounded mb-4 w-1/4"></div>
-            <div className="h-12 bg-muted rounded mb-6"></div>
-            <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-16 bg-muted rounded"></div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+  if (!propertiesData) {
+    <Loading loading={true} isLineLoader={true} />
   }
 
   return (

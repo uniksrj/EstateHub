@@ -2,16 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-
-const pipelineData = [
-  { stage: 'Prospecting', deals: 24, value: 18.2 },
-  { stage: 'Initial Review', deals: 18, value: 22.5 },
-  { stage: 'Due Diligence', deals: 12, value: 35.8 },
-  { stage: 'Final Negotiation', deals: 8, value: 28.4 },
-  { stage: 'Closing', deals: 5, value: 15.2 },
-];
-
-const DealPipeline = () => {
+const DealPipeline = ({ deadPipeData }) => {  
   return (
     <Card>
       <CardHeader>
@@ -22,11 +13,11 @@ const DealPipeline = () => {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={pipelineData}>
+          <BarChart data={deadPipeData?.dealPipeline}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="stage" />
             <YAxis />
-            <Tooltip 
+            <Tooltip
               formatter={(value, name) => {
                 if (name === 'value') return [`$${value}M`, 'Total Value'];
                 return [value, 'Number of Deals'];

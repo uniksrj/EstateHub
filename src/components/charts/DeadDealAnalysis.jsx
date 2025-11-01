@@ -24,7 +24,7 @@ const DeadDealAnalysis = () => {
                     <TabsTrigger value="details">Deal Details</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="overview" className="space-y-6">
+                <TabsContent value="trends" className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <Card>
                             <CardHeader className="pb-2">
@@ -87,9 +87,10 @@ const DeadDealAnalysis = () => {
                                 <DeadDealChart />
                             </CardContent>
                         </Card>
-
-
                     </div>
+                </TabsContent>
+
+                <TabsContent value="overview" className="space-y-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <Card>
                             <CardHeader>
@@ -103,7 +104,7 @@ const DeadDealAnalysis = () => {
                             </CardContent>
                         </Card>
 
-                         <Card>
+                        <Card>
                             <CardHeader>
                                 <CardTitle>Recovery Rate by Type</CardTitle>
                                 <CardDescription>
@@ -115,9 +116,9 @@ const DeadDealAnalysis = () => {
                             </CardContent>
                         </Card>
                     </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">                       
-
+                </TabsContent>
+                <TabsContent value="details" className="space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <Card className="lg:col-span-2">
                             <CardHeader>
                                 <CardTitle>Recent Dead Deals</CardTitle>
@@ -132,7 +133,7 @@ const DeadDealAnalysis = () => {
                     </div>
                 </TabsContent>
 
-                <TabsContent value="trends">
+                {/* <TabsContent value="trends">
                     <Card>
                         <CardHeader>
                             <CardTitle>Trend Analysis</CardTitle>
@@ -146,9 +147,9 @@ const DeadDealAnalysis = () => {
                             </p>
                         </CardContent>
                     </Card>
-                </TabsContent>
+                </TabsContent> */}
 
-                <TabsContent value="details">
+                {/* <TabsContent value="details">
                     <Card>
                         <CardHeader>
                             <CardTitle>Dead Deal Details</CardTitle>
@@ -162,7 +163,7 @@ const DeadDealAnalysis = () => {
                             </p>
                         </CardContent>
                     </Card>
-                </TabsContent>
+                </TabsContent> */}
             </Tabs>
         </div>
     );

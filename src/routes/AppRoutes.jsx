@@ -73,30 +73,12 @@ export const router = createBrowserRouter([
       },
       {
         path: "auth",
-
         children: [
-          {
-            index: true,
-            Component: AuthPage,
-          },
-          {
-            path: "login",
-            Component: AuthPage
-            // Component: Login,
-          },
-          {
-            path: "register",
-            Component: AuthPage
-            // Component: Register,
-          },
-          {
-            path: "forgot-password",
-            Component: ForgotPassword,
-          },
-          {
-            path: "reset-password",
-            Component: ResetPassword,
-          },
+          { index: true, Component: AuthPage,},
+          { path: "login", Component: AuthPage },
+          { path: "register", Component: AuthPage },
+          { path: "forgot-password", Component: ForgotPassword,},
+          { path: "reset-password", Component: ResetPassword, },
         ],
       },
       {
@@ -126,6 +108,7 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      //  Seller */
       {
         path: "seller",
         element: (
@@ -142,6 +125,7 @@ export const router = createBrowserRouter([
           { path: "inquiries", Component: SellerInquiryPage },
         ],
       },
+      //  Buyer */
       {
         path: "buyer",
         element: (
@@ -156,6 +140,8 @@ export const router = createBrowserRouter([
           { path: "inquiries", Component: BuyerInquiryPage },
         ],
       },
+      //** 
+      //  Agent */
       {
         path: "agent",
         element: (

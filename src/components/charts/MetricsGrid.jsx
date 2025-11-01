@@ -2,38 +2,39 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Building, DollarSign, Target, TrendingDown, TrendingUp, Users } from 'lucide-react';
+import { formatNumber } from '@/utils/userHelpers';
 
-const MetricsGrid = () => {
+const MetricsGrid = ({ metricsData }) => {
   const metrics = [
     {
       title: 'Total Portfolio Value',
-      value: '$245.7M',
-      change: '+12.5%',
-      trend: 'up',
+      value: formatNumber(metricsData?.overview?.totalValue),
+      change: `${metricsData?.overview?.valueGrowth?.change}%`,
+      trend: metricsData?.overview?.valueGrowth?.trend,
       icon: <DollarSign className="h-4 w-4" />,
       description: 'From last quarter'
     },
     {
       title: 'Active Deals',
-      value: '47',
-      change: '+8.2%',
-      trend: 'up',
+      value: metricsData?.overview?.activeListings,
+      change: `${metricsData?.overview?.activeDeals?.change}%`,
+      trend: metricsData?.overview?.activeDeals?.trend,
       icon: <Building className="h-4 w-4" />,
       description: 'Currently in pipeline'
     },
     {
       title: 'Conversion Rate',
-      value: '68%',
-      change: '+5.1%',
-      trend: 'up',
+      value: metricsData?.overview?.conversionRate?.value || '0%',
+      change: `${metricsData?.overview?.conversionRate?.change}%`,
+      trend: metricsData?.overview?.conversionRate?.trend,
       icon: <Target className="h-4 w-4" />,
       description: 'Deals won vs total'
     },
     {
       title: 'Team Performance',
-      value: '84%',
-      change: '-2.3%',
-      trend: 'down',
+      value: metricsData?.overview?.teamPerformance?.value || '0%',
+      change: `${metricsData?.overview?.teamPerformance?.change}%`,
+      trend: metricsData?.overview?.teamPerformance?.trend,
       icon: <Users className="h-4 w-4" />,
       description: 'Against quarterly targets'
     }
