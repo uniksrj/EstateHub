@@ -34,7 +34,7 @@ const AdminLayout = () => {
     <div className="min-h-screen bg-background">
       <div className="flex">
         {/* Sidebar */}
-        <aside className="w-64 bg-card border-r border-border">
+        <aside className="w-64 bg-card border-r border-border min-h-screen">
           <div className="p-6">
             <div className="flex items-center space-x-2 mb-8">
               <Building2 className="h-6 w-6 text-accent" />

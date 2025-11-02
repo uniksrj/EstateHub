@@ -38,7 +38,8 @@ const activities = [
   }
 ];
 
-const RecentActivity = () => {
+const RecentActivity = ({activities}) => {
+
   const getVariant = (type) => {
     switch (type) {
       case 'positive': return 'default';
@@ -57,7 +58,7 @@ const RecentActivity = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {activities.map((activity) => (
+          {activities?.map((activity) => (
             <div key={activity.id} className="flex items-start space-x-4">
               <div className="flex-1 space-y-1">
                 <div className="flex items-center space-x-2">

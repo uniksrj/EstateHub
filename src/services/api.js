@@ -125,6 +125,10 @@ export const userAPI = {
   removeFromFavorites: (propertyId) => api.delete(`/user/favorites/${propertyId}`),
   getUser_metrics: (params) => api.get("/api/auth/user_metrics", { params }),
   storeBuyerInquiry : (details) => api.post(`/api/user/store-inquiry`, details),
+  get_deal_losses : (params) => api.get("/api/agent/deal-losses", { params }),
+  get_agent_pipeline : (params) => api.get("/api/agent/pipeline", { params }),
+  store_agent_deal_loss : (details) => api.post(`/api/agent/deal-losses`, details),
+  get_agent_buyers : (params) => api.get("/api/agent/buyers", { params }),
 }
 
 export const superAdminAPI = {

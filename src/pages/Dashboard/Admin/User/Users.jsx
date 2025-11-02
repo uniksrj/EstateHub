@@ -9,6 +9,7 @@ import DateRangePicker from "@/components/common/DateRangePicker";
 import MetricCard from "@/components/common/MetricCard";
 import { userAPI } from "@/services/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Loading from "@/pages/SearchPage/Loading";
 
 
 export default function UserManagementPage() {
@@ -37,19 +38,7 @@ export default function UserManagementPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen py-8">
-                <div className="container mx-auto px-4">
-                    <div className="animate-pulse">
-                        <div className="h-8 bg-muted rounded mb-4 w-1/4"></div>
-                        <div className="h-12 bg-muted rounded mb-6"></div>
-                        <div className="space-y-4">
-                            {[1, 2, 3].map((i) => (
-                                <div key={i} className="h-16 bg-muted rounded"></div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
+           <Loading loading={loading} isLineLoader={true} />
         )
     }
 

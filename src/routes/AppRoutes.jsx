@@ -28,6 +28,9 @@ import { BuyerInquiryPage } from "@/pages/Dashboard/Buyer/BuyerInquiry"
 import AgentDashboard from "@/pages/Dashboard/Agent/Dashboard"
 import { AgentInquiry } from "@/pages/Dashboard/Agent/AgentInquiry"
 import AgentListing from "@/pages/Dashboard/Agent/AgentListing"
+import AgentPipeline from "@/pages/Dashboard/Agent/pipeline/AgentPipeline"
+import AgentDealLosses from "@/pages/Dashboard/Agent/deal-losses/AgentDealLosses"
+import AgentClients from "@/pages/Dashboard/Agent/AgentClients"
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -155,6 +158,9 @@ export const router = createBrowserRouter([
           { path: "add-property", Component: AddProperty },
           { path: "manage-properties", Component: ManageProperties},
           { path: "properties", Component: AgentListing},
+          { path: "pipeline", Component: AgentPipeline},
+          { path: "clients", Component: AgentClients},
+          { path: "deal-losses", Component: AgentDealLosses},
           { path: "properties/:id/edit", Component: AddProperty, errorElement: <div>Error loading property</div>, },
         ],
       },

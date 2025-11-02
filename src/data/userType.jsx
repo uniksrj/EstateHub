@@ -18,6 +18,8 @@ import {
   Calculator,
   TrendingUp,
   User,
+  Activity,
+  XCircle,
 } from "lucide-react";
 
 export const sidebars = {
@@ -45,6 +47,8 @@ export const sidebars = {
     { label: "My Clients", path: "/agent/clients", icon: Users },
     { label: "Inquiries", path: "/agent/inquiries", icon: MessageSquare },
     { label: "Schedule", path: "/agent/schedule", icon: Calendar },
+    { label: "Pipeline", path: "/agent/pipeline", icon: Activity },
+    { label: "Deal Losses", path: "/agent/deal-losses", icon: XCircle },
     { label: "Performance", path: "/agent/analytics", icon: BarChart3 },
   ],
 

@@ -25,10 +25,10 @@ export default function AdminDashboard() {
         };
         fetchPropertiesData();
     }, []);
-    console.log("This is full property data :", propertiesData);
+    
     if (loading) {
         return (
-            < Loading loading={loading} isLineLoader={true} />
+            <Loading loading={loading} isLineLoader={true} />
         )
     }
     
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
                             <MetricsGrid metricsData={propertiesData?.metrics}/>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 <DealPipeline deadPipeData={propertiesData?.charts}/>
-                                <RecentActivity />
+                                <RecentActivity activities={propertiesData?.activity.original?.activities}/>
                             </div>
                         </div>
                         <hr className="my-6" />

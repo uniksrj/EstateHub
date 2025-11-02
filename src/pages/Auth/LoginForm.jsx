@@ -8,6 +8,7 @@ import { Label } from "../../components/ui/label"
 import { Alert, AlertDescription } from "../../components/ui/alert"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
 import { useAuth } from "../../hooks/useAuth"
+import { toast, Toaster } from "sonner"
 
 const LoginForm = () => { 
     
@@ -38,14 +39,15 @@ const LoginForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
-        setError("")
+        // setError("")
 
         try {
             const result = await login(formData)
             if (result.success) {
                 navigate('/', { replace: true })
             } else {
-                setError(result.error)
+                setError(result.error || "Invalid email or password")
+                toast.error(result.error || "Invalid credentials")
             }
         } catch (err) {
             console.error(err);
@@ -57,6 +59,7 @@ const LoginForm = () => {
 
     return (
         <div className="h-full flex flex-col justify-center p-4">
+            <Toaster position="top-left" />
             <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold">Welcome Back</h2>
                 <p className="text-muted-foreground">Sign in to your account</p>
