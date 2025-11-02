@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MoreHorizontal, Edit, Trash2, Mail, UserCheck, UserX, Search, Filter } from 'lucide-react';
+import { Trash2, Mail, UserCheck, UserX, Search } from 'lucide-react';
 import { superAdminAPI } from '@/services/api';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
@@ -84,7 +84,7 @@ export default function UserManagementTable({ user_list }) {
             onChange={(e) => setSelectedRole(e.target.value)}
             className="bg-card px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
           >
-            {filterOptions.roles.map((role, index) => (
+            {filterOptions.roles.map((role) => (
               <option key={role.value} value={role.value}>{role.label}</option>
             ))}
           </select>
