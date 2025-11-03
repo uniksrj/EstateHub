@@ -1,23 +1,52 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
 import { Home, Users, Calendar, TrendingUp } from "lucide-react"
-
-const performanceData = [
-  { month: "Jan", sales: 3, views: 120 },
-  { month: "Feb", sales: 5, views: 145 },
-  { month: "Mar", sales: 4, views: 132 },
-  { month: "Apr", sales: 7, views: 168 },
-  { month: "May", sales: 6, views: 152 },
-  { month: "Jun", sales: 8, views: 189 },
-]
-
-const chartConfig = {
-  sales: { label: "Sales", color: "hsl(var(--chart-1))" },
-  views: { label: "Views", color: "hsl(var(--chart-2))" },
-}
+import PerformanceMetrics from "@/components/agent/PerformanceMetrics"
+import StatCard from "@/components/common/StatCard";
+import { useEffect, useState } from "react";
+import { propertiesAPI } from "@/services/api";
+import Loading from "@/pages/SearchPage/Loading";
 
 export default function AgentDashboard() {
+
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchAgentProperties();
+  }, []);
+
+  const fetchAgentProperties = async () => {
+    setLoading(true)
+    try {
+      const response = await propertiesAPI.getPropertyListByUser();
+      setProperties(response?.data || {});
+    } catch (error) {
+      console.error("Error:", error)
+      setProperties([])
+    } finally {
+      setLoading(false)
+    }
+  }
+  console.log("this is property list", properties);
+  const pendingProperties = properties?.data?.data?.filter(p => p.status === "pending").length;
+  const totalProperties = properties?.data?.data?.length || 0;
+  const activeClients = properties?.agentClientStats?.active_clients || 0;
+  const newClientsThisWeek = properties?.agentClientStats?.new_this_week || 0;
+
+  const scheduledTours = 0;
+  const commission = 0;
+
+
+
+  const stats = [
+    { title: "My Properties", value: totalProperties, subtitle: `${pendingProperties} pending approval`, Icon: Home },
+    { title: "Active Clients", value: activeClients, subtitle:`+${newClientsThisWeek} new this week`, Icon: Users },
+    { title: "Scheduled Tours", value: scheduledTours, subtitle: "This week", Icon: Calendar },
+    { title: "Commission", value: `$${commission.toLocaleString()}`, subtitle: "This month", Icon: TrendingUp },
+  ];
+
+  if (loading) {
+    return <Loading />
+  }
   return (
     <div className="space-y-6">
       <div>
@@ -26,71 +55,12 @@ export default function AgentDashboard() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">My Properties</CardTitle>
-            <Home className="size-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">3 pending approval</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Active Clients</CardTitle>
-            <Users className="size-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">18</div>
-            <p className="text-xs text-muted-foreground">+3 new this week</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Scheduled Tours</CardTitle>
-            <Calendar className="size-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">7</div>
-            <p className="text-xs text-muted-foreground">This week</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Commission</CardTitle>
-            <TrendingUp className="size-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$12,400</div>
-            <p className="text-xs text-muted-foreground">This month</p>
-          </CardContent>
-        </Card>
+        {stats.map((item, idx) => (
+          <StatCard key={idx} {...item} />
+        ))}
       </div>
+      <PerformanceMetrics />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Performance Metrics</CardTitle>
-          <CardDescription>Your sales and property views over time</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig} className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={performanceData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Line type="monotone" dataKey="sales" stroke="var(--color-sales)" strokeWidth={2} />
-                <Line type="monotone" dataKey="views" stroke="var(--color-views)" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </CardContent>
-      </Card>
     </div>
   )
 }
