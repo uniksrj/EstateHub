@@ -61,7 +61,7 @@ export default function ScheduleManager({
             onClose?.()
         } catch (error) {
             console.error("Error creating schedule:", error)
-            toast.error("Failed to schedule tour")
+            toast.error(error.response.data.message || "Failed to schedule tour.")
         } finally {
             setLoading(false)
         }

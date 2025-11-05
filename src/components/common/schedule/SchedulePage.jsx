@@ -7,9 +7,11 @@ import { Calendar, Video, MapPin, Check, XCircle, Clock, RefreshCcw } from "luci
 import { format } from "date-fns"
 import { userAPI } from "@/services/api"
 import { getScheduleStatusColor } from "@/utils/userHelpers"
+import { Loading } from "@/pages/misc/Loading"
 
 export default function SchedulePage() {
   const [schedules, setSchedules] = useState([])
+  const [loading, setLoading] = useState(true)
   const userRole = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
@@ -19,6 +21,8 @@ export default function SchedulePage() {
         setSchedules(response.data.schedules)
       } catch (error) {
         console.error("Error fetching schedules:", error)
+      } finally {
+        setLoading(false)
       }
     }
     fetchSchedules()
@@ -36,6 +40,21 @@ export default function SchedulePage() {
       prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
     )
     toast.success(`Schedule ${newStatus} successfully.`)
+  }
+
+  if (loading) {
+    return (
+      <Loading loading={loading} />
+    )
+  }
+
+  if (schedules.length === 0) {
+    return (
+      <div className="p-6"> 
+        <h2 className="text-2xl font-bold mb-6">My Schedules</h2>
+        <p className="text-muted-foreground">No schedules found.</p>
+      </div>
+    )
   }
 
   return (
