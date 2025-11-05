@@ -129,6 +129,9 @@ export const userAPI = {
   get_agent_pipeline : (params) => api.get("/api/agent/pipeline", { params }),
   store_agent_deal_loss : (details) => api.post(`/api/agent/deal-losses`, details),
   get_agent_buyers : (params) => api.get("/api/agent/buyers", { params }),
+  store_schedule : (details) => api.post(`/api/store-schedule`, details),
+  getAll : (params) => api.get(`/api/get-schedule`, { params }),
+  updateScheduleStatus : (status) => api.put(`/api/update-schedule-status`, status),
 }
 
 export const superAdminAPI = {

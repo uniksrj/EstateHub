@@ -58,7 +58,7 @@ export const sidebars = {
     { label: "My Criteria", path: "/buyer/preferences", icon: Filter },
     { label: "Property Alerts", path: "/buyer/alerts", icon: Bell },
     { label: "My Inquiries", path: "/buyer/inquiries", icon: MessageSquare },
-    { label: "Schedule Tours", path: "/buyer/tours", icon: Calendar },
+    { label: "Schedule Tours", path: "/buyer/schedule", icon: Calendar },
     { label: "My Offers", path: "/buyer/offers", icon: Tag },
   ],
 

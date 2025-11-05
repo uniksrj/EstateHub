@@ -2,12 +2,13 @@ import { getStatusColor, getStatusText } from "@/utils/userHelpers"
 import { useState } from "react"
 import { Card, CardContent } from "../ui/card"
 import { Link } from "react-router"
-import { Badge, Bath, Bed, Calendar, Eye, Heart, MapPin, Square } from "lucide-react"
+import { Badge, Bath, Bed, Calendar, CalendarPlus, Eye, Heart, MapPin, MessageCircle, Square } from "lucide-react"
 import { Button } from "../ui/button"
 import { userAPI } from "@/services/api"
 import ContactSellerDialog from "./ContactSellerDialog"
 import { useAuth } from "@/hooks/useAuth"
 import { toast, Toaster } from "sonner"
+import ScheduleManager from "../common/schedule/ScheduleManager"
 
 
 export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
@@ -15,10 +16,15 @@ export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
     const [isSaved, setIsSaved] = useState(
         property.favorites?.[0]?.user_id === user.id
     )
+    const [showModal, setShowModal] = useState(false)
+
+    const handleNewSchedule = (schedule) => {
+        toast.success(`Tour scheduled on ${schedule.date} at ${schedule.time}!`)
+    }
 
     const handleFavoriteProperty = async (e) => {
-        e.preventDefault()
-        e.stopPropagation()
+        e.preventDefault();
+        e.stopPropagation();
         const optimisticValue = !isSaved
         setIsSaved(optimisticValue)
         handleFavoriteChange?.(property.id, optimisticValue)
@@ -113,16 +119,34 @@ export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
                     </div>
                 </CardContent>
             </Link>
-            <CardContent >
+            <CardContent>
                 <div className="flex space-x-2 mt-4">
                     <ContactSellerDialog
                         property={property}
                         triggerButton={
-                            <Button variant="outline" size="sm">
-                                Contact Seller
+                            <Button variant="outline" size="sm" title="Contact Seller">
+                                <MessageCircle className="h-4 w-4" />
                             </Button>
                         }
                     />
+                    <div className="flex items-center gap-3">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowModal(true)}
+                            title="Schedule a Tour"
+                        >
+                            <CalendarPlus className="h-4 w-4" />
+                        </Button>
+
+                        <ScheduleManager
+                            mode="modal"
+                            isOpen={showModal}
+                            onClose={() => setShowModal(false)}
+                            property={property}
+                            onScheduleCreated={handleNewSchedule}
+                        />
+                    </div>
                     <Button
                         variant="ghost"
                         size="sm"

@@ -425,3 +425,46 @@ export const demoInquiries = [
     ]
   }
 ];
+
+const demoSchedules = [
+  {
+    id: 1,
+    property: { title: "Modern Apartment in Downtown", city: "New York" },
+    buyer: { name: "Alice Johnson" },
+    agent: { name: "Michael Lee" },
+    scheduled_at: "2025-11-07 14:30",
+    meeting_type: "in-person",
+    status: "pending",
+    notes: "Buyer prefers afternoon slot.",
+  },
+  {
+    id: 2,
+    property: { title: "Beachfront Cottage", city: "Miami" },
+    buyer: { name: "John Smith" },
+    agent: { name: "Samantha Davis" },
+    scheduled_at: "2025-11-10 10:00",
+    meeting_type: "virtual",
+    status: "approved",
+    notes: "Tour via Zoom link shared.",
+  },
+  {
+    id: 3,
+    property: { title: "Luxury Villa in Beverly Hills", city: "Los Angeles" },
+    buyer: { name: "Emma Brown" },
+    agent: { name: "Michael Lee" },
+    scheduled_at: "2025-11-12 16:00",
+    meeting_type: "in-person",
+    status: "completed",
+    notes: "Visit successfully completed.",
+  },
+  {
+    id: 4,
+    property: { title: "Luxury Villa in Beverly Hills", city: "Los Angeles" },
+    buyer: { name: "Emma Brown" },
+    // agent: { name: "Michael Lee" },
+    scheduled_at: "2025-11-12 16:00",
+    meeting_type: "in-person",
+    status: "approved",
+    notes: "Visit successfully completed.",
+  },
+]

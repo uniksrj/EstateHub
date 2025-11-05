@@ -31,6 +31,7 @@ import AgentListing from "@/pages/Dashboard/Agent/AgentListing"
 import AgentPipeline from "@/pages/Dashboard/Agent/pipeline/AgentPipeline"
 import AgentDealLosses from "@/pages/Dashboard/Agent/deal-losses/AgentDealLosses"
 import AgentClients from "@/pages/Dashboard/Agent/AgentClients"
+import SchedulePage from "@/components/common/schedule/SchedulePage"
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -141,6 +142,7 @@ export const router = createBrowserRouter([
           { path: "search", Component: FindProperties },
           { path: "favorites", Component: FavoritePage },
           { path: "inquiries", Component: BuyerInquiryPage },
+          { path: "schedule", Component: SchedulePage },
         ],
       },
       //** 

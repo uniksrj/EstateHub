@@ -101,6 +101,12 @@
   --chart-5: oklch(0.645 0.246 16.439);
   --color-count: #3b82f6;
   --color-counter: oklch(0.985 0 0);
+
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+    opacity: 0.8;
+  }
 }
 
 @theme inline {
@@ -141,6 +147,7 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
 }
 
 @layer base {
