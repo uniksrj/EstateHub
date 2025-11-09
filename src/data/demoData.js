@@ -20,7 +20,7 @@ export const demoProperties = [
       "/apartment-2.jpg"
     ],
     features: ["City View", "Modern Kitchen", "Balcony", "Parking"],
-    recent_views : 5
+    recent_views: 5
   },
   {
     id: 2,
@@ -42,7 +42,7 @@ export const demoProperties = [
       "/villa-2.jpg"
     ],
     features: ["Ocean View", "Private Pool", "Beach Access", "Smart Home"],
-    recent_views : 2
+    recent_views: 2
   },
   {
     id: 3,
@@ -63,7 +63,7 @@ export const demoProperties = [
       "/condo-1.jpg"
     ],
     features: ["Garden", "Pet Friendly", "Updated Kitchen", "Storage"],
-    recent_views : 8
+    recent_views: 8
   },
   {
     id: 4,
@@ -86,7 +86,7 @@ export const demoProperties = [
       "/house-2.jpg"
     ],
     features: ["Large Yard", "Garage", "Updated Bathrooms", "Open Floor Plan"],
-    recent_views : 15
+    recent_views: 15
   },
   {
     id: 5,
@@ -103,7 +103,7 @@ export const demoProperties = [
     created_at: "2024-01-20T13:10:00Z",
     images: [],
     features: ["High Foot Traffic", "Street Parking", "Modern HVAC", "Flexible Layout"],
-    recent_views : 20
+    recent_views: 20
   },
   {
     id: 6,
@@ -124,7 +124,7 @@ export const demoProperties = [
       "/townhouse-1.jpg"
     ],
     features: ["Mountain View", "Community Pool", "Garage", "Updated"],
-    recent_views : 4
+    recent_views: 4
   },
   {
     id: 7,
@@ -146,7 +146,7 @@ export const demoProperties = [
       "/loft-2.jpg"
     ],
     features: ["Historic", "High Ceilings", "Exposed Brick", "City Center"],
-    recent_views : 10
+    recent_views: 10
   },
   {
     id: 8,
@@ -167,7 +167,7 @@ export const demoProperties = [
       "/cabin-1.jpg"
     ],
     features: ["Lake Front", "Private Dock", "Fireplace", "Wooded Lot"],
-    recent_views : 12
+    recent_views: 12
   }
 ]
 
@@ -360,16 +360,16 @@ export const demoInquiries = [
     createdAt: "2024-01-13T09:15:00Z",
     responses: []
   },
-   {
+  {
     id: 4,
     buyerName: "Emily Davis",
-    buyerEmail: "emily.davis@email.com", 
+    buyerEmail: "emily.davis@email.com",
     buyerPhone: "+1 (555) 234-5678",
     propertyTitle: "Luxury Villa with Pool",
     propertyId: 102,
     propertyPrice: 1400000,
     propertyCity: "Los Angeles",
-    propertyState: "CA", 
+    propertyState: "CA",
     propertyBedrooms: 4,
     propertyBathrooms: 3,
     propertySqft: 3200,
@@ -392,11 +392,11 @@ export const demoInquiries = [
         is_read: true
       },
       {
-        id: 2, 
+        id: 2,
         message: "Thank you for the information. We've decided to move forward with another property, but appreciate your help!",
         sender: "buyer",
         sender_id: 4,
-        timestamp: "2024-01-12T10:30:00Z", 
+        timestamp: "2024-01-12T10:30:00Z",
         is_read: true
       }
     ]
@@ -468,3 +468,433 @@ const demoSchedules = [
     notes: "Visit successfully completed.",
   },
 ]
+
+export const testimonials = [
+  {
+    id: 1,
+    name: "Sarah Johnson",
+    role: "Home Owner",
+    content: "EstateHub helped me find my dream home in just 2 weeks! The process was smooth and professional.",
+    rating: 5,
+    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=500"
+  },
+  {
+    id: 2,
+    name: "Michael Chen",
+    role: "Real Estate Investor",
+    content: "As an investor, I appreciate the market insights and property analytics. Made my investment decisions much easier.",
+    rating: 5,
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=500"
+  },
+  {
+    id: 3,
+    name: "Emily Rodriguez",
+    role: "First-time Buyer",
+    content: "The team was incredibly patient and guided me through every step. Couldn't be happier with my new apartment!",
+    rating: 5,
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=500"
+  }
+];
+
+
+export const stats = [
+  { number: "10,000+", label: "Properties Listed" },
+  { number: "5,000+", label: "Happy Customers" },
+  { number: "50+", label: "Cities Covered" },
+  { number: "24/7", label: "Customer Support" }
+];
+
+// Featured properties data
+export const featuredPropertiesData = [
+  {
+    id: 1,
+    title: "Modern Villa",
+    location: "Beverly Hills, CA",
+    beds: 4,
+    baths: 3,
+    sqft: 3200,
+    price: "$2,500,000",
+    image: "https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470",
+    featured: true
+  },
+  {
+    id: 2,
+    title: "Luxury Apartment",
+    location: "Manhattan, NY",
+    beds: 2,
+    baths: 2,
+    sqft: 1800,
+    price: "$1,800,000",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470",
+    featured: true
+  },
+  {
+    id: 3,
+    title: "Beach House",
+    location: "Miami, FL",
+    beds: 3,
+    baths: 2,
+    sqft: 2200,
+    price: "$1,200,000",
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470",
+    featured: true
+  },
+  {
+    id: 4,
+    title: "Urban Loft",
+    location: "Chicago, IL",
+    beds: 2,
+    baths: 2,
+    sqft: 1600,
+    price: "$950,000",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470"
+  },
+  {
+    id: 5,
+    title: "Mountain Retreat",
+    location: "Aspen, CO",
+    beds: 5,
+    baths: 4,
+    sqft: 3800,
+    price: "$3,200,000",
+    image: "https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470"
+  },
+  {
+    id: 6,
+    title: "City Penthouse",
+    location: "San Francisco, CA",
+    beds: 3,
+    baths: 3,
+    sqft: 2400,
+    price: "$2,100,000",
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470"
+  }
+];
+
+export const heroContent = [
+  {
+    title: "Discover Your Perfect",
+    highlight: "Dream Property",
+    description: "Experience seamless property discovery with our AI-powered platform. From luxury estates to strategic investments, find exactly what you're looking for.",
+    badge: "AI-Powered Platform",
+    image: "https://images.unsplash.com/photo-1560448076-213180fe7d44?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470"
+  },
+  {
+    title: "Luxury Living",
+    highlight: "Redefined",
+    description: "Access exclusive properties in prime locations. Our curated portfolio features the finest homes with exceptional amenities and investment potential.",
+    badge: "Exclusive Collection",
+    image: "https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470"
+  },
+  {
+    title: "Smart Real Estate",
+    highlight: "Investments",
+    description: "Make data-driven decisions with comprehensive market analytics and expert guidance. Maximize returns with our strategic investment opportunities.",
+    badge: "Market Intelligence",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470"
+  }
+];
+
+export const demoPreferences = [
+  {
+    id: 1,
+    user_id: 1,
+    name: "Downtown Condos",
+    min_price: 300000,
+    max_price: 500000,
+    min_bedrooms: 2,
+    min_bathrooms: 2,
+    property_type: "condo",
+    location: "Downtown",
+    min_sqft: 800,
+    max_sqft: 1500,
+    amenities: ["parking", "gym", "pool"],
+    alerts_enabled: true,
+    alert_frequency: "instant",
+    is_active: true,
+    is_default: true,
+    created_at: "2024-01-15T10:30:00Z",
+    updated_at: "2024-01-15T10:30:00Z"
+  },
+  {
+    id: 2,
+    user_id: 1,
+    name: "Suburban Family Homes",
+    min_price: 500000,
+    max_price: 800000,
+    min_bedrooms: 3,
+    min_bathrooms: 2,
+    property_type: "house",
+    location: "North Suburbs",
+    min_sqft: 1500,
+    max_sqft: 2500,
+    amenities: ["garage", "garden", "schools"],
+    alerts_enabled: true,
+    alert_frequency: "daily",
+    is_active: true,
+    is_default: false,
+    created_at: "2024-01-10T14:20:00Z",
+    updated_at: "2024-01-12T09:15:00Z"
+  },
+  {
+    id: 3,
+    user_id: 1,
+    name: "Luxury Waterfront",
+    min_price: 1000000,
+    max_price: 2500000,
+    min_bedrooms: 4,
+    min_bathrooms: 3,
+    property_type: "house",
+    location: "Waterfront",
+    min_sqft: 2500,
+    max_sqft: 5000,
+    amenities: ["pool", "dock", "view", "smart_home"],
+    alerts_enabled: false,
+    alert_frequency: "weekly",
+    is_active: true,
+    is_default: false,
+    created_at: "2024-01-05T16:45:00Z",
+    updated_at: "2024-01-08T11:30:00Z"
+  },
+  {
+    id: 4,
+    user_id: 1,
+    name: "Starter Apartments",
+    min_price: 150000,
+    max_price: 300000,
+    min_bedrooms: 1,
+    min_bathrooms: 1,
+    property_type: "apartment",
+    location: "University Area",
+    min_sqft: 500,
+    max_sqft: 900,
+    amenities: ["laundry", "parking"],
+    alerts_enabled: true,
+    alert_frequency: "instant",
+    is_active: true,
+    is_default: false,
+    created_at: "2024-01-20T08:15:00Z",
+    updated_at: "2024-01-20T08:15:00Z"
+  },
+  {
+    id: 5,
+    user_id: 1,
+    name: "Investment Properties",
+    min_price: 200000,
+    max_price: 400000,
+    min_bedrooms: 2,
+    min_bathrooms: 1,
+    property_type: "townhouse",
+    location: "East District",
+    min_sqft: 1000,
+    max_sqft: 1800,
+    amenities: ["rental_ready", "low_maintenance"],
+    alerts_enabled: true,
+    alert_frequency: "daily",
+    is_active: false,
+    is_default: false,
+    created_at: "2024-01-18T13:40:00Z",
+    updated_at: "2024-01-22T10:20:00Z"
+  }
+];
+
+export const demoAlerts = [
+  {
+    id: 1,
+    user_id: 1,
+    preference_id: 1,
+    name: "Downtown Luxury Condos",
+    criteria: {
+      min_price: 300000,
+      max_price: 500000,
+      min_bedrooms: 2,
+      property_type: "condo",
+      location: "Downtown"
+    },
+    status: "active",
+    frequency: "instant",
+    match_count: 12,
+    total_matches: 45,
+    last_matched_at: "2024-01-25T14:30:00Z",
+    last_notified_at: "2024-01-25T10:15:00Z",
+    is_active: true,
+    email_notifications: true,
+    push_notifications: true,
+    created_at: "2024-01-15T10:30:00Z",
+    updated_at: "2024-01-25T14:30:00Z"
+  },
+  {
+    id: 2,
+    user_id: 1,
+    preference_id: 2,
+    name: "Family Suburban Homes",
+    criteria: {
+      min_price: 500000,
+      max_price: 800000,
+      min_bedrooms: 3,
+      property_type: "house",
+      location: "North Suburbs"
+    },
+    status: "active",
+    frequency: "daily",
+    match_count: 5,
+    total_matches: 23,
+    last_matched_at: "2024-01-24T18:45:00Z",
+    last_notified_at: "2024-01-24T08:00:00Z",
+    is_active: true,
+    email_notifications: true,
+    push_notifications: false,
+    created_at: "2024-01-10T14:20:00Z",
+    updated_at: "2024-01-24T18:45:00Z"
+  },
+  {
+    id: 3,
+    user_id: 1,
+    preference_id: 3,
+    name: "Premium Waterfront",
+    criteria: {
+      min_price: 1000000,
+      max_price: 2500000,
+      min_bedrooms: 4,
+      property_type: "house",
+      location: "Waterfront"
+    },
+    status: "paused",
+    frequency: "weekly",
+    match_count: 2,
+    total_matches: 8,
+    last_matched_at: "2024-01-20T11:20:00Z",
+    last_notified_at: "2024-01-20T11:20:00Z",
+    is_active: false,
+    email_notifications: false,
+    push_notifications: true,
+    created_at: "2024-01-05T16:45:00Z",
+    updated_at: "2024-01-22T09:10:00Z"
+  },
+  {
+    id: 4,
+    user_id: 1,
+    preference_id: 4,
+    name: "Student Apartments",
+    criteria: {
+      min_price: 150000,
+      max_price: 300000,
+      min_bedrooms: 1,
+      property_type: "apartment",
+      location: "University Area"
+    },
+    status: "active",
+    frequency: "instant",
+    match_count: 8,
+    total_matches: 32,
+    last_matched_at: "2024-01-25T16:20:00Z",
+    last_notified_at: "2024-01-25T12:30:00Z",
+    is_active: true,
+    email_notifications: true,
+    push_notifications: true,
+    created_at: "2024-01-20T08:15:00Z",
+    updated_at: "2024-01-25T16:20:00Z"
+  },
+  {
+    id: 5,
+    user_id: 1,
+    preference_id: 1,
+    name: "Downtown Studio Deals",
+    criteria: {
+      min_price: 200000,
+      max_price: 350000,
+      min_bedrooms: 1,
+      property_type: "condo",
+      location: "Downtown"
+    },
+    status: "active",
+    frequency: "daily",
+    match_count: 15,
+    total_matches: 67,
+    last_matched_at: "2024-01-25T09:45:00Z",
+    last_notified_at: "2024-01-24T08:00:00Z",
+    is_active: true,
+    email_notifications: true,
+    push_notifications: false,
+    created_at: "2024-01-12T11:30:00Z",
+    updated_at: "2024-01-25T09:45:00Z"
+  }
+];
+
+export const demoMatchingProperties = [
+  {
+    id: 101,
+    title: "Luxury Downtown Condo with City Views",
+    price: 450000,
+    bedrooms: 2,
+    bathrooms: 2,
+    sqft: 1200,
+    type: "condo",
+    location: "Downtown",
+    address: "123 Main Street, Downtown",
+    image: "/api/placeholder/400/300",
+    amenities: ["parking", "gym", "pool", "concierge"],
+    listed_at: "2024-01-25T10:00:00Z",
+    match_score: 95
+  },
+  {
+    id: 102,
+    title: "Modern Suburban Family Home",
+    price: 650000,
+    bedrooms: 4,
+    bathrooms: 3,
+    sqft: 2200,
+    type: "house",
+    location: "North Suburbs",
+    address: "456 Oak Avenue, North Suburbs",
+    image: "/api/placeholder/400/300",
+    amenities: ["garage", "garden", "fireplace", "schools"],
+    listed_at: "2024-01-24T14:30:00Z",
+    match_score: 88
+  },
+  {
+    id: 103,
+    title: "Stunning Waterfront Estate",
+    price: 1850000,
+    bedrooms: 5,
+    bathrooms: 4,
+    sqft: 3800,
+    type: "house",
+    location: "Waterfront",
+    address: "789 Beach Road, Waterfront",
+    image: "/api/placeholder/400/300",
+    amenities: ["pool", "dock", "view", "smart_home", "guest_house"],
+    listed_at: "2024-01-23T09:15:00Z",
+    match_score: 92
+  },
+  {
+    id: 104,
+    title: "Cozy University Apartment",
+    price: 220000,
+    bedrooms: 1,
+    bathrooms: 1,
+    sqft: 650,
+    type: "apartment",
+    location: "University Area",
+    address: "321 College Street, University Area",
+    image: "/api/placeholder/400/300",
+    amenities: ["laundry", "parking", "campus_proximity"],
+    listed_at: "2024-01-25T16:45:00Z",
+    match_score: 85
+  },
+  {
+    id: 105,
+    title: "Investment Townhouse - Great ROI",
+    price: 320000,
+    bedrooms: 2,
+    bathrooms: 2,
+    sqft: 1250,
+    type: "townhouse",
+    location: "East District",
+    address: "654 Pine Street, East District",
+    image: "/api/placeholder/400/300",
+    amenities: ["rental_ready", "low_maintenance", "community_pool"],
+    listed_at: "2024-01-24T11:20:00Z",
+    match_score: 78
+  }
+];

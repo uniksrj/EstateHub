@@ -132,6 +132,10 @@ export const userAPI = {
   store_schedule : (details) => api.post(`/api/store-schedule`, details),
   getAll : (params) => api.get(`/api/get-schedule`, { params }),
   updateScheduleStatus : (status) => api.put(`/api/update-schedule-status`, status),
+  buyer_preferences : (params) => api.get(`/api/buyer/preferences`, { params }),
+  update_preferences : (id, preference) => api.put(`/api/buyer/preferences/${id}`, preference),
+  create_preference : (preference) => api.post(`/api/buyer/preferences`, preference),
+  delete_preference : (id) => api.delete(`/api/buyer/preferences/${id}`),
 }
 
 export const superAdminAPI = {

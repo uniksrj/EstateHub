@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router"
 import Layout from "../components/layout/Layout"
-import Home from "../pages/Home/Home"
 import PropertyList from "../pages/Properties/PropertyList"
 import PropertyDetail from "../pages/Properties/PropertyDetail"
 import AuthPage from "../pages/Auth/AuthPage"
@@ -32,6 +31,12 @@ import AgentPipeline from "@/pages/Dashboard/Agent/pipeline/AgentPipeline"
 import AgentDealLosses from "@/pages/Dashboard/Agent/deal-losses/AgentDealLosses"
 import AgentClients from "@/pages/Dashboard/Agent/AgentClients"
 import SchedulePage from "@/components/common/schedule/SchedulePage"
+import PreferencesAlerts from "@/pages/Dashboard/Buyer/PreferencesAlerts"
+import BuyerOffers from "@/pages/Dashboard/Buyer/BuyerOffers "
+import MortgageTools from "@/pages/Dashboard/Buyer/MortgageTools"
+import DocumentsPage from "@/pages/Dashboard/Buyer/DocumentsPage"
+import MarketInsights from "@/pages/Dashboard/Buyer/MarketInsights"
+import HomePage from "@/pages/Home/HomePage"
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -41,7 +46,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: Home,
+        Component: HomePage,
       },
       {
         path: "properties",
@@ -143,6 +148,11 @@ export const router = createBrowserRouter([
           { path: "favorites", Component: FavoritePage },
           { path: "inquiries", Component: BuyerInquiryPage },
           { path: "schedule", Component: SchedulePage },
+          { path: "preferences-alerts", Component: PreferencesAlerts },
+          { path: "offers", Component: BuyerOffers },
+          { path: "mortgage-tools", Component: MortgageTools },
+          { path: "documents", Component: DocumentsPage },
+          { path: "market-insight", Component: MarketInsights },
         ],
       },
       //** 

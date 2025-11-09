@@ -53,13 +53,15 @@ export const sidebars = {
   ],
 
   buyer: [
+    { label: "Dashboard", path: "/buyer", icon: Home },
     { label: "Find Properties", path: "/buyer/search", icon: Search },
     { label: "Saved Properties", path: "/buyer/favorites", icon: Heart },
-    { label: "My Criteria", path: "/buyer/preferences", icon: Filter },
-    { label: "Property Alerts", path: "/buyer/alerts", icon: Bell },
-    { label: "My Inquiries", path: "/buyer/inquiries", icon: MessageSquare },
+    { label: "My Criteria & Alerts", path: "/buyer/preferences-alerts", icon: Filter },
     { label: "Schedule Tours", path: "/buyer/schedule", icon: Calendar },
     { label: "My Offers", path: "/buyer/offers", icon: Tag },
+    { label: "Mortgage Tools", path: "/buyer/mortgage-tools", icon: Calculator },
+    { label: "Documents", path: "/buyer/documents", icon: FileText },
+    { label: "Market Insights", path: "/buyer/market-insight", icon: TrendingUp },
   ],
 
   seller: [
