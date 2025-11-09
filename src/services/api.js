@@ -2,7 +2,7 @@ import axios from "axios"
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: API_URL, 
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -106,13 +106,13 @@ export const propertiesAPI = {
   getAll: (params) => api.get("/api/properties", { params }),
   create: (propertyData) => api.post("/api/property/add", propertyData),
   getById: (id) => api.get(`/api/properties/${id}`),
-  saveViewById: (id,details) => api.post(`/api/properties/${id}`,details),
+  saveViewById: (id, details) => api.post(`/api/properties/${id}`, details),
   update: (id, propertyData) => api.put(`/api/properties/${id}`, propertyData),
   delete: (id) => api.delete(`/api/properties/${id}`),
   search: (searchParams) => api.get("/properties/search", { params: searchParams }),
   getFeatured: () => api.get("/properties/featured"),
-  getPropertyListByUser :(searchData) => api.get("/api/propertiesList", {searchData}),
-  getDashboardListByUser :(searchData) => api.get("/api/seller/dashboard", {searchData}),
+  getPropertyListByUser: (searchData) => api.get("/api/propertiesList", { searchData }),
+  getDashboardListByUser: (searchData) => api.get("/api/seller/dashboard", { searchData }),
 }
 
 // User API calls
@@ -124,18 +124,22 @@ export const userAPI = {
   toggleFavorite: (details) => api.post(`/api/properties/toggle-favorite`, details),
   removeFromFavorites: (propertyId) => api.delete(`/user/favorites/${propertyId}`),
   getUser_metrics: (params) => api.get("/api/auth/user_metrics", { params }),
-  storeBuyerInquiry : (details) => api.post(`/api/user/store-inquiry`, details),
-  get_deal_losses : (params) => api.get("/api/agent/deal-losses", { params }),
-  get_agent_pipeline : (params) => api.get("/api/agent/pipeline", { params }),
-  store_agent_deal_loss : (details) => api.post(`/api/agent/deal-losses`, details),
-  get_agent_buyers : (params) => api.get("/api/agent/buyers", { params }),
-  store_schedule : (details) => api.post(`/api/store-schedule`, details),
-  getAll : (params) => api.get(`/api/get-schedule`, { params }),
-  updateScheduleStatus : (status) => api.put(`/api/update-schedule-status`, status),
-  buyer_preferences : (params) => api.get(`/api/buyer/preferences`, { params }),
-  update_preferences : (id, preference) => api.put(`/api/buyer/preferences/${id}`, preference),
-  create_preference : (preference) => api.post(`/api/buyer/preferences`, preference),
-  delete_preference : (id) => api.delete(`/api/buyer/preferences/${id}`),
+  storeBuyerInquiry: (details) => api.post(`/api/user/store-inquiry`, details),
+  get_deal_losses: (params) => api.get("/api/agent/deal-losses", { params }),
+  get_agent_pipeline: (params) => api.get("/api/agent/pipeline", { params }),
+  store_agent_deal_loss: (details) => api.post(`/api/agent/deal-losses`, details),
+  get_agent_buyers: (params) => api.get("/api/agent/buyers", { params }),
+  store_schedule: (details) => api.post(`/api/store-schedule`, details),
+  getAll: (params) => api.get(`/api/get-schedule`, { params }),
+  updateScheduleStatus: (status) => api.put(`/api/update-schedule-status`, status),
+  buyer_preferences: (params) => api.get(`/api/buyer/preferences`, { params }),
+  update_preferences: (id, preference) => api.put(`/api/buyer/preferences/${id}`, preference),
+  create_preference: (preference) => api.post(`/api/buyer/preferences`, preference),
+  delete_preference: (id) => api.delete(`/api/buyer/preferences/${id}`),
+  create_alert: (alertData) => api.post('/api/buyer/alerts', alertData),
+  get_alerts: () => api.get('/api/buyer/alerts'),
+  toggle_alert: (id) => api.patch(`/api/buyer/alerts/${id}/toggle`),
+  delete_alert: (id) => api.delete(`/api/buyer/alerts/${id}`)
 }
 
 export const superAdminAPI = {
@@ -152,7 +156,7 @@ export const superAdminAPI = {
 export const webhookAPI = {
   getInquiryList: (params) => api.get("/api/inquiries", { params }),
   inquiry_respond: (id, userData) => api.post(`/api/inquiries/${id}/respond`, userData),
-  inquiry_close : (id, status) => api.post(`/api/inquiries/${id}/close`, status),
+  inquiry_close: (id, status) => api.post(`/api/inquiries/${id}/close`, status),
 }
 
 export default api

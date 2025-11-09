@@ -169,24 +169,47 @@ const PreferencesAlerts = () => {
   };
 
   const toggleAlert = async (alertId, isActive) => {
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setAlerts(prev => prev.map(alert =>
-        alert.id === alertId ? { ...alert, is_active: isActive } : alert
-      ));
+  try {
+    const updatedAlert = await userAPI.toggle_alert(alertId);
+    setAlerts(prev => prev.map(alert =>
+      alert.id === alertId ? updatedAlert : alert
+    ));
+    toast.success(`Alert ${isActive ? 'enabled' : 'paused'}`);
+  } catch (error) {
+    console.error('Error updating alert:', error);
+    toast.error('Failed to update alert');
+  }
+};
 
-      toast.success(`Alert ${isActive ? 'enabled' : 'paused'}`);
-    } catch (error) {
-      console.error('Error updating alert:', error);
-      toast.error('Failed to update alert');
-    }
-  };
+  const createNewAlert = async () => {
+  if (!activePreference) {
+    toast.error('Please save your search criteria first');
+    return;
+  }
 
-  const createNewAlert = () => {
-    // In a real app, this would open a modal or navigate to alert creation
-    toast.info('Create new alert functionality would go here');
-  };
+  try {
+    const alertData = {
+      name: `${activePreference.name} Alert`,
+      preference_id: activePreference.id,
+      criteria: {
+        min_price: activePreference.min_price,
+        max_price: activePreference.max_price,
+        min_bedrooms: activePreference.min_bedrooms,
+        property_type: activePreference.property_type,
+        location: activePreference.location
+      },
+      is_active: true,
+      frequency: activePreference.alert_frequency || 'instant'
+    };
+
+    const newAlert = await userAPI.create_alert(alertData);
+    setAlerts(prev => [newAlert, ...prev]);
+    toast.success('New alert created!');
+  } catch (error) {
+    console.error('Error creating alert:', error);
+    toast.error('Failed to create alert');
+  }
+};
 
   // Watch form values for real-time validation
   const watchMinPrice = watch('min_price');
@@ -216,7 +239,7 @@ const PreferencesAlerts = () => {
 
       {/* Loading State */}
       {isLoading && !activePreference && (
-        <Loading />
+        <Loading loading={isLoading} />
       )}
 
       {/* Preferences List */}
@@ -444,12 +467,12 @@ const PreferencesAlerts = () => {
                 <p className="text-sm text-muted-foreground">Manage your property alerts</p>
               </div>
             </div>
-            <button
+            {/* <button
               onClick={createNewAlert}
               className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-200"
             >
               New Alert
-            </button>
+            </button> */}
           </div>
 
           <div className="space-y-4">
