@@ -139,7 +139,8 @@ export const userAPI = {
   create_alert: (alertData) => api.post('/api/buyer/alerts', alertData),
   get_alerts: () => api.get('/api/buyer/alerts'),
   toggle_alert: (id) => api.patch(`/api/buyer/alerts/${id}/toggle`),
-  delete_alert: (id) => api.delete(`/api/buyer/alerts/${id}`)
+  delete_alert: (id) => api.delete(`/api/buyer/alerts/${id}`),
+  update_alert: (id, alertData) => api.put(`/api/buyer/alerts/${id}`, alertData),
 }
 
 export const superAdminAPI = {

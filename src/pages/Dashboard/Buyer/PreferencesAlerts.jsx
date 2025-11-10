@@ -14,47 +14,39 @@ const PreferencesAlerts = () => {
   const [activePreference, setActivePreference] = useState(null);
   const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm();
 
-  const mockAlerts = [
-    {
-      id: 1,
-      name: "Downtown Condos",
-      criteria: "2+ beds, $300k-$500k, Downtown",
-      properties_count: 12,
-      is_active: true,
-      created_at: "2024-01-15"
-    },
-    {
-      id: 2,
-      name: "Luxury Homes",
-      criteria: "4+ beds, $800k+, Pool",
-      properties_count: 5,
-      is_active: false,
-      created_at: "2024-01-10"
-    }
-  ];
-
   useEffect(() => {
-    fetchUserPreferences();
-    setAlerts(demoAlerts);
+    fetchAllUserData();
   }, []);
 
-  const fetchUserPreferences = async () => {
+  const fetchAllUserData = async () => {
     setIsLoading(true);
     try {
-      // Fetch preferences from API
-      const preferencesData = await userAPI.buyer_preferences();
-      setPreferences(preferencesData.data);
-      setAlerts(demoAlerts);
+      const [preferencesResponse, alertsResponse] = await Promise.all([
+        userAPI.buyer_preferences().catch(error => {
+          console.error('Preferences fetch failed:', error);
+          return { data: demoPreferences };
+        }),
+        userAPI.get_alerts().catch(error => {
+          console.error('Alerts fetch failed:', error);
+          return { data: demoAlerts };
+        })
+      ]);
 
-      if (preferencesData.data.length > 0) {
-        setActivePreference(preferencesData.data[0]);
-        reset(preferencesData.data[0]);
+      const preferences = preferencesResponse.data || preferencesResponse || [];
+      const alerts = alertsResponse.data || alertsResponse || demoAlerts;
+
+      setPreferences(preferences);
+      setAlerts(alerts);
+
+      if (preferences.length > 0) {
+        setActivePreference(preferences[0]);
+        reset(preferences[0]);
       } else {
         createDefaultPreference();
       }
     } catch (error) {
-      console.error('Error fetching preferences:', error);
-      toast.error('Failed to load preferences');
+      console.error('Error in fetchAllUserData:', error);
+      toast.error('Failed to load data');
     } finally {
       setIsLoading(false);
     }
@@ -112,6 +104,8 @@ const PreferencesAlerts = () => {
       setPreferences(prev => [...prev, newPreference.data]);
       setActivePreference(newPreference.data);
       reset(newPreference.data);
+
+      await handleAlertForPreference(newPreference.data);
       toast.success('New search criteria created!');
     } catch (error) {
       console.error('Error creating preference:', error);
@@ -146,19 +140,20 @@ const PreferencesAlerts = () => {
 
   const onSubmitPreferences = async (data) => {
     console.log("data from use Form :", data);
-    
+
     if (!activePreference) return;
 
     setIsLoading(true);
     try {
-      const updatedPreference = await userAPI.update_preferences(activePreference.id, data);
+      const response  = await userAPI.update_preferences(activePreference.id, data);
+      const updatedPreference = response?.data || response;
 
       // Update in local state
       setPreferences(prev =>
-        prev.map(p => p.id === updatedPreference.data.id ? updatedPreference.data : p)
+        prev.map(p => p.id === updatedPreference.id ? updatedPreference : p)
       );
-      setActivePreference(updatedPreference.data);
-
+      setActivePreference(updatedPreference);
+      await handleAlertForPreference(updatedPreference);
       toast.success('Preferences saved successfully!');
     } catch (error) {
       console.error('Error saving preferences:', error);
@@ -169,47 +164,92 @@ const PreferencesAlerts = () => {
   };
 
   const toggleAlert = async (alertId, isActive) => {
-  try {
-    const updatedAlert = await userAPI.toggle_alert(alertId);
-    setAlerts(prev => prev.map(alert =>
-      alert.id === alertId ? updatedAlert : alert
-    ));
-    toast.success(`Alert ${isActive ? 'enabled' : 'paused'}`);
-  } catch (error) {
-    console.error('Error updating alert:', error);
-    toast.error('Failed to update alert');
-  }
-};
+    try {
+      const resToggle = await userAPI.toggle_alert(alertId);
+      const updatedAlert = resToggle.data || resToggle;
+      setAlerts(prev => prev.map(alert =>
+        alert.id === alertId ? updatedAlert : alert
+      ));
+      toast.success(`Alert ${isActive ? 'enabled' : 'paused'}`);
+    } catch (error) {
+      console.error('Error updating alert:', error);
+      toast.error('Failed to update alert');
+    }
+  };
 
-  const createNewAlert = async () => {
-  if (!activePreference) {
-    toast.error('Please save your search criteria first');
-    return;
-  }
+  const handleAlertForPreference = async (preference) => {
+    try {
+      // Check if alerts are enabled for this preference
+      if (!preference.alerts_enabled) {
+        // If alerts are disabled, find and disable existing alert
+        const existingAlert = alerts.find(alert => alert.preference_id === preference.id);
+        if (existingAlert) {
+          await userAPI.toggle_alert(existingAlert.id, false);
+          setAlerts(prev => prev.map(alert =>
+            alert.id === existingAlert.id ? { ...alert, is_active: false } : alert
+          ));
+        }
+        return;
+      }
 
-  try {
-    const alertData = {
-      name: `${activePreference.name} Alert`,
-      preference_id: activePreference.id,
-      criteria: {
-        min_price: activePreference.min_price,
-        max_price: activePreference.max_price,
-        min_bedrooms: activePreference.min_bedrooms,
-        property_type: activePreference.property_type,
-        location: activePreference.location
-      },
-      is_active: true,
-      frequency: activePreference.alert_frequency || 'instant'
-    };
+      // Check if alert already exists for this preference
+      const existingAlert = alerts.find(alert => alert.preference_id === preference.id);
 
-    const newAlert = await userAPI.create_alert(alertData);
-    setAlerts(prev => [newAlert, ...prev]);
-    toast.success('New alert created!');
-  } catch (error) {
-    console.error('Error creating alert:', error);
-    toast.error('Failed to create alert');
-  }
-};
+      if (existingAlert) {
+        // UPDATE existing alert
+        const alertUpdateData = {
+          name: `${preference.name} Alert`,
+          criteria: {
+            min_price: preference.min_price,
+            max_price: preference.max_price,
+            min_bedrooms: preference.min_bedrooms,
+            min_bathrooms: preference.min_bathrooms,
+            property_type: preference.property_type,
+            location: preference.location,
+            min_sqft: preference.min_sqft,
+            max_sqft: preference.max_sqft
+          },
+          frequency: preference.alert_frequency,
+          is_active: true
+        };
+
+        const response = await userAPI.update_alert(existingAlert.id, alertUpdateData);
+        const updatedAlert = response.data || response;
+
+        setAlerts(prev => prev.map(alert =>
+          alert.id === existingAlert.id ? updatedAlert : alert
+        ));
+
+        console.log('Alert updated:', updatedAlert);
+      } else {
+        // CREATE new alert
+        const alertData = {
+          name: `${preference.name} Alert`,
+          preference_id: preference.id,
+          criteria: {
+            min_price: preference.min_price,
+            max_price: preference.max_price,
+            min_bedrooms: preference.min_bedrooms,
+            min_bathrooms: preference.min_bathrooms,
+            property_type: preference.property_type,
+            location: preference.location,
+            min_sqft: preference.min_sqft,
+            max_sqft: preference.max_sqft
+          },
+          is_active: true,
+        };
+
+        const response = await userAPI.create_alert(alertData);
+        const newAlert = response.data || response;
+
+        setAlerts(prev => [newAlert, ...prev]);
+        console.log('New alert created:', newAlert);
+      }
+    } catch (error) {
+      console.error('Error handling alert for preference:', error);
+      toast.error('Preferences saved, but failed to update alerts');
+    }
+  };
 
   // Watch form values for real-time validation
   const watchMinPrice = watch('min_price');
@@ -481,14 +521,15 @@ const PreferencesAlerts = () => {
                 <Bell className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
                 <h3 className="text-lg font-medium text-card-foreground mb-2">No alerts yet</h3>
                 <p className="text-muted-foreground mb-4">Create your first alert to get notified about new properties</p>
-                <button
+                {/* <button
                   onClick={createNewAlert}
                   className="bg-primary text-primary-foreground px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors duration-200"
                 >
                   Create Alert
-                </button>
+                </button> */}
               </div>
             ) : (
+              console.log('Rendering alerts:', alerts),
               alerts.map(alert => (
                 <div key={alert.id} className="border border-border rounded-lg p-4 hover:border-primary/50 transition-colors duration-200">
                   <div className="flex items-start justify-between mb-3">
