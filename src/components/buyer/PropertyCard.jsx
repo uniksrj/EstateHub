@@ -1,22 +1,29 @@
 import { getStatusColor, getStatusText } from "@/utils/userHelpers"
 import { useState } from "react"
 import { Card, CardContent } from "../ui/card"
-import { Link } from "react-router"
-import { Badge, Bath, Bed, Calendar, CalendarPlus, Eye, Heart, MapPin, MessageCircle, Square } from "lucide-react"
+import { Link, useNavigate } from "react-router"
+import { Badge, Bath, Bed, Calendar, CalendarPlus, Eye, Handshake, Heart, MapPin, MessageCircle, Square } from "lucide-react"
 import { Button } from "../ui/button"
 import { userAPI } from "@/services/api"
 import ContactSellerDialog from "./ContactSellerDialog"
 import { useAuth } from "@/hooks/useAuth"
 import { toast, Toaster } from "sonner"
 import ScheduleManager from "../common/schedule/ScheduleManager"
+import { useOffers } from "@/hooks/useOffers"
+import OfferCreationWizard from "@/pages/Dashboard/Buyer/OfferCreationWizard"
 
 
 export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
     const { user } = useAuth()
+    const { offers, addNewOffer } = useOffers();
     const [isSaved, setIsSaved] = useState(
         property.favorites?.[0]?.user_id === user.id
     )
     const [showModal, setShowModal] = useState(false)
+    const navigate = useNavigate();
+    const [showOfferWizard, setShowOfferWizard] = useState(false);
+    const [selectedProperty, setSelectedProperty] = useState(null);
+
 
     const handleNewSchedule = (schedule) => {
         toast.success(`Tour scheduled on ${schedule.date} at ${schedule.time}!`)
@@ -39,6 +46,18 @@ export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
             toast.error("Failed to change favorite status.");
         }
     }
+
+    const handleNewOfferSubmit = (property, offerData) => {        
+        addNewOffer(property, offerData);
+        setShowOfferWizard(false);
+        navigate('/buyer/offers');
+    };
+
+
+    const handleMakeOffer = (property) => {
+        setSelectedProperty(property);
+        setShowOfferWizard(true);
+    };
 
     return (
         <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -146,6 +165,14 @@ export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
                             property={property}
                             onScheduleCreated={handleNewSchedule}
                         />
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={()=> handleMakeOffer(property)}
+                            title="Make Offer"
+                        >
+                            <Handshake className="w-4 h-4" />
+                        </Button>
                     </div>
                     <Button
                         variant="ghost"
@@ -155,6 +182,17 @@ export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
                     >
                         <Heart className={`h-4 w-4 ${isSaved ? "fill-red-500 text-red-500" : ""}`} />
                     </Button>
+                    {/* Offer Wizard */}
+                    {showOfferWizard && selectedProperty && (
+                        <OfferCreationWizard
+                            property={selectedProperty}
+                            onClose={() => {
+                                setShowOfferWizard(false);
+                                setSelectedProperty(null);
+                            }}
+                            onOfferSubmit={handleNewOfferSubmit}
+                        />
+                    )}
                 </div>
             </CardContent>
         </Card>

@@ -1,3 +1,5 @@
+import { Calculator, CheckCircle, DollarSign, Shield } from "lucide-react";
+
 // demoData/sellerProperties.js
 export const demoProperties = [
   {
@@ -426,7 +428,7 @@ export const demoInquiries = [
   }
 ];
 
-const demoSchedules = [
+export const demoSchedules = [
   {
     id: 1,
     property: { title: "Modern Apartment in Downtown", city: "New York" },
@@ -898,3 +900,128 @@ export const demoMatchingProperties = [
     match_score: 78
   }
 ];
+
+export const mockOffers = [
+  {
+    id: 1,
+    property: {
+      id: 101,
+      title: "Modern Downtown Condo",
+      address: "123 Main St, Downtown, CA",
+      price: 485000,
+      image: "/api/placeholder/400/300",
+      beds: 2,
+      baths: 2,
+      sqft: 1200
+    },
+    offerAmount: 475000,
+    offerDate: "2024-01-15",
+    status: "pending", // pending, accepted, rejected, counter_offer, withdrawn
+    expiration: "2024-01-22",
+    lastUpdated: "2024-01-15",
+    sellerResponse: null,
+    counterOffer: null,
+    contingencies: ["financing", "inspection"],
+    earnestMoney: 10000,
+    notes: "Love the natural light in this unit!"
+  },
+  {
+    id: 2,
+    property: {
+      id: 102,
+      title: "Luxury Waterfront Villa",
+      address: "456 Beach Rd, Malibu, CA",
+      price: 2500000,
+      image: "/api/placeholder/400/300",
+      beds: 5,
+      baths: 4,
+      sqft: 3800
+    },
+    offerAmount: 2450000,
+    offerDate: "2024-01-12",
+    status: "accepted",
+    expiration: "2024-01-19",
+    lastUpdated: "2024-01-13",
+    sellerResponse: "Accepted your offer! Let's move forward.",
+    counterOffer: null,
+    contingencies: ["financing", "inspection", "appraisal"],
+    earnestMoney: 50000,
+    notes: "Perfect for our growing family"
+  },
+  {
+    id: 3,
+    property: {
+      id: 103,
+      title: "Charming Victorian House",
+      address: "789 Oak Ave, Heritage, CA",
+      price: 650000,
+      image: "/api/placeholder/400/300",
+      beds: 3,
+      baths: 2,
+      sqft: 1800
+    },
+    offerAmount: 620000,
+    offerDate: "2024-01-10",
+    status: "rejected",
+    expiration: "2024-01-17",
+    lastUpdated: "2024-01-11",
+    sellerResponse: "Received a higher offer from another buyer.",
+    counterOffer: null,
+    contingencies: ["financing", "inspection"],
+    earnestMoney: 15000,
+    notes: "Great character but needs some updates"
+  },
+  {
+    id: 4,
+    property: {
+      id: 104,
+      title: "Urban Loft Apartment",
+      address: "321 Loft St, Arts District, CA",
+      price: 350000,
+      image: "/api/placeholder/400/300",
+      beds: 1,
+      baths: 1,
+      sqft: 900
+    },
+    offerAmount: 340000,
+    offerDate: "2024-01-08",
+    status: "counter_offer",
+    expiration: "2024-01-15",
+    lastUpdated: "2024-01-09",
+    sellerResponse: "We'd like to counter at $345,000",
+    counterOffer: 345000,
+    contingencies: ["financing"],
+    earnestMoney: 8000,
+    notes: "Perfect downtown location"
+  },
+  {
+    id: 5,
+    property: {
+      id: 105,
+      title: "Suburban Family Home",
+      address: "654 Pine St, Suburbia, CA",
+      price: 750000,
+      image: "/api/placeholder/400/300",
+      beds: 4,
+      baths: 3,
+      sqft: 2200
+    },
+    offerAmount: 730000,
+    offerDate: "2024-01-05",
+    status: "withdrawn",
+    expiration: "2024-01-12",
+    lastUpdated: "2024-01-06",
+    sellerResponse: null,
+    counterOffer: null,
+    contingencies: ["financing", "inspection"],
+    earnestMoney: 20000,
+    notes: "Found another property we liked better"
+  }
+];
+
+export const steps = [
+    { number: 1, title: 'Offer Terms', icon: DollarSign },
+    { number: 2, title: 'Contingencies', icon: Shield },
+    { number: 3, title: 'Financing', icon: Calculator },
+    { number: 4, title: 'Review', icon: CheckCircle }
+  ];
