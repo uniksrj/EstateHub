@@ -1,80 +1,159 @@
-
+import { userAPI } from '@/services/api';
+import { createBackendOffer, createFrontendOffer, transformBackendOffer } from '@/utils/offerUtils';
+import { formatCurrency } from '@/utils/userHelpers';
 import { createContext, useState } from 'react';
+import { toast } from 'sonner';
 
 const OfferContext = createContext();
 
 export const OfferProvider = ({ children }) => {
     const [offers, setOffers] = useState([]);
-    const addNewOffer = (property, offerData) => {
+    const [loading, setLoading] = useState(false);
+
+    const addNewOffer = async (property, offerData) => {
+        const user_id = JSON.parse(localStorage.getItem('user')).id;
         const newId = offers.length > 0 ? Math.max(...offers.map(o => o.id)) + 1 : 1;
+        setLoading(true);
+        let toastId = null;
+        try {
+            const backendOffer = createBackendOffer(property, offerData, user_id);
+            toastId = toast.loading("Submitting your offer...");
 
-        const newOffer = {
-            id: newId,
-            property_id: property.id,
-            buyer_id: 1,
-            offer_amount: offerData.offerAmount,
-            message: offerData.personalNote,
-            status: 'pending', 
-            counter_offer_amount: null, 
-            counter_offer_message: null, 
-            commission_rate: 2.50,
-            special_conditions: JSON.stringify({
-                contingencies: Object.keys(offerData.contingencies).filter(key => offerData.contingencies[key]),
-                contingencies_period: offerData.contingenciesPeriod,
-                financing_type: offerData.financing.type,
-                down_payment: offerData.financing.downPayment,
-                pre_approved: offerData.financing.preApproved,
-                earnest_money: offerData.earnestMoney,
-                closing_date: offerData.closingDate
-            }), 
-            expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().replace('T', ' ').substring(0, 19),
-            offer_date: new Date().toISOString().replace('T', ' ').substring(0, 19),
-            accepted_at: null,
-            rejected_at: null,
-            created_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
-            updated_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
+            await userAPI.store_offer_details(backendOffer);
+            toast.success("Offer submitted successfully!", {
+                id: toastId,
+                description: `Your offer of ${formatCurrency(offerData.offerAmount)} for ${property.title} has been submitted.`
+            });
+
+            const frontendOffer = createFrontendOffer(backendOffer, property, offerData, newId);
+            setOffers(prev => [frontendOffer, ...prev]);
+            return frontendOffer;
+
+        } catch (error) {
+            console.error("Failed to store offer details to backend:", error);
+            if (toastId) {
+                toast.dismiss(toastId);
+            }
+            toast.error("Failed to submit offer", {
+                description: error.response?.data?.message || "Please check your connection and try again."
+            });
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Enhanced status update function
+    const updateOfferStatus = async (offerId, status, sellerResponse = null, counterOffer = null) => {
+        try {
+            // Update local state immediately for better UX
+            setOffers(prev => prev.map(offer =>
+                offer.id === offerId
+                    ? {
+                        ...offer,
+                        status: status,
+                        counter_offer_message: sellerResponse,
+                        counter_offer_amount: counterOffer,
+                        updated_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                        ...(status === 'accepted' && {
+                            accepted_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                            rejected_at: null
+                        }),
+                        ...(status === 'rejected' && {
+                            rejected_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                            accepted_at: null
+                        }),
+                        sellerResponse: sellerResponse,
+                        counterOffer: counterOffer,
+                        lastUpdated: new Date().toISOString().split('T')[0]
+                    }
+                    : offer
+            ));
+
+            // Optional: Sync with backend
+            // await userAPI.update_offer_status(offerId, {
+            //     status,
+            //     counter_offer_message: sellerResponse,
+            //     counter_offer_amount: counterOffer
+            // });
+
+        } catch (error) {
+            console.error("Failed to update offer status:", error);
+
+            // Revert local state if backend update fails
+            refreshOffers();
+
+            throw error;
+        }
+    };
+
+    // Specific action functions for better semantics
+    const withdrawOffer = async (offerId) => {
+        return updateOfferStatus(offerId, 'withdrawn', 'Offer withdrawn by buyer');
+    };
+
+    const acceptCounterOffer = async (offerId) => {
+        return updateOfferStatus(offerId, 'accepted', 'Counter offer accepted', null);
+    };
+
+    const rejectCounterOffer = async (offerId) => {
+        return updateOfferStatus(offerId, 'rejected', 'Counter offer rejected', null);
+    };
+
+    const makeCounterOffer = async (offerId, counterAmount, message) => {
+        return updateOfferStatus(offerId, 'countered', message, counterAmount);
+    };
+
+    // Existing refresh function
+    const refreshOffers = async () => {
+        setLoading(true);
+        try {
+            const response = await userAPI.get_offers();
+            const transformedOffers = response.data.offers.map(transformBackendOffer);
+            console.log("Transform data :", transformedOffers);
             
-            property: property,
-            offerDetails: offerData
-        };
-
-        setOffers(prev => [newOffer, ...prev]);
-        return newOffer;
+            setOffers(transformedOffers);
+        } catch (error) {
+            console.error("Failed to fetch offers:", error);
+            toast.error("Failed to load offers.");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const updateOfferStatus = (offerId, status, sellerResponse = null, counterOffer = null) => {
-        setOffers(prev => prev.map(offer =>
-            offer.id === offerId
-                ? {
-                    ...offer,
-                    // Database fields
-                    status: status,
-                    counter_offer_message: sellerResponse,
-                    counter_offer_amount: counterOffer,
-                    updated_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
-                    // Set accepted_at or rejected_at based on status
-                    ...(status === 'accepted' && {
-                        accepted_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
-                        rejected_at: null
-                    }),
-                    ...(status === 'rejected' && {
-                        rejected_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
-                        accepted_at: null
-                    }),
-
-                    // Frontend fields
-                    sellerResponse: sellerResponse,
-                    counterOffer: counterOffer,
-                    lastUpdated: new Date().toISOString().split('T')[0]
-                }
-                : offer
-        ));
+    // Helper functions
+    const getOfferById = (offerId) => {
+        return offers.find(offer => offer.id === offerId);
     };
 
-    const value = {
+    const getOffersByProperty = (propertyId) => {
+        return offers.filter(offer => offer.property_id === propertyId);
+    };
+
+    const getOffersByStatus = (status) => {
+        return offers.filter(offer => offer.status === status);
+    };
+
+     const value = {
+        // State
         offers,
+        loading,
+        
+        // Core actions
         addNewOffer,
-        updateOfferStatus
+        refreshOffers,
+        
+        // Status updates
+        updateOfferStatus,
+        withdrawOffer,
+        acceptCounterOffer,
+        rejectCounterOffer,
+        makeCounterOffer,
+        
+        // Getters
+        getOfferById,
+        getOffersByProperty,
+        getOffersByStatus,
     };
 
     return (
@@ -85,4 +164,3 @@ export const OfferProvider = ({ children }) => {
 };
 
 export default OfferContext;
-

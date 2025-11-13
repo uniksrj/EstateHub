@@ -60,21 +60,7 @@ export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
     };
 
     return (
-        <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <Toaster
-                position="top-right"
-                reverseOrder={false}
-                toastOptions={{
-                    style: {
-                        borderRadius: '8px',
-                        padding: '16px',
-                        color: '#fff',
-                        fontWeight: 'bold',
-                        background: '#f56565',
-                        border: 'none',
-                    },
-                }}
-            />
+        <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">           
             <Link to={`/properties/${property.id}/view`}>
                 <div className="relative">
                     <img

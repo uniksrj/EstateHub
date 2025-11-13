@@ -1,6 +1,7 @@
+import { OFFER_STATUS } from "@/constants/offerTypes";
 import { Search } from "lucide-react";
 
-export const OfferFilter = ({ searchTerm, setSearchTerm, statusFilter, setStatusFilter, sortBy, setSortBy}) => {
+export const OfferFilter = ({ searchTerm, setSearchTerm, statusFilter, setStatusFilter, sortBy, setSortBy }) => {
     return (
         <div className="bg-card rounded-xl shadow-lg border border-border p-6 mb-6">
             <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
@@ -24,11 +25,11 @@ export const OfferFilter = ({ searchTerm, setSearchTerm, statusFilter, setStatus
                         className="px-4 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
                         <option value="all">All Statuses</option>
-                        <option value="pending">Pending</option>
-                        <option value="accepted">Accepted</option>
-                        <option value="rejected">Rejected</option>
-                        <option value="counter_offer">Counter Offers</option>
-                        <option value="withdrawn">Withdrawn</option>
+                        {Object.keys(OFFER_STATUS).map(status => (
+                            <option key={status} value={status}>
+                                {OFFER_STATUS[status].text}
+                            </option>
+                        ))}
                     </select>
 
                     {/* Sort By */}
@@ -42,7 +43,7 @@ export const OfferFilter = ({ searchTerm, setSearchTerm, statusFilter, setStatus
                         <option value="price_high">Price: High to Low</option>
                         <option value="price_low">Price: Low to High</option>
                     </select>
-                </div>                
+                </div>
             </div>
         </div>
     );

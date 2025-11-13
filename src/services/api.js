@@ -141,6 +141,8 @@ export const userAPI = {
   toggle_alert: (id) => api.patch(`/api/buyer/alerts/${id}/toggle`),
   delete_alert: (id) => api.delete(`/api/buyer/alerts/${id}`),
   update_alert: (id, alertData) => api.put(`/api/buyer/alerts/${id}`, alertData),
+  store_offer_details: (offerData) => api.post(`/api/buyer/store-offer`, offerData),
+  get_offers : () => api.get(`/api/buyer/offers`),
 }
 
 export const superAdminAPI = {

@@ -1,36 +1,34 @@
 import { useState, useEffect } from 'react';
 import { Tag, Home, MapPin, MoreVertical, Eye, FileText, MessageSquare } from 'lucide-react';
-import { mockOffers } from '@/data/demoData';
 import { formatCurrency, getOfferStatusColor, getOfferStatusText } from '@/utils/userHelpers';
 import { Loading } from '@/pages/misc/Loading';
 import { OfferOverview } from '@/components/buyer/offer/OfferOverview';
 import { OfferFilter } from '@/components/buyer/offer/OfferFilter';
 import { OfferTerms } from '@/components/buyer/offer/OfferTerms';
-import OfferCreationWizard from './OfferCreationWizard';
 import { useNavigate } from 'react-router';
+import { getDefaultOfferFormData } from '@/constants/offerTypes';
+import { useOffers } from '@/hooks/useOffers';
+import { toast } from 'sonner';
 
 const BuyerOffers = () => {
-  const [offers, setOffers] = useState([]);
+  const {
+    offers,
+    loading,
+    withdrawOffer,
+    acceptCounterOffer,
+    rejectCounterOffer,
+    refreshOffers
+  } = useOffers();
+  // const [offers, setOffers] = useState([]);
   const [filteredOffers, setFilteredOffers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
-  const [showOfferWizard, setShowOfferWizard] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Simulate API call
-    const fetchOffers = async () => {
-      setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setOffers(mockOffers);
-      setFilteredOffers(mockOffers);
-      setLoading(false);
-    };
-
-    fetchOffers();
+    refreshOffers();
   }, []);
 
   useEffect(() => {
@@ -38,13 +36,18 @@ const BuyerOffers = () => {
   }, [searchTerm, statusFilter, sortBy, offers]);
 
   const filterOffers = () => {
+    if (!offers || offers.length === 0) {
+      setFilteredOffers([]);
+      return;
+    }
+
     let filtered = [...offers];
 
     // Apply search filter
     if (searchTerm) {
       filtered = filtered.filter(offer =>
-        offer.property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        offer.property.address.toLowerCase().includes(searchTerm.toLowerCase())
+        offer.property?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        offer.property?.address?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -57,34 +60,53 @@ const BuyerOffers = () => {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'newest':
-          return new Date(b.offerDate) - new Date(a.offerDate);
+          return new Date(b.offer_date || b.offerDate) - new Date(a.offer_date || a.offerDate);
         case 'oldest':
-          return new Date(a.offerDate) - new Date(b.offerDate);
+          return new Date(a.offer_date || a.offerDate) - new Date(b.offer_date || b.offerDate);
         case 'price_high':
-          return b.offerAmount - a.offerAmount;
+          return (b.offer_amount || b.offerAmount) - (a.offer_amount || a.offerAmount);
         case 'price_low':
-          return a.offerAmount - b.offerAmount;
+          return (a.offer_amount || a.offerAmount) - (b.offer_amount || b.offerAmount);
         default:
           return 0;
       }
     });
 
     setFilteredOffers(filtered);
-  }; 
+  };
 
-  const handleWithdrawOffer = (offerId) => {
+
+  const handleWithdrawOffer = async (offerId) => {
     if (confirm('Are you sure you want to withdraw this offer?')) {
-      setOffers(prev => prev.map(offer =>
-        offer.id === offerId ? { ...offer, status: 'withdrawn' } : offer
-      ));
+      try {
+        await withdrawOffer(offerId);
+        toast.success("Offer withdrawn successfully!");
+      } catch (error) {
+        console.error("Error withdrawing offer:", error);
+        toast.error("Failed to withdraw offer.");
+      }
     }
   };
 
-  const handleAcceptCounter = (offerId) => {
+  const handleAcceptCounter = async (offerId) => {
     if (confirm('Accept the counter offer?')) {
-      setOffers(prev => prev.map(offer =>
-        offer.id === offerId ? { ...offer, status: 'accepted' } : offer
-      ));
+      try {
+        await acceptCounterOffer(offerId);
+        toast.success("Counter offer accepted!");
+      } catch (error) {
+        console.error("Error accepting counter offer:", error);
+        toast.error("Failed to accept counter offer.");
+      }
+    }
+  };
+
+  const handleRejectCounter = async (offerId) => {
+    try {
+      await rejectCounterOffer(offerId);
+      toast.success("Counter offer rejected.");
+    } catch (error) {
+      console.error("Failed to reject counter offer:", error);
+      toast.error("Failed to reject counter offer.");
     }
   };
 
@@ -172,12 +194,12 @@ const BuyerOffers = () => {
                           </h3>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                             <MapPin className="w-4 h-4" />
-                            <span>{offer.property.address}</span>
+                            <span>{`${offer?.property?.address}, ${offer?.property?.city}, ${offer?.property?.state}, ${offer?.property?.country}(${offer?.property?.zip_code})`}</span>
                           </div>
                           <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            <span>{offer.property.beds} beds</span>
-                            <span>{offer.property.baths} baths</span>
-                            <span>{offer.property.sqft.toLocaleString()} sqft</span>
+                            <span>{offer.property?.bedrooms} beds</span>
+                            <span>{offer.property?.bathrooms} baths</span>
+                            <span>{offer.property?.sq_ft.toLocaleString()} sqft</span>
                           </div>
                         </div>
 
@@ -260,7 +282,7 @@ const BuyerOffers = () => {
             ))
           )}
         </div>
-      </div>      
+      </div>
     </div>
   );
 };

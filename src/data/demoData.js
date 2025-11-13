@@ -1018,10 +1018,3 @@ export const mockOffers = [
     notes: "Found another property we liked better"
   }
 ];
-
-export const steps = [
-    { number: 1, title: 'Offer Terms', icon: DollarSign },
-    { number: 2, title: 'Contingencies', icon: Shield },
-    { number: 3, title: 'Financing', icon: Calculator },
-    { number: 4, title: 'Review', icon: CheckCircle }
-  ];

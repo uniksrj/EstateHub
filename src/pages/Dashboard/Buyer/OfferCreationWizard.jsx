@@ -1,11 +1,13 @@
-// components/OfferCreationWizard.jsx
+// frontend/src/pages/Dashboard/Buyer/OfferCreationWizard.jsx
+
 import { useState } from 'react';
-import { 
-   DollarSign, CheckCircle, 
+import {
+  DollarSign, CheckCircle,
   ArrowLeft, ArrowRight, Shield,
-  Calendar
+  Calendar,
+  Calculator
 } from 'lucide-react';
-import { steps } from '@/data/demoData';
+import { OFFER_WIZARD_STEPS } from '@/constants/offerTypes';
 
 const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -26,8 +28,10 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
       downPayment: 20
     },
     personalNote: '',
-    includeLetter: false
+    includeLetter: false,
+    commission_rate: property?.commission_rate || 2.50
   });
+  const steps = OFFER_WIZARD_STEPS;
 
   const updateOfferData = (updates) => {
     setOfferData(prev => ({ ...prev, ...updates }));
@@ -40,7 +44,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
       expiration: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       status: 'pending'
     };
-    onOfferSubmit(property,finalOffer);
+    onOfferSubmit(property, finalOffer);
   };
 
   return (
@@ -53,29 +57,30 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
               <h2 className="text-2xl font-bold text-card-foreground">Make an Offer</h2>
               <p className="text-muted-foreground">{property?.title || 'Select a property'}</p>
             </div>
-            <button 
+            <button
               onClick={onClose}
               className="p-2 hover:bg-muted rounded-lg transition-colors"
             >
               ×
             </button>
           </div>
-          
+
           {/* Progress Steps */}
           <div className="flex justify-between mt-6">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center flex-1">
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
-                  currentStep >= step.number 
-                    ? 'bg-primary border-primary text-primary-foreground' 
-                    : 'border-muted-foreground text-muted-foreground'
-                }`}>
-                  <step.icon className="w-5 h-5" />
+                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${currentStep >= step.number
+                  ? 'bg-primary border-primary text-primary-foreground'
+                  : 'border-muted-foreground text-muted-foreground'
+                  }`}>
+                  {step.icon === 'DollarSign' && <DollarSign className="w-5 h-5" />}
+                  {step.icon === 'Shield' && <Shield className="w-5 h-5" />}
+                  {step.icon === 'Calculator' && <Calculator className="w-5 h-5" />}
+                  {step.icon === 'CheckCircle' && <CheckCircle className="w-5 h-5" />}
                 </div>
                 {index < steps.length - 1 && (
-                  <div className={`flex-1 h-1 mx-2 ${
-                    currentStep > step.number ? 'bg-primary' : 'bg-muted'
-                  }`} />
+                  <div className={`flex-1 h-1 mx-2 ${currentStep > step.number ? 'bg-primary' : 'bg-muted'
+                    }`} />
                 )}
               </div>
             ))}
@@ -171,7 +176,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
           {currentStep === 2 && (
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-card-foreground">Protect Your Investment</h3>
-              
+
               <div className="space-y-4">
                 {[
                   { key: 'inspection', label: 'Home Inspection Contingency', description: 'Allows you to inspect the property and request repairs or withdraw if major issues are found' },
@@ -202,6 +207,31 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
                 ))}
               </div>
 
+              {/* Commission Rate - Moved outside contingencies list */}
+              <div className="p-4 border border-border rounded-lg bg-muted/20">
+                <label className="block text-sm font-medium text-card-foreground mb-2">
+                  Commission Rate (%)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="10"
+                    value={offerData.commission_rate || 2.50}
+                    onChange={(e) => updateOfferData({
+                      commission_rate: parseFloat(e.target.value) || 2.50
+                    })}
+                    className="w-full px-4 py-3 border border-input rounded-lg bg-background text-card-foreground focus:ring-2 focus:ring-primary"
+                    placeholder="2.50"
+                  />
+                  <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">%</span>
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Typical buyer agent commission rates: 2.5% - 3%. This affects your agent's compensation.
+                </p>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-card-foreground mb-2">
                   Contingency Period (Days)
@@ -225,7 +255,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
           {currentStep === 3 && (
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-card-foreground">Financing Details</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-card-foreground mb-2">
@@ -295,7 +325,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
           {currentStep === 4 && (
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-card-foreground">Review Your Offer</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
@@ -371,7 +401,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
                   <div>
                     <h4 className="font-medium text-card-foreground">Legal Disclaimer</h4>
                     <p className="text-sm text-muted-foreground mt-1">
-                      This is a legally binding offer. By submitting, you agree to the terms and conditions. 
+                      This is a legally binding offer. By submitting, you agree to the terms and conditions.
                       We recommend reviewing with your real estate attorney before submission.
                     </p>
                   </div>
