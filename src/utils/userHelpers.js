@@ -1,3 +1,5 @@
+import { OFFER_STATUS } from "@/constants/offerTypes";
+
 export const getStatusInfo = (user) => {
   switch (user.is_active) {
     case 1:
@@ -31,15 +33,15 @@ export const getStatusInfo = (user) => {
 
 export const getRoleColor = (role_id) => {
   switch (role_id) {
-    case 1: return 'bg-red-100 text-red-800 border border-red-200'; // Super Admin
-    case 2: return 'bg-indigo-100 text-indigo-800 border border-indigo-200'; // Admin
-    case 3: return 'bg-purple-100 text-purple-800 border border-purple-200'; // Agent
-    case 4: return 'bg-violet-100 text-violet-800 border border-violet-200'; // Broker
-    case 5: return 'bg-orange-100 text-orange-800 border border-orange-200'; // Buyer
-    case 6: return 'bg-blue-100 text-blue-800 border border-blue-200'; // Seller
-    case 7: return 'bg-amber-100 text-amber-800 border border-amber-200'; // Investor
-    case 8: return 'bg-cyan-100 text-cyan-800 border border-cyan-200'; // Renter
-    default: return 'bg-gray-100 text-gray-800 border border-gray-200'; // Unknown
+    case 1: return 'bg-red-100 text-red-800 border border-red-200'; 
+    case 2: return 'bg-indigo-100 text-indigo-800 border border-indigo-200';
+    case 3: return 'bg-purple-100 text-purple-800 border border-purple-200';
+    case 4: return 'bg-violet-100 text-violet-800 border border-violet-200';
+    case 5: return 'bg-orange-100 text-orange-800 border border-orange-200';
+    case 6: return 'bg-blue-100 text-blue-800 border border-blue-200';
+    case 7: return 'bg-amber-100 text-amber-800 border border-amber-200';
+    case 8: return 'bg-cyan-100 text-cyan-800 border border-cyan-200';
+    default: return 'bg-gray-100 text-gray-800 border border-gray-200';
   }
 };
 
@@ -101,25 +103,11 @@ export const getScheduleStatusColor = (status) => {
 }
 
 export const getOfferStatusColor = (status) => {
-  const colors = {
-    pending: 'bg-warning/20 text-warning border-warning/30',
-    accepted: 'bg-success/20 text-success border-success/30',
-    rejected: 'bg-destructive/20 text-destructive border-destructive/30',
-    counter_offer: 'bg-primary/20 text-primary border-primary/30',
-    withdrawn: 'bg-muted text-muted-foreground border-border'
-  };
-  return colors[status] || colors.pending;
+   return OFFER_STATUS[status]?.color || OFFER_STATUS.pending.color;
 };
 
 export const getOfferStatusText = (status) => {
-  const texts = {
-    pending: 'Pending Review',
-    accepted: 'Accepted',
-    rejected: 'Rejected',
-    counter_offer: 'Counter Offer',
-    withdrawn: 'Withdrawn'
-  };
-  return texts[status] || status;
+   return OFFER_STATUS[status]?.text || status;
 };
 
 export const getDaysRemaining = (expirationDate) => {
