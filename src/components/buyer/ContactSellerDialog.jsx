@@ -1,7 +1,7 @@
 // components/ContactSellerDialog.jsx
 "use client"
 
-import { useState } from "react"
+import { memo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -19,7 +19,7 @@ import { MessageSquare, Send } from "lucide-react"
 import { PropertySidebar } from "./PropertySidebar"
 import { userAPI } from "@/services/api"
 
-const ContactSellerDialog = ({ property, triggerButton = null }) => {
+const ContactSellerDialog = memo(({ property,  isOpen, onClose }) => {
     console.log("this is project id details : ", property);
     
     const [open, setOpen] = useState(false)
@@ -107,16 +107,7 @@ const ContactSellerDialog = ({ property, triggerButton = null }) => {
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                {triggerButton || (
-                    <Button className="flex items-center gap-2 bg-primary hover:bg-primary/90">
-                        <MessageSquare className="h-4 w-4" />
-                        Contact Seller
-                    </Button>
-                )}
-            </DialogTrigger>
-
+        <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="!max-w-5xl w-[90vw] h-[85vh] flex flex-col p-0 overflow-hidden bg-background">
                 {/* Header with your brand colors */}
                 <DialogHeader className="px-8 pt-8 pb-6 flex-shrink-0 bg-card border-b">
@@ -231,11 +222,11 @@ const ContactSellerDialog = ({ property, triggerButton = null }) => {
                             {/* Message */}
                             <div className="space-y-6">
                                 <h3 className="text-m font-semibold text-card-foreground border-b pb-2">
-                                    Your Message
+                                    Type Your Message
                                 </h3>
 
                                 <div className="space-y-3">
-                                    <Label htmlFor="message" className="text-base font-medium">Your Message *</Label>
+                                    <Label htmlFor="message" className="text-m font-medium">Message *</Label>
                                     <Textarea
                                         id="message"
                                         placeholder={`I'm interested in ${propertyData.title}. Please provide more information about...`}
@@ -278,6 +269,6 @@ const ContactSellerDialog = ({ property, triggerButton = null }) => {
             </DialogContent>
         </Dialog>
     )
-}
+})
 
 export default ContactSellerDialog

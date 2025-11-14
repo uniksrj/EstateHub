@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -23,6 +23,7 @@ export default function ScheduleManager({
     schedules = [],
     onScheduleCreated,
 }) {
+    console.log("ScheduleManager props:", { mode, isOpen, property, schedules });
     const [formData, setFormData] = useState({
         date: null,
         time: "",
@@ -31,6 +32,7 @@ export default function ScheduleManager({
     })
     const [loading, setLoading] = useState(false)
 
+    console.log("Schedules passed to ScheduleManager:", schedules);
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -39,7 +41,7 @@ export default function ScheduleManager({
         setFormData({ ...formData, date: selectedDate })
     }
 
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
         if (!formData.date || !formData.time) {
             toast.error("Please select both date and time")
             return
@@ -69,8 +71,12 @@ export default function ScheduleManager({
 
     const Content = (
         <div className="space-y-4 p-4">
-            <h3 className="text-lg font-semibold">Schedule Property Tour</h3>
-            <p className="text-muted-foreground text-sm">Choose a date and time for your tour.</p>
+            {mode !== "modal" && (
+                <>
+                    <h3 className="text-lg font-semibold">Schedule Property Tour</h3>
+                    <p className="text-muted-foreground text-sm">Choose a date and time for your tour.</p>
+                </>
+            )}
 
             <div className="space-y-4">
                 {/* ✅ Date Picker */}
@@ -159,7 +165,15 @@ export default function ScheduleManager({
     if (mode === "modal") {
         return (
             <Dialog open={isOpen} onOpenChange={onClose}>
-                <DialogContent className="sm:max-w-md">{Content}</DialogContent>
+                <DialogContent className="sm:max-w-md">
+                    <DialogTitle>Schedule Property Tour</DialogTitle>
+                    <DialogDescription>
+                        Choose a date and time for your tour.
+                    </DialogDescription>                    
+                    <div className="space-y-4">
+                        {Content}
+                    </div>
+                </DialogContent>
             </Dialog>
         )
     }

@@ -5,10 +5,11 @@ import { Loading } from '@/pages/misc/Loading';
 import { OfferOverview } from '@/components/buyer/offer/OfferOverview';
 import { OfferFilter } from '@/components/buyer/offer/OfferFilter';
 import { OfferTerms } from '@/components/buyer/offer/OfferTerms';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { getDefaultOfferFormData } from '@/constants/offerTypes';
 import { useOffers } from '@/hooks/useOffers';
 import { toast } from 'sonner';
+import ContactSellerDialog from '@/components/buyer/ContactSellerDialog';
 
 const BuyerOffers = () => {
   const {
@@ -25,8 +26,9 @@ const BuyerOffers = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [showContactDialog, setShowContactDialog] = useState(false);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     refreshOffers();
   }, []);
@@ -238,15 +240,24 @@ const BuyerOffers = () => {
 
                       {/* Actions */}
                       <div className="flex flex-wrap gap-3">
-                        <button className="flex items-center gap-2 px-4 py-2 border border-input rounded-lg text-sm font-medium text-card-foreground hover:bg-muted transition-colors duration-200">
-                          <Eye className="w-4 h-4" />
-                          View Property
-                        </button>
+                        <Link to={`/properties/${offer.property?.id}/view`}>
+                          <button className="flex items-center gap-2 px-4 py-2 border border-input rounded-lg text-sm font-medium text-card-foreground hover:bg-muted transition-colors duration-200">
+                            <Eye className="w-4 h-4" />
+                            View Property
+                          </button>
+                        </Link>
                         <button className="flex items-center gap-2 px-4 py-2 border border-input rounded-lg text-sm font-medium text-card-foreground hover:bg-muted transition-colors duration-200">
                           <FileText className="w-4 h-4" />
                           Offer Details
-                        </button>
-                        <button className="flex items-center gap-2 px-4 py-2 border border-input rounded-lg text-sm font-medium text-card-foreground hover:bg-muted transition-colors duration-200">
+                        </button>                        
+                        {showContactDialog && (
+                            <ContactSellerDialog
+                                property={offer?.property}
+                                isOpen={showContactDialog}
+                                onClose={() => setShowContactDialog(false)}
+                            />
+                        )}
+                        <button onClick={() => setShowContactDialog(true)} className="flex items-center gap-2 px-4 py-2 border border-input rounded-lg text-sm font-medium text-card-foreground hover:bg-muted transition-colors duration-200">
                           <MessageSquare className="w-4 h-4" />
                           Contact Agent
                         </button>

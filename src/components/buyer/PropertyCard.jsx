@@ -1,5 +1,6 @@
 import { getStatusColor, getStatusText } from "@/utils/userHelpers"
-import { useState } from "react"
+import { memo } from "react"
+import { useMemo, useState } from "react"
 import { Card, CardContent } from "../ui/card"
 import { Link, useNavigate } from "react-router"
 import { Badge, Bath, Bed, Calendar, CalendarPlus, Eye, Handshake, Heart, MapPin, MessageCircle, Square } from "lucide-react"
@@ -13,17 +14,40 @@ import { useOffers } from "@/hooks/useOffers"
 import OfferCreationWizard from "@/pages/Dashboard/Buyer/OfferCreationWizard"
 
 
-export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
+export const PropertyCard = memo(function PropertyCard({
+    property,
+    formatPrice,
+    handleFavoriteChange
+}) {
     const { user } = useAuth()
     const { offers, addNewOffer } = useOffers();
     const [isSaved, setIsSaved] = useState(
         property.favorites?.[0]?.user_id === user.id
     )
-    const [showModal, setShowModal] = useState(false)
+    
     const navigate = useNavigate();
     const [showOfferWizard, setShowOfferWizard] = useState(false);
     const [selectedProperty, setSelectedProperty] = useState(null);
+    const [showContactDialog, setShowContactDialog] = useState(false);
+    const [showScheduleModal, setShowScheduleModal] = useState(false);
+    
+    const contactSellerTrigger = useMemo(() => (
+        <Button variant="outline" size="sm" title="Contact Seller" onClick={() => setShowContactDialog(true)}>
+            <MessageCircle className="h-4 w-4" />
+        </Button>
+    ), []);
 
+    const scheduleTourTrigger = useMemo(() => (
+        <Button variant="outline" size="sm" onClick={() => setShowScheduleModal(true)} title="Schedule a Tour">
+            <CalendarPlus className="h-4 w-4" />
+        </Button>
+    ), []);
+
+    const makeOfferTrigger = useMemo(() => (
+        <Button variant="outline" size="sm" onClick={() => handleMakeOffer(property)} title="Make Offer">
+            <Handshake className="w-4 h-4" />
+        </Button>
+    ), [property]);
 
     const handleNewSchedule = (schedule) => {
         toast.success(`Tour scheduled on ${schedule.date} at ${schedule.time}!`)
@@ -47,7 +71,7 @@ export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
         }
     }
 
-    const handleNewOfferSubmit = (property, offerData) => {        
+    const handleNewOfferSubmit = (property, offerData) => {
         addNewOffer(property, offerData);
         setShowOfferWizard(false);
         navigate('/buyer/offers');
@@ -60,7 +84,7 @@ export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
     };
 
     return (
-        <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">           
+        <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
             <Link to={`/properties/${property.id}/view`}>
                 <div className="relative">
                     <img
@@ -126,39 +150,28 @@ export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
             </Link>
             <CardContent>
                 <div className="flex space-x-2 mt-4">
-                    <ContactSellerDialog
-                        property={property}
-                        triggerButton={
-                            <Button variant="outline" size="sm" title="Contact Seller">
-                                <MessageCircle className="h-4 w-4" />
-                            </Button>
-                        }
-                    />
                     <div className="flex items-center gap-3">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setShowModal(true)}
-                            title="Schedule a Tour"
-                        >
-                            <CalendarPlus className="h-4 w-4" />
-                        </Button>
+                        {contactSellerTrigger}
+                        {showContactDialog && (
+                            <ContactSellerDialog
+                                property={property}
+                                isOpen={showContactDialog}
+                                onClose={() => setShowContactDialog(false)}
+                            />
+                        )}
 
+                        {scheduleTourTrigger}
+                        {showScheduleModal && (
                         <ScheduleManager
                             mode="modal"
-                            isOpen={showModal}
-                            onClose={() => setShowModal(false)}
+                            isOpen={showScheduleModal}
+                            onClose={() => setShowScheduleModal(false)}
                             property={property}
                             onScheduleCreated={handleNewSchedule}
                         />
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={()=> handleMakeOffer(property)}
-                            title="Make Offer"
-                        >
-                            <Handshake className="w-4 h-4" />
-                        </Button>
+                    )}
+                    
+                        {makeOfferTrigger}
                     </div>
                     <Button
                         variant="ghost"
@@ -168,6 +181,7 @@ export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
                     >
                         <Heart className={`h-4 w-4 ${isSaved ? "fill-red-500 text-red-500" : ""}`} />
                     </Button>
+
                     {/* Offer Wizard */}
                     {showOfferWizard && selectedProperty && (
                         <OfferCreationWizard
@@ -182,5 +196,5 @@ export function PropertyCard({ property, formatPrice, handleFavoriteChange }) {
                 </div>
             </CardContent>
         </Card>
-    )
-}
+    );
+})

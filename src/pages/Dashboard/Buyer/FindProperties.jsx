@@ -79,11 +79,11 @@ export default function FindProperties() {
         })
         setFilteredProperties(filtered)
     }, [filters, properties])
-
+    
     const handleFilterChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }))
     }
-
+    
     const resetFilters = () => {
         setFilters({
             search: "",
