@@ -1,4 +1,5 @@
 import { OFFER_STATUS } from "@/constants/offerTypes";
+import { AlertTriangle, CheckCircle, Info } from "lucide-react";
 
 export const getStatusInfo = (user) => {
   switch (user.is_active) {
@@ -33,7 +34,7 @@ export const getStatusInfo = (user) => {
 
 export const getRoleColor = (role_id) => {
   switch (role_id) {
-    case 1: return 'bg-red-100 text-red-800 border border-red-200'; 
+    case 1: return 'bg-red-100 text-red-800 border border-red-200';
     case 2: return 'bg-indigo-100 text-indigo-800 border border-indigo-200';
     case 3: return 'bg-purple-100 text-purple-800 border border-purple-200';
     case 4: return 'bg-violet-100 text-violet-800 border border-violet-200';
@@ -103,11 +104,11 @@ export const getScheduleStatusColor = (status) => {
 }
 
 export const getOfferStatusColor = (status) => {
-   return OFFER_STATUS[status]?.color || OFFER_STATUS.pending.color;
+  return OFFER_STATUS[status]?.color || OFFER_STATUS.pending.color;
 };
 
 export const getOfferStatusText = (status) => {
-   return OFFER_STATUS[status]?.text || status;
+  return OFFER_STATUS[status]?.text || status;
 };
 
 export const getDaysRemaining = (expirationDate) => {
@@ -134,4 +135,30 @@ export const formatDate = (dateString) => {
     day: 'numeric',
     year: 'numeric'
   });
-}; 
+};
+
+export const getVariantStyles = (variant) => {
+  switch (variant) {
+    case 'destructive':
+      return {
+        IconComponent: AlertTriangle,
+        iconClassName: "h-6 w-6 text-destructive",
+        confirmButton: "bg-destructive text-white hover:bg-destructive/90",
+        iconBg: "bg-destructive/10"
+      }
+    case 'success':
+      return {
+        IconComponent: CheckCircle,
+        iconClassName: "h-6 w-6 text-green-600",
+        confirmButton: "bg-green-600 text-white hover:bg-green-700",
+        iconBg: "bg-green-100"
+      }
+    default:
+      return {
+        IconComponent: Info,
+        iconClassName: "h-6 w-6 text-blue-600",
+        confirmButton: "bg-blue-600 text-white hover:bg-blue-700",
+        iconBg: "bg-blue-100"
+      }
+  }
+}
