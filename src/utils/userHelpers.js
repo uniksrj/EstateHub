@@ -1,4 +1,4 @@
-import { OFFER_STATUS } from "@/constants/offerTypes";
+import { AGENT_OFFER_STATUS, OFFER_STATUS } from "@/constants/offerTypes";
 import { AlertTriangle, CheckCircle, Info } from "lucide-react";
 
 export const getStatusInfo = (user) => {
@@ -103,12 +103,21 @@ export const getScheduleStatusColor = (status) => {
   }
 }
 
-export const getOfferStatusColor = (status) => {
-  return OFFER_STATUS[status]?.color || OFFER_STATUS.pending.color;
+export const getOfferStatusColor = (status, role = "buyer") => {
+  if (role === "buyer") {
+    return OFFER_STATUS[status]?.color || OFFER_STATUS.pending.color;
+  } else if (role === "agent") {
+    return AGENT_OFFER_STATUS[status]?.color || AGENT_OFFER_STATUS.pending.color;
+  }
 };
 
-export const getOfferStatusText = (status) => {
-  return OFFER_STATUS[status]?.text || status;
+export const getOfferStatusText = (status,  role = "buyer") => {
+  if (role === "buyer") {
+    return OFFER_STATUS[status]?.text || status;
+  } else if (role === "agent") {
+    return AGENT_OFFER_STATUS[status]?.text || status;
+  }
+  
 };
 
 export const getDaysRemaining = (expirationDate) => {

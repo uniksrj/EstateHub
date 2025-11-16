@@ -32,11 +32,11 @@ import AgentDealLosses from "@/pages/Dashboard/Agent/deal-losses/AgentDealLosses
 import AgentClients from "@/pages/Dashboard/Agent/AgentClients"
 import SchedulePage from "@/components/common/schedule/SchedulePage"
 import PreferencesAlerts from "@/pages/Dashboard/Buyer/PreferencesAlerts"
-import BuyerOffers from "@/pages/Dashboard/Buyer/BuyerOffers "
 import MortgageTools from "@/pages/Dashboard/Buyer/MortgageTools"
 import DocumentsPage from "@/pages/Dashboard/Buyer/DocumentsPage"
 import MarketInsights from "@/pages/Dashboard/Buyer/MarketInsights"
 import HomePage from "@/pages/Home/HomePage"
+import Offers from "@/pages/Dashboard/offer/Offers "
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -149,7 +149,7 @@ export const router = createBrowserRouter([
           { path: "inquiries", Component: BuyerInquiryPage },
           { path: "schedule", Component: SchedulePage },
           { path: "preferences-alerts", Component: PreferencesAlerts },
-          { path: "offers", Component: BuyerOffers },
+          { path: "offers", Component: Offers },
           { path: "mortgage-tools", Component: MortgageTools },
           { path: "documents", Component: DocumentsPage },
           { path: "market-insight", Component: MarketInsights },
@@ -169,6 +169,7 @@ export const router = createBrowserRouter([
           { path: "inquiries", Component: AgentInquiry },
           { path: "add-property", Component: AddProperty },
           { path: "manage-properties", Component: ManageProperties},
+          { path: "offers", Component: Offers },
           { path: "properties", Component: AgentListing},
           { path: "pipeline", Component: AgentPipeline},
           { path: "clients", Component: AgentClients},

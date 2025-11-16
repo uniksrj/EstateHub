@@ -1,7 +1,7 @@
 import { OFFER_STATUS } from "@/constants/offerTypes";
 import { Search } from "lucide-react";
 
-export const OfferFilter = ({ searchTerm, setSearchTerm, statusFilter, setStatusFilter, sortBy, setSortBy }) => {
+export const OfferFilter = ({ searchTerm, statusFilter, sortBy, onFilterChange }) => {
     return (
         <div className="bg-card rounded-xl shadow-lg border border-border p-6 mb-6">
             <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
@@ -13,7 +13,7 @@ export const OfferFilter = ({ searchTerm, setSearchTerm, statusFilter, setStatus
                             type="text"
                             placeholder="Search properties..."
                             value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onChange={(e) => onFilterChange('searchTerm', e.target.value)}
                             className="w-full sm:w-64 pl-10 pr-4 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
                         />
                     </div>
@@ -21,7 +21,7 @@ export const OfferFilter = ({ searchTerm, setSearchTerm, statusFilter, setStatus
                     {/* Status Filter */}
                     <select
                         value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
+                        onChange={(e) => onFilterChange('statusFilter', e.target.value)}
                         className="px-4 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
                         <option value="all">All Statuses</option>
@@ -35,7 +35,7 @@ export const OfferFilter = ({ searchTerm, setSearchTerm, statusFilter, setStatus
                     {/* Sort By */}
                     <select
                         value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
+                        onChange={(e) => onFilterChange('sortBy', e.target.value)}
                         className="px-4 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
                         <option value="newest">Newest First</option>

@@ -43,10 +43,8 @@ export const OfferProvider = ({ children }) => {
         }
     };
 
-    // Enhanced status update function
     const updateOfferStatus = async (offerId, status, sellerResponse = null, counterOffer = null) => {
         try {
-            // Update local state immediately for better UX
             setOffers(prev => prev.map(offer =>
                 offer.id === offerId
                     ? {
@@ -69,25 +67,23 @@ export const OfferProvider = ({ children }) => {
                     }
                     : offer
             ));
-
-            // Optional: Sync with backend
-            // await userAPI.update_offer_status(offerId, {
-            //     status,
-            //     counter_offer_message: sellerResponse,
-            //     counter_offer_amount: counterOffer
-            // });
+            await userAPI.changeStatusOffer(offerId, {
+                status,
+                counter_offer_message: sellerResponse,
+                counter_offer_amount: counterOffer
+            });
 
         } catch (error) {
             console.error("Failed to update offer status:", error);
-
-            // Revert local state if backend update fails
             refreshOffers();
-
             throw error;
         }
     };
 
-    // Specific action functions for better semantics
+    const canceledOffer = async (offerId) => {
+        return updateOfferStatus(offerId, 'cancelled');
+    };
+
     const withdrawOffer = async (offerId) => {
         return updateOfferStatus(offerId, 'withdrawn', 'Offer withdrawn by buyer');
     };
@@ -104,14 +100,23 @@ export const OfferProvider = ({ children }) => {
         return updateOfferStatus(offerId, 'countered', message, counterAmount);
     };
 
-    // Existing refresh function
+    const deleteOffer = async (offerId) => {
+        try {
+            await userAPI.deleteOffer(offerId);
+        } catch (error) {
+            console.error("Failed to delete offer :", error);
+            refreshOffers();
+            throw error;
+        }
+    };
+
     const refreshOffers = async () => {
         setLoading(true);
         try {
             const response = await userAPI.get_offers();
             const transformedOffers = response.data.offers.map(transformBackendOffer);
             console.log("Transform data :", transformedOffers);
-            
+
             setOffers(transformedOffers);
         } catch (error) {
             console.error("Failed to fetch offers:", error);
@@ -134,22 +139,24 @@ export const OfferProvider = ({ children }) => {
         return offers.filter(offer => offer.status === status);
     };
 
-     const value = {
+    const value = {
         // State
         offers,
         loading,
-        
+
         // Core actions
         addNewOffer,
         refreshOffers,
-        
+
         // Status updates
         updateOfferStatus,
         withdrawOffer,
         acceptCounterOffer,
         rejectCounterOffer,
         makeCounterOffer,
-        
+        canceledOffer,
+        deleteOffer,
+
         // Getters
         getOfferById,
         getOffersByProperty,

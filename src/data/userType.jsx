@@ -44,12 +44,13 @@ export const sidebars = {
     { label: "Dashboard", path: "/agent", icon: LayoutDashboard },
     { label: "Properties", path: "/agent/properties", icon: Home },
     { label: "Add Property", path: "/agent/add-property", icon: Plus },
+    { label: "Offers", path: "/agent/offers", icon: Tag },
     { label: "My Clients", path: "/agent/clients", icon: Users },
     { label: "Inquiries", path: "/agent/inquiries", icon: MessageSquare },
     { label: "Schedule", path: "/agent/schedule", icon: Calendar },
     { label: "Pipeline", path: "/agent/pipeline", icon: Activity },
-    { label: "Deal Losses", path: "/agent/deal-losses", icon: XCircle },
     { label: "Performance", path: "/agent/analytics", icon: BarChart3 },
+    { label: "Profile", path: "/agent/profile", icon: User },
   ],
 
   buyer: [
@@ -66,11 +67,11 @@ export const sidebars = {
 
   seller: [
     { label: "Dashboard", path: "/seller", icon: LayoutDashboard },
-    { label: "Listings", path: "/seller/properties", icon: Home },
-    { label: "Offers & Inquiries", path: "/seller/offers", icon: Tag },
-    { label: "Property Views", path: "/seller/analytics", icon: BarChart3 },
-    { label: "Messages", path: "/seller/inquiries", icon: MessageSquare },
-    { label: "Documents", path: "/seller/documents", icon: FileText },
+    { label: "My Properties", path: "/seller/properties", icon: Home },
+    { label: "Add Property", path: "/seller/add-property", icon: Plus },
+    { label: "Offers", path: "/seller/offers", icon: Tag },
+    { label: "Inquiries", path: "/seller/inquiries", icon: MessageSquare },
+    { label: "Schedule", path: "/seller/schedule", icon: Calendar },
     { label: "Profile", path: "/seller/profile", icon: User },
   ],
 

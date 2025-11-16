@@ -142,7 +142,9 @@ export const userAPI = {
   delete_alert: (id) => api.delete(`/api/buyer/alerts/${id}`),
   update_alert: (id, alertData) => api.put(`/api/buyer/alerts/${id}`, alertData),
   store_offer_details: (offerData) => api.post(`/api/buyer/store-offer`, offerData),
-  get_offers : () => api.get(`/api/buyer/offers`),
+  get_offers: () => api.get(`/api/buyer/offers`),
+  changeStatusOffer: (id, status) => api.patch(`/api/buyer/${id}/status`, status),
+  deleteOffer : (id) => api.delete(`/api/buyer/${id}/delete`),
 }
 
 export const superAdminAPI = {

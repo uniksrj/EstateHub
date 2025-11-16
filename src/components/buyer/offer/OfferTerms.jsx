@@ -7,25 +7,25 @@ export const OfferTerms = ({ offer }) => {
                 <div>
                     <div className="text-sm text-muted-foreground">List Price</div>
                     <div className="font-semibold text-card-foreground">
-                        {formatCurrency(offer.property.price)}
+                        {formatCurrency(offer?.property?.price)}
                     </div>
                 </div>
                 <div>
                     <div className="text-sm text-muted-foreground">Your Offer</div>
                     <div className="font-semibold text-card-foreground">
-                        {formatCurrency(offer.offerAmount)}
+                        {formatCurrency(offer?.offerAmount)}
                     </div>
                 </div>
                 <div>
                     <div className="text-sm text-muted-foreground">Offer Date</div>
                     <div className="font-semibold text-card-foreground">
-                        {formatDate(offer.offerDate)}
+                        {formatDate(offer?.offerDate)}
                     </div>
                 </div>
                 <div>
                     <div className="text-sm text-muted-foreground">Expires In</div>
                     <div className="font-semibold text-card-foreground">
-                        {getDaysRemaining(offer.expiration)} days
+                        {getDaysRemaining(offer?.expiration)} days
                     </div>
                 </div>
             </div>
