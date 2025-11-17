@@ -1,3 +1,4 @@
+import { useAuth } from '@/hooks/useAuth';
 import { userAPI } from '@/services/api';
 import { createBackendOffer, createFrontendOffer, transformBackendOffer } from '@/utils/offerUtils';
 import { formatCurrency } from '@/utils/userHelpers';
@@ -7,6 +8,7 @@ import { toast } from 'sonner';
 const OfferContext = createContext();
 
 export const OfferProvider = ({ children }) => {
+    const { user } = useAuth()
     const [offers, setOffers] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -67,11 +69,18 @@ export const OfferProvider = ({ children }) => {
                     }
                     : offer
             ));
-            await userAPI.changeStatusOffer(offerId, {
-                status,
-                counter_offer_message: sellerResponse,
-                counter_offer_amount: counterOffer
-            });
+
+            const requestData = {
+                status: status,
+                ...(sellerResponse && { counter_offer_message: sellerResponse }),
+                ...(counterOffer && { counter_offer_amount: counterOffer })
+            };
+
+            if (user.role_id === 5) {
+                await userAPI.changeBuyerStatusOffer(offerId, requestData);
+            } else if ([3, 6].includes(user.role_id)) {
+                await userAPI.changeAgentStatusOffer(offerId, requestData);
+            }
 
         } catch (error) {
             console.error("Failed to update offer status:", error);
@@ -82,6 +91,10 @@ export const OfferProvider = ({ children }) => {
 
     const canceledOffer = async (offerId) => {
         return updateOfferStatus(offerId, 'cancelled');
+    };
+
+    const acceptedOffer = async (offerId) => {
+        return updateOfferStatus(offerId, 'accepted');
     };
 
     const withdrawOffer = async (offerId) => {
@@ -97,7 +110,7 @@ export const OfferProvider = ({ children }) => {
     };
 
     const makeCounterOffer = async (offerId, counterAmount, message) => {
-        return updateOfferStatus(offerId, 'countered', message, counterAmount);
+        return updateOfferStatus(offerId, 'counter_offer', message, counterAmount);
     };
 
     const deleteOffer = async (offerId) => {
@@ -115,7 +128,6 @@ export const OfferProvider = ({ children }) => {
         try {
             const response = await userAPI.get_offers();
             const transformedOffers = response.data.offers.map(transformBackendOffer);
-            console.log("Transform data :", transformedOffers);
 
             setOffers(transformedOffers);
         } catch (error) {
@@ -156,6 +168,7 @@ export const OfferProvider = ({ children }) => {
         makeCounterOffer,
         canceledOffer,
         deleteOffer,
+        acceptedOffer,
 
         // Getters
         getOfferById,

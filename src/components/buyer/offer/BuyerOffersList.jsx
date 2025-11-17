@@ -141,7 +141,7 @@ const BuyerOfferCard = ({ offer, onAction }) => {
                 </>
               )}
 
-              {offer.status === 'countered' && (
+              {offer.status === 'counter_offer' && (
                 <div className="flex gap-2">
                   <Button 
                     size="sm"

@@ -52,7 +52,7 @@ export const PropertyCard = memo(function PropertyCard({
     const handleNewSchedule = (schedule) => {
         toast.success(`Tour scheduled on ${schedule.date} at ${schedule.time}!`)
     }
-
+    
     const handleFavoriteProperty = async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -70,11 +70,13 @@ export const PropertyCard = memo(function PropertyCard({
             toast.error("Failed to change favorite status.");
         }
     }
+    
 
     const handleNewOfferSubmit = (property, offerData) => {
+        let roleName = [3,6].includes(user.role_id) ? "seller" : "buyer";
         addNewOffer(property, offerData);
         setShowOfferWizard(false);
-        navigate('/buyer/offers');
+        navigate(`/${roleName}/offers`);
     };
 
 

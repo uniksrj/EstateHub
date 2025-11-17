@@ -143,7 +143,8 @@ export const userAPI = {
   update_alert: (id, alertData) => api.put(`/api/buyer/alerts/${id}`, alertData),
   store_offer_details: (offerData) => api.post(`/api/buyer/store-offer`, offerData),
   get_offers: () => api.get(`/api/buyer/offers`),
-  changeStatusOffer: (id, status) => api.patch(`/api/buyer/${id}/status`, status),
+  changeBuyerStatusOffer: (id, status) => api.patch(`/api/buyer/${id}/status`, status),
+  changeAgentStatusOffer: (id, status) => api.patch(`/api/agent/${id}/status`, status),
   deleteOffer : (id) => api.delete(`/api/buyer/${id}/delete`),
 }
 

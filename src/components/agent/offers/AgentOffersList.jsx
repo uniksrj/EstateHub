@@ -15,9 +15,9 @@ export const AgentOffersList = ({ offers, onAction, emptyState }) => {
   return (
     <div className="space-y-4">
       {offers.map(offer => (
-        <AgentOfferCard 
-          key={offer.id} 
-          offer={offer} 
+        <AgentOfferCard
+          key={offer.id}
+          offer={offer}
           onAction={onAction}
         />
       ))}
@@ -26,6 +26,7 @@ export const AgentOffersList = ({ offers, onAction, emptyState }) => {
 }
 
 const AgentOfferCard = ({ offer, onAction }) => {
+  console.log("This is offer details :", offer)
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">
@@ -44,28 +45,31 @@ const AgentOfferCard = ({ offer, onAction }) => {
                 <h3 className="text-lg font-semibold text-card-foreground mb-1">
                   {offer.property?.title}
                 </h3>
-                
-                {/* Buyer Information */}
-                <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                  <div className="flex items-center gap-1">
-                    <User className="w-4 h-4" />
-                    <span>{offer.buyer?.name}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Phone className="w-4 h-4" />
-                    <span>{offer.buyer?.phone || 'No phone provided'}</span>
-                  </div>
-                </div>
 
                 {/* Property Address */}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="w-4 h-4" />
                   <span>{offer.property?.address}</span>
                 </div>
+
+                {/* Buyer Information */}
+                <div className="flex items-center gap-4 text-sm mt-2">
+                  <span className="font-medium text-foreground">Buyer Info:</span>
+
+                  <div className="flex items-center gap-1 text-muted-foreground">
+                    <User className="w-4 h-4" />
+                    <span>{offer.buyer_info?.name}</span>
+                  </div>
+
+                  <div className="flex items-center gap-1 text-muted-foreground">
+                    <Phone className="w-4 h-4" />
+                    <span>{offer.buyer_info?.phone || 'No phone provided'}</span>
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Badge className={getOfferStatusColor(offer.status,'agent')}>
+                <Badge className={getOfferStatusColor(offer.status, 'agent')}>
                   {getOfferStatusText(offer.status, 'agent')}
                 </Badge>
                 <button className="p-1 hover:bg-muted rounded transition-colors duration-200">
@@ -85,8 +89,8 @@ const AgentOfferCard = ({ offer, onAction }) => {
                 </Button>
               </Link>
 
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => onAction('view', offer)}
               >
@@ -95,21 +99,21 @@ const AgentOfferCard = ({ offer, onAction }) => {
 
               {offer.status === 'pending' && (
                 <>
-                  <Button 
+                  <Button
                     size="sm"
                     onClick={() => onAction('accept', offer)}
                   >
                     Accept Offer
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     onClick={() => onAction('counter', offer)}
                   >
                     Make Counter Offer
                   </Button>
-                  <Button 
-                    variant="destructive" 
+                  <Button
+                    variant="destructive"
                     size="sm"
                     onClick={() => onAction('reject', offer)}
                   >

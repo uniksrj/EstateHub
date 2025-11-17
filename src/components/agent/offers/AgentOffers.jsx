@@ -6,7 +6,6 @@ import { AgentOffersList } from "./AgentOffersList";
 import { Tag } from "lucide-react";
 import { AgentEmptyState } from "./AgentEmptyState";
 
-// components/agent/AgentOffers.jsx
 export const AgentOffers = ({ 
   offers, 
   filteredOffers, 

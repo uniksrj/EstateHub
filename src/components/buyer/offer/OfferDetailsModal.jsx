@@ -10,8 +10,8 @@ import { FileText, Calendar, DollarSign, User, Home, X } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 
 export function OfferDetailsModal({ offer, isOpen, onClose }) {
-  const {user} = useAuth()
-  console.log("im here for offer details  ",user)
+  const { user } = useAuth()
+  console.log("im here for offer details  ", user)
   const getStatusColor = (status) => {
     switch (status) {
       case 'accepted': return 'bg-green-500'
@@ -31,7 +31,7 @@ export function OfferDetailsModal({ offer, isOpen, onClose }) {
       default: return 'Unknown'
     }
   }
-  
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -42,9 +42,6 @@ export function OfferDetailsModal({ offer, isOpen, onClose }) {
               <FileText className="w-5 h-5" />
               Offer Details #{offer.id}
             </span>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="w-4 h-4" />
-            </Button>
           </DialogTitle>
         </DialogHeader>
 

@@ -1,17 +1,35 @@
-import { Home, Users, Calendar, TrendingUp } from "lucide-react"
-import PerformanceMetrics from "@/components/agent/PerformanceMetrics"
-import StatCard from "@/components/common/StatCard";
+import { Home, Target, AlertCircle, TrendingUp } from "lucide-react"
 import { useEffect, useState } from "react";
 import { propertiesAPI } from "@/services/api";
-import Loading from "@/pages/SearchPage/Loading";
+import { Loading } from "@/pages/misc/Loading";
+import StatCard from "@/components/agent/StatCard";
+import PerformanceMetrics from "@/components/agent/PerformanceMetrics";
+import DealPipeline from "@/components/agent/process/DealPipeline";
+import RecentActivity from "@/components/agent/process/RecentActivity";
+import QuickActions from "@/components/agent/process/QuickActions";
+import PriorityTasks from "@/components/agent/process/PriorityTasks";
+import PostAcceptanceProcess from "@/components/agent/process/PostAcceptanceProcess";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function AgentDashboard() {
-
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [activeDeals, setActiveDeals] = useState([]);
+  const [dashboardStats, setDashboardStats] = useState({
+    totalProperties: 0,
+    pendingProperties: 0,
+    underContract: 0,
+    activeClients: 0,
+    newClientsThisWeek: 0,
+    urgentTasks: 0,
+    scheduledTours: 0,
+    commission: 0,
+    dealsInProgress: 0
+  });
 
   useEffect(() => {
     fetchAgentProperties();
+    fetchActiveDeals();
   }, []);
 
   const fetchAgentProperties = async () => {
@@ -19,6 +37,7 @@ export default function AgentDashboard() {
     try {
       const response = await propertiesAPI.getPropertyListByUser();
       setProperties(response?.data || {});
+      calculateDashboardStats(response?.data);
     } catch (error) {
       console.error("Error:", error)
       setProperties([])
@@ -26,41 +45,158 @@ export default function AgentDashboard() {
       setLoading(false)
     }
   }
-  console.log("this is property list", properties);
-  const pendingProperties = properties?.data?.data?.filter(p => p.status === "pending").length;
-  const totalProperties = properties?.data?.data?.length || 0;
-  const activeClients = properties?.agentClientStats?.active_clients || 0;
-  const newClientsThisWeek = properties?.agentClientStats?.new_this_week || 0;
 
-  const scheduledTours = 0;
-  const commission = 0;
+  const fetchActiveDeals = async () => {
+    // Mock data for active deals in process
+    const mockDeals = [
+      {
+        id: 1,
+        address: "123 Main Street",
+        buyer: "John Smith",
+        seller: "Sarah Johnson",
+        status: "contract_generation",
+        price: "$450,000",
+        acceptedDate: "2024-01-15",
+        nextStep: "Review Purchase Agreement",
+        deadline: "2024-01-18",
+        priority: "high",
+        progress: 25
+      },
+      {
+        id: 2,
+        address: "456 Oak Avenue",
+        buyer: "Mike Chen",
+        seller: "David Wilson",
+        status: "earnest_money",
+        price: "$520,000",
+        acceptedDate: "2024-01-10",
+        nextStep: "Confirm EMD Receipt",
+        deadline: "2024-01-17",
+        priority: "medium",
+        progress: 40
+      }
+    ];
+    setActiveDeals(mockDeals);
+  }
 
+  const calculateDashboardStats = (propertiesData) => {
+    const propertiesList = propertiesData?.data?.data || [];
+    const pendingProperties = propertiesList.filter(p => p.status === "pending").length;
+    const underContract = propertiesList.filter(p => p.status === "under_contract" || p.status === "pending_sale").length;
+    const urgentTasks = propertiesList.filter(p => 
+      p.status === "under_contract" || 
+      p.status === "counter_offer"
+    ).length;
 
+    setDashboardStats({
+      totalProperties: propertiesList.length,
+      pendingProperties,
+      underContract,
+      activeClients: propertiesData?.agentClientStats?.active_clients || 0,
+      newClientsThisWeek: propertiesData?.agentClientStats?.new_this_week || 0,
+      urgentTasks: urgentTasks + 3,
+      scheduledTours: 5,
+      commission: 12500,
+      dealsInProgress: underContract + activeDeals.length
+    });
+  };
 
   const stats = [
-    { title: "My Properties", value: totalProperties, subtitle: `${pendingProperties} pending approval`, Icon: Home },
-    { title: "Active Clients", value: activeClients, subtitle:`+${newClientsThisWeek} new this week`, Icon: Users },
-    { title: "Scheduled Tours", value: scheduledTours, subtitle: "This week", Icon: Calendar },
-    { title: "Commission", value: `$${commission.toLocaleString()}`, subtitle: "This month", Icon: TrendingUp },
+    { 
+      title: "Total Listings", 
+      value: dashboardStats.totalProperties, 
+      subtitle: `${dashboardStats.underContract} under contract`, 
+      Icon: Home,
+      trend: "up" 
+    },
+    { 
+      title: "Active Deals", 
+      value: dashboardStats.dealsInProgress, 
+      subtitle: "In contract phase", 
+      Icon: Target,
+      trend: "up" 
+    },
+    { 
+      title: "Priority Tasks", 
+      value: dashboardStats.urgentTasks, 
+      subtitle: "Need attention", 
+      Icon: AlertCircle,
+      iconColor: "text-amber-500",
+      trend: "neutral"
+    },
+    { 
+      title: "This Month's Commission", 
+      value: `$${dashboardStats.commission.toLocaleString()}`, 
+      subtitle: "Estimated", 
+      Icon: TrendingUp,
+      trend: "up" 
+    },
   ];
 
   if (loading) {
-    return <Loading />
+    return <Loading loading={loading} />
   }
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Agent Dashboard</h2>
-        <p className="text-muted-foreground">Track your performance and manage listings</p>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Agent Dashboard</h2>
+          <p className="text-muted-foreground">Manage your listings, deals, and performance</p>
+        </div>
+        <div className="text-sm text-muted-foreground">
+          Last updated: {new Date().toLocaleDateString()}
+        </div>
       </div>
 
+      {/* Key Metrics Grid - Always Visible */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((item, idx) => (
           <StatCard key={idx} {...item} />
         ))}
       </div>
-      <PerformanceMetrics />
 
+      {/* Tabbed Content */}
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="deals">Deals</TabsTrigger>
+          <TabsTrigger value="tasks">Tasks</TabsTrigger>
+          <TabsTrigger value="performance">Performance</TabsTrigger>
+        </TabsList>
+
+        {/* OVERVIEW TAB - Just 2 main components */}
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <DealPipeline deals={activeDeals} />
+            <RecentActivity />
+          </div>
+        </TabsContent>
+
+        {/* DEALS TAB - Focused on deal process */}
+        <TabsContent value="deals" className="space-y-6">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <DealPipeline deals={activeDeals} />
+            <PostAcceptanceProcess />
+          </div>
+        </TabsContent>
+
+        {/* TASKS TAB - Focused on actions */}
+        <TabsContent value="tasks" className="space-y-6">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <PriorityTasks stats={dashboardStats} deals={activeDeals} />
+            <QuickActions />
+          </div>
+        </TabsContent>
+
+        {/* PERFORMANCE TAB - Focused on analytics */}
+        <TabsContent value="performance" className="space-y-6">
+          <div className="grid gap-6">
+            <PerformanceMetrics />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

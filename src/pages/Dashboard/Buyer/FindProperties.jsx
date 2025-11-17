@@ -79,11 +79,11 @@ export default function FindProperties() {
         })
         setFilteredProperties(filtered)
     }, [filters, properties])
-    
+
     const handleFilterChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }))
     }
-    
+
     const resetFilters = () => {
         setFilters({
             search: "",
@@ -107,11 +107,11 @@ export default function FindProperties() {
     const handleFavoriteChange = (propertyId, isNowFavorite) => {
         setFavorites(prev =>
             isNowFavorite
-                ? prev 
-                : prev.filter(p => p.id !== propertyId) 
+                ? prev
+                : prev.filter(p => p.id !== propertyId)
         )
     }
-    
+
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
@@ -141,7 +141,7 @@ export default function FindProperties() {
                         {!loading && (
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                 {filteredProperties.map(property => (
-                                    <PropertyCard key={property.id} property={property} formatPrice={formatPrice} handleFavoriteChange={handleFavoriteChange}/>
+                                    <PropertyCard key={property.id} property={property} formatPrice={formatPrice} handleFavoriteChange={handleFavoriteChange} />
                                 ))}
                             </div>
                         )}

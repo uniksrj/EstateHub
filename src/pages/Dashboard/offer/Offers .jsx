@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AgentOfferOverview } from '@/components/agent/offers/AgentOfferOverview';
 import { BuyerOffers } from '@/components/buyer/offer/BuyerOffers';
 import { AgentOffers } from '@/components/agent/offers/AgentOffers';
+import { CounterOfferModal } from '@/components/common/offers/CounterOfferModal';
 
 
 const Offers = () => {
@@ -19,7 +20,11 @@ const Offers = () => {
     loading,
     canceledOffer,
     deleteOffer,
-    refreshOffers
+    acceptedOffer,
+    rejectCounterOffer,
+    acceptCounterOffer,
+    refreshOffers,
+    makeCounterOffer
   } = useOffers();
 
   // User authentication and role checking
@@ -34,6 +39,12 @@ const Offers = () => {
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [selectedOffer, setSelectedOffer] = useState(null)
   const [showModal, setShowModal] = useState(false)
+  const [counterModal, setCounterModal] = useState({
+    isOpen: false,
+    offerId: null,
+    offerAmount: null,
+    offer: null,
+  });
 
   // Confirmation modal state
   const [confirmModal, setConfirmModal] = useState({
@@ -52,7 +63,7 @@ const Offers = () => {
   useEffect(() => {
     filterOffers();
   }, [filters, offers]);
-  
+
   if (loading) {
     return (
       <Loading loading={loading} isLineLoader={true} />
@@ -63,25 +74,25 @@ const Offers = () => {
    * Filters and sorts offers based on current filter criteria
    */
   const filterOffers = () => {
-    
+
     if (!offers || offers.length === 0) {
       setFilteredOffers([]);
       return;
     }
 
     let filtered = [...offers];
-    
+
     if (filters.searchTerm) {
       filtered = filtered.filter(offer =>
         offer.property?.title?.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
         offer.property?.address?.toLowerCase().includes(filters.searchTerm.toLowerCase())
       );
     }
-    
+
     if (filters.statusFilter !== 'all') {
       filtered = filtered.filter(offer => offer.status === filters.statusFilter);
     }
-    
+
     filtered.sort((a, b) => {
       switch (filters.sortBy) {
         case 'newest':
@@ -100,18 +111,45 @@ const Offers = () => {
     setFilteredOffers(filtered);
   };
 
+  const handleCounterOffer = (offer) => {
+    setCounterModal({
+      isOpen: true,
+      offerId: offer.id,
+      offerAmount: offer.offer_amount
+    });
+  };
+
   /**
    * Updates offer status and refreshes local state
    * @param {number} offerId - ID of the offer to update
    * @param {string} newStatus - New status to set
    * @param {object} confirmData - Success/error message configuration
    */
-  const handleUpdateOfferStatus = async (offerId, newStatus, confirmData = {}) => {
+  const handleUpdateOfferStatus = async (offerId, newStatus, confirmData = {}, message="", amount="") => {
     try {
       switch (newStatus) {
         case "cancelled":
-
           canceledOffer(offerId);
+          toast.success(confirmData.successMessage || 'Action completed successfully');
+          break;
+        case "accept":
+          acceptedOffer(offerId);
+          toast.success(confirmData.successMessage || 'Action completed successfully');
+          break;
+        case "reject":
+          rejectCounterOffer(offerId);
+          toast.success(confirmData.successMessage || 'Action completed successfully');
+          break;
+        case "counter_offer":
+          makeCounterOffer(offerId,amount,message);acceptCounterOffer
+          toast.success(confirmData.successMessage || 'Action completed successfully');
+          break;
+         case "accepted":
+          acceptCounterOffer(offerId);
+          toast.success(confirmData.successMessage || 'Action completed successfully');
+          break;
+        case "rejected":
+          rejectCounterOffer(offerId);
           toast.success(confirmData.successMessage || 'Action completed successfully');
           break;
       }
@@ -208,8 +246,21 @@ const Offers = () => {
           errorMessage: 'Failed to delete offer'
         })
         break
+
+      case 'accept':
+        await handleUpdateOfferStatus(offerId, 'accept', {
+          successMessage: 'Offer Accepted successfully',
+          errorMessage: 'Failed to accept offer'
+        })
+        break
+      case 'reject':
+        await handleUpdateOfferStatus(offerId, 'rejected', {
+          successMessage: 'Offer Rejected successfully',
+          errorMessage: 'Failed to reject offer'
+        })
+        break
     }
-    
+
     setConfirmModal({ isOpen: false, offerId: null, action: null, data: null })
   }
 
@@ -222,7 +273,7 @@ const Offers = () => {
       [filterType]: value
     }));
   };
-  
+
   const handleAction = (actionType, offer, additionalData = {}) => {
 
     switch (actionType) {
@@ -250,13 +301,83 @@ const Offers = () => {
           variant: "destructive"
         });
         break;
+      case 'accept':
+        openConfirmation(offer.id, 'accept', {
+          title: "Accept Offer?",
+          description: "You are about to accept this offer. This will move the property to pending sale status.",
+          confirmText: "Accept Offer",
+          variant: "success"
+        });
+        break;
+      case 'counter':
+        setCounterModal({
+          isOpen: true,
+          offerId: offer.id,
+          offerAmount: null,
+          offer: offer
+        });
+        break;
+      case 'reject':
+        openConfirmation(offer.id, 'reject', {
+          title: "Reject Offer?",
+          description: "Are you sure you want to reject this offer? The buyer will be notified.",
+          confirmText: "Reject Offer",
+          variant: "destructive"
+        });
+        break;
+      case 'accept_counter':
+        openConfirmation(offer.id, 'accept_counter', {
+          title: "Accept Counter Offer?",
+          description: "You are about to accept the seller's counter offer. This will move the process to the next stage.",
+          confirmText: "Accept Counter Offer",
+          variant: "success"
+        });
+        break;
+
+      case 'reject_counter':
+        openConfirmation(offer.id, 'reject_counter', {
+          title: "Reject Counter Offer?",
+          description: "Are you sure you want to reject this counter offer?",
+          confirmText: "Reject Counter",
+          variant: "destructive"
+        });
+        break;
+
+      case 'renew':
+        openConfirmation(offer.id, 'renew', {
+          title: "Renew Offer?",
+          description: "This will renew your expired offer.",
+          confirmText: "Renew Offer",
+          variant: "default"
+        });
+        break;
       default:
         console.warn('Unknown action type:', actionType);
     }
   }
 
+  const handleCounterConfirm = async (counterData) => {
+    try {
+      const { offer } = counterModal;
+      await handleUpdateOfferStatus(
+        offer.id,
+        'counter_offer',
+        {
+          successMessage: 'Counter offer sent successfully!',
+          errorMessage: 'Failed to send counter offer'
+        },
+        counterData.message,
+        counterData.counterAmount,
+
+      );
+      setCounterModal({ isOpen: false, offer: null });
+    } catch (error) {
+      console.error("something went wrong!", error);
+    }
+  }
+
   const RoleSpecificComponent = user.role_id === 3 ? AgentOffers : BuyerOffers;
-  
+
   return (
     <>
       <RoleSpecificComponent
@@ -276,6 +397,13 @@ const Offers = () => {
         description={confirmModal.data?.description}
         confirmText={confirmModal.data?.confirmText}
         variant={confirmModal.data?.variant}
+      />
+
+      <CounterOfferModal
+        isOpen={counterModal.isOpen}
+        onClose={() => setCounterModal({ isOpen: false, offer: null })}
+        onConfirm={handleCounterConfirm}
+        offer={counterModal.offer}
       />
 
       {

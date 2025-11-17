@@ -101,12 +101,12 @@ export const transformBackendOffer = (backendOffer) => {
         id: backendOffer.id,
         property_id: backendOffer.property_id,
         buyer_id: backendOffer.buyer_id,
-        offer_amount: parseFloat(backendOffer.offer_amount), // Convert to number
+        offer_amount: parseFloat(backendOffer.offer_amount), 
         message: backendOffer.message,
         status: backendOffer.status,
         counter_offer_amount: backendOffer.counter_offer_amount ? parseFloat(backendOffer.counter_offer_amount) : null,
         counter_offer_message: backendOffer.counter_offer_message,
-        commission_rate: parseFloat(backendOffer.commission_rate), // Convert to number
+        commission_rate: parseFloat(backendOffer.commission_rate),
         special_conditions: backendOffer.special_conditions,
         expires_at: backendOffer.expires_at,
         offer_date: backendOffer.offer_date,
@@ -114,6 +114,7 @@ export const transformBackendOffer = (backendOffer) => {
         rejected_at: backendOffer.rejected_at,
         created_at: backendOffer.created_at,
         updated_at: backendOffer.updated_at,
+        buyer_info : backendOffer.buyer ?? [],
 
         // Frontend display fields
         property: backendOffer.property || {},
