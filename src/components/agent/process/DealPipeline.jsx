@@ -2,60 +2,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { FileText, DollarSign, ClipboardCheck, Home, Shield, CheckCircle2, Calendar, User } from "lucide-react";
+import { Home, Calendar, User } from "lucide-react";
+import { getAgentStatusInfo, getDaysUntilDeadline } from "@/utils/userHelpers";
+import { useState } from "react";
+import { DealManagementModal } from "./DealManagementModal";
 
 const DealPipeline = ({ deals }) => {
-  const getStatusInfo = (status) => {
-    const statusMap = {
-      contract_generation: { 
-        label: "Contract Phase", 
-        icon: FileText, 
-        color: "bg-blue-100 text-blue-800 border-blue-200",
-        description: "Generating and reviewing purchase agreement"
-      },
-      earnest_money: { 
-        label: "EMD Processing", 
-        icon: DollarSign, 
-        color: "bg-amber-100 text-amber-800 border-amber-200",
-        description: "Processing earnest money deposit"
-      },
-      inspection: { 
-        label: "Inspection", 
-        icon: ClipboardCheck, 
-        color: "bg-purple-100 text-purple-800 border-purple-200",
-        description: "Scheduling and completing inspections"
-      },
-      mortgage: { 
-        label: "Mortgage", 
-        icon: Shield, 
-        color: "bg-green-100 text-green-800 border-green-200",
-        description: "Mortgage processing and approval"
-      },
-      closing: { 
-        label: "Closing", 
-        icon: CheckCircle2, 
-        color: "bg-emerald-100 text-emerald-800 border-emerald-200",
-        description: "Finalizing closing details"
-      }
-    };
-    return statusMap[status] || { label: status, icon: FileText, color: "bg-gray-100 text-gray-800" };
-  };
+  const [dealManagement, setDealManagement] = useState(false);
+  const [selectedDeal, setSelectedDeal] = useState(null);
 
   const getPriorityColor = (priority) => {
     return priority === "high" ? "destructive" : "secondary";
   };
 
-  const getDaysUntilDeadline = (deadline) => {
-    const today = new Date();
-    const deadlineDate = new Date(deadline);
-    const diffTime = deadlineDate - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
+  const handleManageDeal = (dealID) => {
+    let filterData = deals.find(val => Number(val.id) === Number(dealID));
+    console.log("Getting filterData DATA :",filterData)
+    setSelectedDeal(filterData);
+    setDealManagement(true);
 
-  const handleManageDeal = (dealId) => {
-    console.log(`Managing deal ${dealId}`);
-    // Implement deal management logic
   };
 
   return (
@@ -66,11 +31,11 @@ const DealPipeline = ({ deals }) => {
       </CardHeader>
       <CardContent className="space-y-4">
         {deals.map((deal) => {
-          const statusInfo = getStatusInfo(deal.status);
+          const statusInfo = getAgentStatusInfo(deal.status);
           const StatusIcon = statusInfo.icon;
           const daysUntilDeadline = getDaysUntilDeadline(deal.deadline);
           const isUrgent = daysUntilDeadline <= 2;
-          
+
           return (
             <div key={deal.id} className="border rounded-lg p-4 space-y-3 hover:shadow-md transition-shadow">
               {/* Header */}
@@ -98,7 +63,7 @@ const DealPipeline = ({ deals }) => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Status and Progress */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -110,7 +75,7 @@ const DealPipeline = ({ deals }) => {
                     {deal.priority} priority
                   </Badge>
                 </div>
-                
+
                 <div className="space-y-1">
                   <div className="flex justify-between text-sm">
                     <span>Progress</span>
@@ -119,7 +84,7 @@ const DealPipeline = ({ deals }) => {
                   <Progress value={deal.progress} className="h-2" />
                 </div>
               </div>
-              
+
               {/* Next Steps and Actions */}
               <div className="flex items-center justify-between pt-2 border-t">
                 <div className="space-y-1">
@@ -128,7 +93,7 @@ const DealPipeline = ({ deals }) => {
                     Next: {deal.nextStep}
                   </p>
                   <p className={`text-xs ${isUrgent ? 'text-red-600 font-medium' : 'text-muted-foreground'}`}>
-                    {isUrgent ? '⚠️ ' : ''}Deadline: {new Date(deal.deadline).toLocaleDateString()} 
+                    {isUrgent ? '⚠️ ' : ''}Deadline: {new Date(deal.deadline).toLocaleDateString()}
                     ({daysUntilDeadline} {daysUntilDeadline === 1 ? 'day' : 'days'})
                   </p>
                 </div>
@@ -144,7 +109,7 @@ const DealPipeline = ({ deals }) => {
             </div>
           );
         })}
-        
+
         <div className="flex gap-2">
           <Button variant="outline" className="flex-1">
             View All Deals
@@ -153,6 +118,13 @@ const DealPipeline = ({ deals }) => {
             Add New Deal
           </Button>
         </div>
+        {dealManagement && (
+          <DealManagementModal
+            isOpen={!!selectedDeal}
+            onClose={() => setSelectedDeal(null)}
+            deal={selectedDeal}
+          />
+        )}
       </CardContent>
     </Card>
   );

@@ -1,5 +1,5 @@
 import { AGENT_OFFER_STATUS, OFFER_STATUS } from "@/constants/offerTypes";
-import { AlertTriangle, CheckCircle, Info } from "lucide-react";
+import { AlertTriangle, CheckCircle, CheckCircle2, ClipboardCheck, DollarSign, FileText, Info, Shield } from "lucide-react";
 
 export const getStatusInfo = (user) => {
   switch (user.is_active) {
@@ -111,13 +111,13 @@ export const getOfferStatusColor = (status, role = "buyer") => {
   }
 };
 
-export const getOfferStatusText = (status,  role = "buyer") => {
+export const getOfferStatusText = (status, role = "buyer") => {
   if (role === "buyer") {
     return OFFER_STATUS[status]?.text || status;
   } else if (role === "agent") {
     return AGENT_OFFER_STATUS[status]?.text || status;
   }
-  
+
 };
 
 export const getDaysRemaining = (expirationDate) => {
@@ -171,3 +171,47 @@ export const getVariantStyles = (variant) => {
       }
   }
 }
+
+export const getAgentStatusInfo = (status) => {
+  const statusMap = {
+    contract_generation: {
+      label: "Contract Phase",
+      icon: FileText,
+      color: "bg-blue-100 text-blue-800 border-blue-200",
+      description: "Generating and reviewing purchase agreement"
+    },
+    earnest_money: {
+      label: "EMD Processing",
+      icon: DollarSign,
+      color: "bg-amber-100 text-amber-800 border-amber-200",
+      description: "Processing earnest money deposit"
+    },
+    inspection: {
+      label: "Inspection",
+      icon: ClipboardCheck,
+      color: "bg-purple-100 text-purple-800 border-purple-200",
+      description: "Scheduling and completing inspections"
+    },
+    mortgage: {
+      label: "Mortgage",
+      icon: Shield,
+      color: "bg-green-100 text-green-800 border-green-200",
+      description: "Mortgage processing and approval"
+    },
+    closing: {
+      label: "Closing",
+      icon: CheckCircle2,
+      color: "bg-emerald-100 text-emerald-800 border-emerald-200",
+      description: "Finalizing closing details"
+    }
+  };
+  return statusMap[status] || { label: status, icon: FileText, color: "bg-gray-100 text-gray-800" };
+};
+
+export const getDaysUntilDeadline = (deadline) => {
+  const today = new Date();
+  const deadlineDate = new Date(deadline);
+  const diffTime = deadlineDate - today;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+};
