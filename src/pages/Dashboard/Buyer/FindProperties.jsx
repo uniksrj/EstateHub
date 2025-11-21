@@ -2,7 +2,7 @@ import { FilterHeader } from "@/components/buyer/FilterHeader"
 import { Filtersidebar } from "@/components/buyer/Filtersidebar"
 import { PropertyCard } from "@/components/buyer/PropertyCard"
 import { Paginationlink } from "@/components/common/Pagination"
-import { Card, CardContent } from "@/components/ui/card"
+import { NoPropertyFound } from "@/components/common/property/NoPropertyFound"
 import { demoPropertiesList } from "@/data/demoData"
 import { Loading } from "@/pages/misc/Loading"
 import { propertiesAPI } from "@/services/api"
@@ -14,7 +14,7 @@ export default function FindProperties() {
     const [searchParams, setSearchParams] = useSearchParams()
     const [properties, setProperties] = useState([])
     const [filteredProperties, setFilteredProperties] = useState(demoPropertiesList)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [lastPage, setLastPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page")) || 1);
     const [filters, setFilters] = useState({
@@ -27,6 +27,7 @@ export default function FindProperties() {
         city: "all",
         status: "for_sale"
     })
+
     const [favorites, setFavorites] = useState([])
 
     useEffect(() => {
@@ -112,6 +113,15 @@ export default function FindProperties() {
         )
     }
 
+    if (loading) {
+        return <Loading loading={loading} />
+    }
+
+    if (!properties || properties.length === 0) {
+        return <NoPropertyFound />
+    }
+
+
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
@@ -133,9 +143,6 @@ export default function FindProperties() {
 
                         {/* Results Header */}
                         <FilterHeader filters={filters} />
-
-                        {/* Loading State */}
-                        <Loading loading={loading} />
 
                         {/* Properties Grid */}
                         {!loading && (

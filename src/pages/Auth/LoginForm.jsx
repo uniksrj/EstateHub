@@ -59,18 +59,13 @@ const LoginForm = () => {
 
     return (
         <div className="h-full flex flex-col justify-center p-4">
-            <Toaster position="top-left" />
+            {/* <Toaster position="top-left" /> */}
             <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold">Welcome Back</h2>
                 <p className="text-muted-foreground">Sign in to your account</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {error && (
-                    <Alert variant="destructive">
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                )}
+            <form onSubmit={handleSubmit} className="space-y-4">              
 
                 <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>

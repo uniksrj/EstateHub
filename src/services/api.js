@@ -76,7 +76,9 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("user")
-      window.location.href = "/auth/login"
+      setTimeout(() => {
+        window.location.href = "/auth/login"
+      },1000)      
     }
     return Promise.reject(error)
   }

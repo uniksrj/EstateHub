@@ -1,5 +1,6 @@
 import { PropertyCard } from "@/components/buyer/PropertyCard";
 import { Paginationlink } from "@/components/common/Pagination";
+import { NoPropertyFound } from "@/components/common/property/NoPropertyFound";
 import { useAuth } from "@/hooks/useAuth";
 import { Loading } from "@/pages/misc/Loading";
 import { propertiesAPI } from "@/services/api";
@@ -14,8 +15,8 @@ export default function FavoritePage() {
     const [properties, setProperties] = useState([])
     const [loading, setLoading] = useState(false)
     const [lastPage, setLastPage] = useState(1);
-    const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page")) || 1); 
-    const params = new URLSearchParams(searchParams);  
+    const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page")) || 1);
+    const params = new URLSearchParams(searchParams);
     params.set('isUserFavorite', true);
 
     useEffect(() => {
@@ -56,6 +57,14 @@ export default function FavoritePage() {
             setProperties(prev => prev.filter(p => p.id !== propertyId))
         }
     }
+
+    if (loading) {
+        return <Loading loading={loading} />
+    }
+
+    if (!properties || properties.length === 0) {
+        return <NoPropertyFound />
+    }
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
@@ -77,9 +86,6 @@ export default function FavoritePage() {
 
                     {/* Properties Grid */}
                     <div className="lg:w-full w-full">
-
-                        {/* Loading State */}
-                        <Loading loading={loading} />
 
                         {/* Properties Grid */}
                         {!loading && (

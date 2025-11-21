@@ -25,7 +25,6 @@ export const PropertyCard = memo(function PropertyCard({
         property.favorites?.[0]?.user_id === user.id
     )
     
-    const navigate = useNavigate();
     const [showOfferWizard, setShowOfferWizard] = useState(false);
     const [selectedProperty, setSelectedProperty] = useState(null);
     const [showContactDialog, setShowContactDialog] = useState(false);
@@ -73,10 +72,8 @@ export const PropertyCard = memo(function PropertyCard({
     
 
     const handleNewOfferSubmit = (property, offerData) => {
-        let roleName = [3,6].includes(user.role_id) ? "seller" : "buyer";
         addNewOffer(property, offerData);
         setShowOfferWizard(false);
-        navigate(`/${roleName}/offers`);
     };
 
 
@@ -94,7 +91,7 @@ export const PropertyCard = memo(function PropertyCard({
                         alt={property.title}
                         className="w-full h-48 object-cover"
                     />
-                    <div className="absolute top-3 left-3">
+                    {/* <div className="absolute top-3 left-3">
                         <Badge className={property.is_featured ? "bg-orange-500" : "bg-blue-500"}>
                             {property.is_featured ? "Featured" : "New"}
                         </Badge>
@@ -103,7 +100,7 @@ export const PropertyCard = memo(function PropertyCard({
                         <Badge className={getStatusColor(property.status)}>
                             {getStatusText(property.status)}
                         </Badge>
-                    </div>
+                    </div> */}
                 </div>
 
                 <CardContent className="p-4">
