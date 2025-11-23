@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    "Content-Type": "application/json",
+    // "Content-Type": "application/json",
     Accept: "application/json",
   },
   withCredentials: true,
@@ -78,7 +78,7 @@ api.interceptors.response.use(
       localStorage.removeItem("user")
       setTimeout(() => {
         window.location.href = "/auth/login"
-      },1000)      
+      }, 1000)
     }
     return Promise.reject(error)
   }
@@ -147,7 +147,16 @@ export const userAPI = {
   get_offers: () => api.get(`/api/buyer/offers`),
   changeBuyerStatusOffer: (id, status) => api.patch(`/api/buyer/${id}/status`, status),
   changeAgentStatusOffer: (id, status) => api.patch(`/api/agent/${id}/status`, status),
-  deleteOffer : (id) => api.delete(`/api/buyer/${id}/delete`),
+  deleteOffer: (id) => api.delete(`/api/buyer/${id}/delete`),
+  get_deal_list: () => api.get(`/api/agent/deal`),
+  upload_document(data) {
+    return api.post('/api/agent/store_document', data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      }
+    });
+  },
+  get_document : (deal_id) => api.get(`/api/agent/get_document_details/${deal_id}`)
 }
 
 export const superAdminAPI = {

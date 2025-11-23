@@ -1,4 +1,4 @@
-import { Calculator, CheckCircle, DollarSign, Shield } from "lucide-react";
+import { Calculator, CheckCircle, CheckCircle2, ClipboardCheck, DollarSign, FileText, Shield } from "lucide-react";
 
 // demoData/sellerProperties.js
 export const demoProperties = [
@@ -1018,3 +1018,67 @@ export const mockOffers = [
     notes: "Found another property we liked better"
   }
 ];
+
+
+export const processSteps = [
+  {
+    key: "contract_generation",
+    label: "Contract Generation",
+    icon: FileText,
+    color: "blue",
+    requiredDocuments: [
+      { type: "purchase_agreement", name: "Purchase Agreement", required: true },
+      { type: "counter_offer", name: "Counter Offer Form", required: true },
+      { type: "property_disclosures", name: "Property Disclosures", required: true },
+      { type: "addendum", name: "Addendums", required: false }
+    ]
+  },
+  {
+    key: "earnest_money",
+    label: "Earnest Money",
+    icon: DollarSign,
+    color: "amber",
+    requiredDocuments: [
+      { type: "emd_receipt", name: "EMD Receipt", required: true },
+      { type: "wire_instructions", name: "Wire Instructions", required: true },
+      { type: "funds_verification", name: "Proof of Funds", required: true }
+    ]
+  },
+  {
+    key: "inspection",
+    label: "Property Inspection",
+    icon: ClipboardCheck,
+    color: "purple",
+    requiredDocuments: [
+      { type: "home_inspection", name: "Home Inspection Report", required: true },
+      { type: "pest_inspection", name: "Pest Inspection", required: true },
+      { type: "roof_inspection", name: "Roof Inspection", required: false },
+      { type: "repair_addendum", name: "Repair Addendum", required: false }
+    ]
+  },
+  {
+    key: "mortgage",
+    label: "Mortgage Processing",
+    icon: Shield,
+    color: "green",
+    requiredDocuments: [
+      { type: "loan_application", name: "Loan Application", required: true },
+      { type: "appraisal_report", name: "Appraisal Report", required: true },
+      { type: "underwriting_approval", name: "Underwriting Approval", required: true },
+      { type: "title_report", name: "Title Report", required: true }
+    ]
+  },
+  {
+    key: "closing",
+    label: "Closing",
+    icon: CheckCircle2,
+    color: "emerald",
+    requiredDocuments: [
+      { type: "closing_disclosure", name: "Closing Disclosure", required: true },
+      { type: "settlement_statement", name: "Settlement Statement", required: true },
+      { type: "deed", name: "Property Deed", required: true },
+      { type: "wire_confirmation", name: "Wire Confirmation", required: true }
+    ]
+  }
+];
+

@@ -6,8 +6,9 @@ import { Home, Calendar, User } from "lucide-react";
 import { getAgentStatusInfo, getDaysUntilDeadline } from "@/utils/userHelpers";
 import { useState } from "react";
 import { DealManagementModal } from "./DealManagementModal";
+import { Loading } from "@/pages/misc/Loading";
 
-const DealPipeline = ({ deals }) => {
+const DealPipeline = ({ deals, loading }) => {
   const [dealManagement, setDealManagement] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
 
@@ -17,11 +18,14 @@ const DealPipeline = ({ deals }) => {
 
   const handleManageDeal = (dealID) => {
     let filterData = deals.find(val => Number(val.id) === Number(dealID));
-    console.log("Getting filterData DATA :",filterData)
+    console.log("Getting filterData DATA :", filterData)
     setSelectedDeal(filterData);
     setDealManagement(true);
-
   };
+
+  if (loading) {
+    return <Loading loading={loading} />
+  }
 
   return (
     <Card>
@@ -35,7 +39,6 @@ const DealPipeline = ({ deals }) => {
           const StatusIcon = statusInfo.icon;
           const daysUntilDeadline = getDaysUntilDeadline(deal.deadline);
           const isUrgent = daysUntilDeadline <= 2;
-
           return (
             <div key={deal.id} className="border rounded-lg p-4 space-y-3 hover:shadow-md transition-shadow">
               {/* Header */}

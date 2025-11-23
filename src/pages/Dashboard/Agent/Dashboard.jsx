@@ -1,6 +1,6 @@
 import { Home, Target, AlertCircle, TrendingUp } from "lucide-react"
 import { useEffect, useState } from "react";
-import { propertiesAPI } from "@/services/api";
+import { propertiesAPI, userAPI } from "@/services/api";
 import { Loading } from "@/pages/misc/Loading";
 import StatCard from "@/components/agent/StatCard";
 import PerformanceMetrics from "@/components/agent/PerformanceMetrics";
@@ -47,44 +47,24 @@ export default function AgentDashboard() {
   }
 
   const fetchActiveDeals = async () => {
-    // Mock data for active deals in process
-    const mockDeals = [
-      {
-        id: 1,
-        address: "123 Main Street",
-        buyer: "John Smith",
-        seller: "Sarah Johnson",
-        status: "contract_generation",
-        price: "$450,000",
-        acceptedDate: "2024-01-15",
-        nextStep: "Review Purchase Agreement",
-        deadline: "2024-01-18",
-        priority: "high",
-        progress: 25
-      },
-      {
-        id: 2,
-        address: "456 Oak Avenue",
-        buyer: "Mike Chen",
-        seller: "David Wilson",
-        status: "earnest_money",
-        price: "$520,000",
-        acceptedDate: "2024-01-10",
-        nextStep: "Confirm EMD Receipt",
-        deadline: "2024-01-17",
-        priority: "medium",
-        progress: 40
-      }
-    ];
-    setActiveDeals(mockDeals);
+    setLoading(true)
+    try {
+      const response = await userAPI.get_deal_list();
+      setActiveDeals(response?.data || []);
+    } catch (error) {
+      console.error("Error:", error)
+      setActiveDeals([]);
+    } finally {
+      setLoading(false)
+    }
   }
 
   const calculateDashboardStats = (propertiesData) => {
     const propertiesList = propertiesData?.data?.data || [];
     const pendingProperties = propertiesList.filter(p => p.status === "pending").length;
     const underContract = propertiesList.filter(p => p.status === "under_contract" || p.status === "pending_sale").length;
-    const urgentTasks = propertiesList.filter(p => 
-      p.status === "under_contract" || 
+    const urgentTasks = propertiesList.filter(p =>
+      p.status === "under_contract" ||
       p.status === "counter_offer"
     ).length;
 
@@ -102,34 +82,34 @@ export default function AgentDashboard() {
   };
 
   const stats = [
-    { 
-      title: "Total Listings", 
-      value: dashboardStats.totalProperties, 
-      subtitle: `${dashboardStats.underContract} under contract`, 
+    {
+      title: "Total Listings",
+      value: dashboardStats.totalProperties,
+      subtitle: `${dashboardStats.underContract} under contract`,
       Icon: Home,
-      trend: "up" 
+      trend: "up"
     },
-    { 
-      title: "Active Deals", 
-      value: dashboardStats.dealsInProgress, 
-      subtitle: "In contract phase", 
+    {
+      title: "Active Deals",
+      value: dashboardStats.dealsInProgress,
+      subtitle: "In contract phase",
       Icon: Target,
-      trend: "up" 
+      trend: "up"
     },
-    { 
-      title: "Priority Tasks", 
-      value: dashboardStats.urgentTasks, 
-      subtitle: "Need attention", 
+    {
+      title: "Priority Tasks",
+      value: dashboardStats.urgentTasks,
+      subtitle: "Need attention",
       Icon: AlertCircle,
       iconColor: "text-amber-500",
       trend: "neutral"
     },
-    { 
-      title: "This Month's Commission", 
-      value: `$${dashboardStats.commission.toLocaleString()}`, 
-      subtitle: "Estimated", 
+    {
+      title: "This Month's Commission",
+      value: `$${dashboardStats.commission.toLocaleString()}`,
+      subtitle: "Estimated",
       Icon: TrendingUp,
-      trend: "up" 
+      trend: "up"
     },
   ];
 
@@ -169,7 +149,7 @@ export default function AgentDashboard() {
         {/* OVERVIEW TAB - Just 2 main components */}
         <TabsContent value="overview" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
-            <DealPipeline deals={activeDeals} />
+            <DealPipeline deals={activeDeals} loading={loading}/>
             <RecentActivity />
           </div>
         </TabsContent>
