@@ -43,6 +43,7 @@ export const DealManagementModal = ({ deal, isOpen, onClose, onUpdate }) => {
       setLoading(false);
     }
   };
+console.log("Deal Data :",deal);
 
   const handleUploadComplete = (newDocument) => {
     setDocuments(prev => [...prev, newDocument]);
@@ -63,12 +64,12 @@ export const DealManagementModal = ({ deal, isOpen, onClose, onUpdate }) => {
       return;
     }
     try {
-      await userAPI.changeStep(deal.id, stepKey);
+      const resp = await userAPI.changeStep(deal.id, stepKey);
       const nextStep = getNextStep(stepKey);
       onUpdate({
         ...deal,
         status: nextStep,
-        progress: deal.progress + 20
+        progress: resp?.data?.percentage
       });
 
       setExpandedStep(nextStep);

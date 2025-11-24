@@ -1031,7 +1031,7 @@ export const processSteps = [
       { type: "counter_offer", name: "Counter Offer Form", required: true },
       { type: "property_disclosures", name: "Property Disclosures", required: true },
       { type: "addendum", name: "Addendums", required: false }
-    ]
+    ],
   },
   {
     key: "earnest_money",
@@ -1057,7 +1057,7 @@ export const processSteps = [
     ]
   },
   {
-    key: "mortgage",
+    key: "mortgage_processing",
     label: "Mortgage Processing",
     icon: Shield,
     color: "green",
@@ -1069,7 +1069,7 @@ export const processSteps = [
     ]
   },
   {
-    key: "closing",
+    key: "closing_preparation",
     label: "Closing",
     icon: CheckCircle2,
     color: "emerald",
@@ -1082,3 +1082,95 @@ export const processSteps = [
   }
 ];
 
+export const processPostProcessSteps = [
+    {
+      step: 1,
+      title: "Contract Generation",
+      status: "active",
+      description: "Generate and execute purchase agreement",
+      tasks: [
+        "Prepare formal contract documents",
+        "Review all terms and conditions",
+        "Coordinate e-signatures from all parties",
+        "Distribute executed copies",
+        "Update property status to 'Under Contract'"
+      ],
+      icon: FileText,
+      color: "border-l-blue-500 bg-blue-50",
+      iconColor: "text-blue-600",
+      duration: "1-2 days",
+      responsible: "Agent & Attorney"
+    },
+    {
+      step: 2,
+      title: "Earnest Money Deposit",
+      status: "pending",
+      description: "Collect and verify good faith deposit",
+      tasks: [
+        "Send EMD instructions to buyer",
+        "Verify wire transfer receipt",
+        "Confirm with title company",
+        "Update system with receipt date",
+        "Send confirmation to all parties"
+      ],
+      icon: DollarSign,
+      color: "border-l-amber-500 bg-amber-50",
+      iconColor: "text-amber-600",
+      duration: "3-5 days",
+      responsible: "Buyer & Title Company"
+    },
+    {
+      step: 3,
+      title: "Property Inspection",
+      status: "pending",
+      description: "Schedule and complete property inspections",
+      tasks: [
+        "Coordinate inspection schedule",
+        "Attend inspection with buyer",
+        "Review inspection report",
+        "Negotiate repairs if needed",
+        "Document all findings"
+      ],
+      icon: ClipboardCheck,
+      color: "border-l-purple-500 bg-purple-50",
+      iconColor: "text-purple-600",
+      duration: "7-10 days",
+      responsible: "Agent & Inspector"
+    },
+    {
+      step: 4,
+      title: "Mortgage Processing",
+      status: "pending",
+      description: "Manage buyer's loan approval process",
+      tasks: [
+        "Connect buyer with preferred lenders",
+        "Submit required documentation",
+        "Track appraisal schedule",
+        "Monitor underwriting progress",
+        "Secure final loan commitment"
+      ],
+      icon: Shield,
+      color: "border-l-green-500 bg-green-50",
+      iconColor: "text-green-600",
+      duration: "21-30 days",
+      responsible: "Buyer & Lender"
+    },
+    {
+      step: 5,
+      title: "Closing Preparation",
+      status: "pending",
+      description: "Finalize all closing details",
+      tasks: [
+        "Schedule closing date with all parties",
+        "Review closing disclosure",
+        "Coordinate with title company",
+        "Prepare for final walkthrough",
+        "Confirm all documents are ready"
+      ],
+      icon: CheckCircle2,
+      color: "border-l-emerald-500 bg-emerald-50",
+      iconColor: "text-emerald-600",
+      duration: "3-5 days",
+      responsible: "Agent & Title Company"
+    }
+  ];
