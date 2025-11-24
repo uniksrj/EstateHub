@@ -8,7 +8,7 @@ import { useState } from "react";
 import { DealManagementModal } from "./DealManagementModal";
 import { Loading } from "@/pages/misc/Loading";
 
-const DealPipeline = ({ deals, loading }) => {
+const DealPipeline = ({ deals, loading, setActiveDeals }) => {
   const [dealManagement, setDealManagement] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
 
@@ -126,6 +126,7 @@ const DealPipeline = ({ deals, loading }) => {
             isOpen={!!selectedDeal}
             onClose={() => setSelectedDeal(null)}
             deal={selectedDeal}
+            onUpdate={setActiveDeals}
           />
         )}
       </CardContent>

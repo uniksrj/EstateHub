@@ -14,6 +14,7 @@ import { processSteps } from "@/data/demoData";
 import ViewDocumentModal from "../deal/ViewDocumentModal";
 import UploadDocumentModal from "../deal/UploadDocumentModal";
 import { userAPI } from "@/services/api";
+import { toast } from "sonner";
 
 export const DealManagementModal = ({ deal, isOpen, onClose, onUpdate }) => {
   const [activeTab, setActiveTab] = useState("process");
@@ -38,20 +39,19 @@ export const DealManagementModal = ({ deal, isOpen, onClose, onUpdate }) => {
       setDocuments(response?.data?.document)
     } catch (error) {
       console.error('Error fetching documents:', error);
-    } finally{
+    } finally {
       setLoading(false);
     }
   };
 
   const handleUploadComplete = (newDocument) => {
     setDocuments(prev => [...prev, newDocument]);
-    // Refresh the deal to update progress if needed
-    if (typeof onUpdate === 'function') {
-      onUpdate({ ...deal });
-    }
+    // if (typeof onUpdate === 'function') {
+    //   onUpdate({ ...deal });
+    // }
   };
 
-  const handleMarkComplete = (stepKey) => {
+  const handleMarkComplete = async (stepKey) => {
     const step = processSteps.find(s => s.key === stepKey);
     const requiredDocs = step.requiredDocuments.filter(doc => doc.required);
     const uploadedDocs = documents.filter(doc =>
@@ -62,15 +62,21 @@ export const DealManagementModal = ({ deal, isOpen, onClose, onUpdate }) => {
       alert(`Please upload all required documents for ${step.label} before marking complete.`);
       return;
     }
+    try {
+      await userAPI.changeStep(deal.id, stepKey);
+      const nextStep = getNextStep(stepKey);
+      onUpdate({
+        ...deal,
+        status: nextStep,
+        progress: deal.progress + 20
+      });
 
-    const nextStep = getNextStep(stepKey);
-    onUpdate({
-      ...deal,
-      status: nextStep,
-      progress: deal.progress + 20
-    });
+      setExpandedStep(nextStep);
+    } catch (error) {
+      console.error("something went wrong!", error)
+      toast("something went wrong!" + error.message)
+    }
 
-    setExpandedStep(nextStep);
   };
 
   const getNextStep = (currentStep) => {
