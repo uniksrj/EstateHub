@@ -1,4 +1,4 @@
-import { Calculator, CheckCircle, CheckCircle2, ClipboardCheck, DollarSign, FileText, Shield } from "lucide-react";
+import { AlertCircle, Building, Calculator, Calendar, CheckCircle, CheckCircle2, ClipboardCheck, Clock, DollarSign, FileText, Mail, PenTool, Shield, Upload } from "lucide-react";
 
 // demoData/sellerProperties.js
 export const demoProperties = [
@@ -1083,94 +1083,261 @@ export const processSteps = [
 ];
 
 export const processPostProcessSteps = [
-    {
-      step: 1,
-      title: "Contract Generation",
-      status: "active",
-      description: "Generate and execute purchase agreement",
-      tasks: [
-        "Prepare formal contract documents",
-        "Review all terms and conditions",
-        "Coordinate e-signatures from all parties",
-        "Distribute executed copies",
-        "Update property status to 'Under Contract'"
-      ],
-      icon: FileText,
-      color: "border-l-blue-500 bg-blue-50",
-      iconColor: "text-blue-600",
-      duration: "1-2 days",
-      responsible: "Agent & Attorney"
-    },
-    {
-      step: 2,
-      title: "Earnest Money Deposit",
-      status: "pending",
-      description: "Collect and verify good faith deposit",
-      tasks: [
-        "Send EMD instructions to buyer",
-        "Verify wire transfer receipt",
-        "Confirm with title company",
-        "Update system with receipt date",
-        "Send confirmation to all parties"
-      ],
-      icon: DollarSign,
-      color: "border-l-amber-500 bg-amber-50",
-      iconColor: "text-amber-600",
-      duration: "3-5 days",
-      responsible: "Buyer & Title Company"
-    },
-    {
-      step: 3,
-      title: "Property Inspection",
-      status: "pending",
-      description: "Schedule and complete property inspections",
-      tasks: [
-        "Coordinate inspection schedule",
-        "Attend inspection with buyer",
-        "Review inspection report",
-        "Negotiate repairs if needed",
-        "Document all findings"
-      ],
-      icon: ClipboardCheck,
-      color: "border-l-purple-500 bg-purple-50",
-      iconColor: "text-purple-600",
-      duration: "7-10 days",
-      responsible: "Agent & Inspector"
-    },
-    {
-      step: 4,
-      title: "Mortgage Processing",
-      status: "pending",
-      description: "Manage buyer's loan approval process",
-      tasks: [
-        "Connect buyer with preferred lenders",
-        "Submit required documentation",
-        "Track appraisal schedule",
-        "Monitor underwriting progress",
-        "Secure final loan commitment"
-      ],
-      icon: Shield,
-      color: "border-l-green-500 bg-green-50",
-      iconColor: "text-green-600",
-      duration: "21-30 days",
-      responsible: "Buyer & Lender"
-    },
-    {
-      step: 5,
-      title: "Closing Preparation",
-      status: "pending",
-      description: "Finalize all closing details",
-      tasks: [
-        "Schedule closing date with all parties",
-        "Review closing disclosure",
-        "Coordinate with title company",
-        "Prepare for final walkthrough",
-        "Confirm all documents are ready"
-      ],
-      icon: CheckCircle2,
-      color: "border-l-emerald-500 bg-emerald-50",
-      iconColor: "text-emerald-600",
-      duration: "3-5 days",
-      responsible: "Agent & Title Company"
-    }
-  ];
+  {
+    step: 1,
+    title: "Contract Generation",
+    status: "active",
+    description: "Generate and execute purchase agreement",
+    tasks: [
+      "Prepare formal contract documents",
+      "Review all terms and conditions",
+      "Coordinate e-signatures from all parties",
+      "Distribute executed copies",
+      "Update property status to 'Under Contract'"
+    ],
+    icon: FileText,
+    color: "border-l-blue-500 bg-blue-50",
+    iconColor: "text-blue-600",
+    duration: "1-2 days",
+    responsible: "Agent & Attorney"
+  },
+  {
+    step: 2,
+    title: "Earnest Money Deposit",
+    status: "pending",
+    description: "Collect and verify good faith deposit",
+    tasks: [
+      "Send EMD instructions to buyer",
+      "Verify wire transfer receipt",
+      "Confirm with title company",
+      "Update system with receipt date",
+      "Send confirmation to all parties"
+    ],
+    icon: DollarSign,
+    color: "border-l-amber-500 bg-amber-50",
+    iconColor: "text-amber-600",
+    duration: "3-5 days",
+    responsible: "Buyer & Title Company"
+  },
+  {
+    step: 3,
+    title: "Property Inspection",
+    status: "pending",
+    description: "Schedule and complete property inspections",
+    tasks: [
+      "Coordinate inspection schedule",
+      "Attend inspection with buyer",
+      "Review inspection report",
+      "Negotiate repairs if needed",
+      "Document all findings"
+    ],
+    icon: ClipboardCheck,
+    color: "border-l-purple-500 bg-purple-50",
+    iconColor: "text-purple-600",
+    duration: "7-10 days",
+    responsible: "Agent & Inspector"
+  },
+  {
+    step: 4,
+    title: "Mortgage Processing",
+    status: "pending",
+    description: "Manage buyer's loan approval process",
+    tasks: [
+      "Connect buyer with preferred lenders",
+      "Submit required documentation",
+      "Track appraisal schedule",
+      "Monitor underwriting progress",
+      "Secure final loan commitment"
+    ],
+    icon: Shield,
+    color: "border-l-green-500 bg-green-50",
+    iconColor: "text-green-600",
+    duration: "21-30 days",
+    responsible: "Buyer & Lender"
+  },
+  {
+    step: 5,
+    title: "Closing Preparation",
+    status: "pending",
+    description: "Finalize all closing details",
+    tasks: [
+      "Schedule closing date with all parties",
+      "Review closing disclosure",
+      "Coordinate with title company",
+      "Prepare for final walkthrough",
+      "Confirm all documents are ready"
+    ],
+    icon: CheckCircle2,
+    color: "border-l-emerald-500 bg-emerald-50",
+    iconColor: "text-emerald-600",
+    duration: "3-5 days",
+    responsible: "Agent & Title Company"
+  }
+];
+
+
+export const activities = [
+  // === DOCUMENT ACTIVITIES ===
+  {
+    id: 1,
+    type: "document_upload",
+    message: "Purchase agreement uploaded",
+    time: "2 hours ago",
+    status: "completed",
+    icon: Upload,
+    color: "text-green-500",
+    property: "123 Main Street",
+    user: "John Agent",
+    action: "uploaded",
+    item: "Purchase Agreement",
+    step: "contract_generation"
+  },
+  {
+    id: 2,
+    type: "document_signed",
+    message: "Disclosure forms signed by buyer",
+    time: "5 hours ago",
+    status: "completed",
+    icon: PenTool,
+    color: "text-blue-500",
+    property: "456 Oak Avenue",
+    user: "Sarah Buyer",
+    action: "signed",
+    item: "Disclosure Forms",
+    step: "contract_generation"
+  },
+  {
+    id: 3,
+    type: "document_request",
+    message: "Bank statements requested",
+    time: "1 day ago",
+    status: "pending",
+    icon: Clock,
+    color: "text-amber-500",
+    property: "789 Pine Road",
+    user: "Loan Officer",
+    action: "requested",
+    item: "Bank Statements (6 months)",
+    step: "mortgage_processing"
+  },
+
+  // === STEP PROGRESS ACTIVITIES ===
+  {
+    id: 4,
+    type: "step_completed",
+    message: "Contract generation completed",
+    time: "2 days ago",
+    status: "completed",
+    icon: CheckCircle2,
+    color: "text-green-500",
+    property: "123 Main Street",
+    user: "System",
+    action: "completed",
+    item: "Contract Generation Step",
+    step: "contract_generation"
+  },
+  {
+    id: 5,
+    type: "step_started",
+    message: "Earnest money step initiated",
+    time: "1 day ago",
+    status: "active",
+    icon: DollarSign,
+    color: "text-blue-500",
+    property: "456 Oak Avenue",
+    user: "System",
+    action: "started",
+    item: "Earnest Money Step",
+    step: "earnest_money"
+  },
+
+  // === FINANCIAL ACTIVITIES ===
+  {
+    id: 6,
+    type: "payment_received",
+    message: "Earnest money deposit received",
+    time: "3 hours ago",
+    status: "completed",
+    icon: DollarSign,
+    color: "text-green-500",
+    property: "123 Main Street",
+    user: "Escrow Company",
+    action: "received",
+    item: "Earnest Money - $10,000",
+    step: "earnest_money"
+  },
+  {
+    id: 7,
+    type: "payment_due",
+    message: "Appraisal fee due tomorrow",
+    time: "1 day ago",
+    status: "urgent",
+    icon: AlertCircle,
+    color: "text-red-500",
+    property: "789 Pine Road",
+    user: "System",
+    action: "due",
+    item: "Appraisal Fee - $500",
+    step: "mortgage_processing"
+  },
+
+  // === COMMUNICATION ACTIVITIES ===
+  {
+    id: 8,
+    type: "message_sent",
+    message: "Inspection schedule sent to buyer",
+    time: "4 hours ago",
+    status: "completed",
+    icon: Mail,
+    color: "text-blue-500",
+    property: "456 Oak Avenue",
+    user: "John Agent",
+    action: "sent",
+    item: "Inspection Schedule",
+    step: "inspection"
+  },
+  {
+    id: 9,
+    type: "deadline_approaching",
+    message: "Mortgage contingency in 2 days",
+    time: "2 days ago",
+    status: "urgent",
+    icon: AlertCircle,
+    color: "text-amber-500",
+    property: "123 Main Street",
+    user: "System",
+    action: "deadline",
+    item: "Mortgage Contingency",
+    step: "mortgage_processing"
+  },
+
+  // === THIRD-PARTY ACTIVITIES ===
+  {
+    id: 10,
+    type: "inspection_scheduled",
+    message: "Home inspection scheduled",
+    time: "1 day ago",
+    status: "pending",
+    icon: Calendar,
+    color: "text-blue-500",
+    property: "789 Pine Road",
+    user: "Inspector Pro",
+    action: "scheduled",
+    item: "Home Inspection - Mar 15, 2:00 PM",
+    step: "inspection"
+  },
+  {
+    id: 11,
+    type: "appraisal_ordered",
+    message: "Property appraisal ordered",
+    time: "3 days ago",
+    status: "completed",
+    icon: Building,
+    color: "text-green-500",
+    property: "456 Oak Avenue",
+    user: "Appraisal Co",
+    action: "ordered",
+    item: "Property Appraisal",
+    step: "mortgage_processing"
+  }
+]; 
