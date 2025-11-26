@@ -157,7 +157,8 @@ export const userAPI = {
     });
   },
   get_document : (deal_id) => api.get(`/api/agent/get_document_details/${deal_id}`),
-  changeStep : (deal_id, stepKey) => api.post(`/api/agent/deals/${deal_id}/complete-step/${stepKey}`)
+  changeStep : (deal_id, stepKey) => api.post(`/api/agent/deals/${deal_id}/complete-step/${stepKey}`),
+  getAllDetailsActivity : (data) => api.get(`/api/agent/activities`, {data})
 }
 
 export const superAdminAPI = {
