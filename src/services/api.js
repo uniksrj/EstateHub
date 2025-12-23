@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    // "Content-Type": "application/json",
+    "Content-Type": "application/json",
     Accept: "application/json",
   },
   withCredentials: true,
@@ -157,7 +157,7 @@ export const userAPI = {
     });
   },
   get_document : (deal_id) => api.get(`/api/agent/get_document_details/${deal_id}`),
-  changeStep : (deal_id, stepKey) => api.post(`/api/agent/deals/${deal_id}/complete-step/${stepKey}`),
+  changeStep : (deal_id, stepKey) => api.post(`/api/agent/deals/${deal_id}/complete-step/${stepKey}`,{}),
   getAllDetailsActivity : (data) => api.get(`/api/agent/activities`, {data})
 }
 

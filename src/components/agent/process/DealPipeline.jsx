@@ -4,29 +4,33 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Home, Calendar, User } from "lucide-react";
 import { getAgentStatusInfo, getDaysUntilDeadline } from "@/utils/userHelpers";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DealManagementModal } from "./DealManagementModal";
 import { Loading } from "@/pages/misc/Loading";
 
 const DealPipeline = ({ deals, loading, setActiveDeals }) => {
-  const [dealManagement, setDealManagement] = useState(false);
-  const [selectedDeal, setSelectedDeal] = useState(null);
-
+  const [selectedDealId, setSelectedDealId] = useState(null);
   const getPriorityColor = (priority) => {
     return priority === "high" ? "destructive" : "secondary";
   };
 
-  const handleManageDeal = (dealID) => {
-    let filterData = deals.find(val => Number(val.id) === Number(dealID));
-    console.log("Getting filterData DATA :", filterData)
-    setSelectedDeal(filterData);
-    setDealManagement(true);
+  const selectedDeal = useMemo(
+    () => deals.find(d => Number(d.id) === Number(selectedDealId)),
+    [deals, selectedDealId]
+  );
+
+  const handleManageDeal = (dealId) => {
+    setSelectedDealId(Number(dealId));
+  };
+
+  const handleCloseModal = () => {
+    setSelectedDealId(null);
   };
 
   if (loading) {
     return <Loading loading={loading} />
   }
-
+  console.log("Rendering DealPipeline with deals:", deals);
   return (
     <Card>
       <CardHeader>
@@ -82,9 +86,9 @@ const DealPipeline = ({ deals, loading, setActiveDeals }) => {
                 <div className="space-y-1">
                   <div className="flex justify-between text-sm">
                     <span>Progress</span>
-                    <span>{deal?.progress}%</span>
+                    <span>{deal?.progress ?? 0}%</span>
                   </div>
-                  <Progress value={deal?.progress} className="h-2" />
+                  <Progress value={deal?.progress ?? 0} className="h-2" />
                 </div>
               </div>
 
@@ -121,10 +125,10 @@ const DealPipeline = ({ deals, loading, setActiveDeals }) => {
             Add New Deal
           </Button>
         </div>
-        {dealManagement && (
+        {selectedDeal && (
           <DealManagementModal
-            isOpen={!!selectedDeal}
-            onClose={() => setSelectedDeal(null)}
+            isOpen={true}
+            onClose={handleCloseModal}
             deal={selectedDeal}
             onUpdate={setActiveDeals}
           />

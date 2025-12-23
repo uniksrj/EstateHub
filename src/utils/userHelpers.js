@@ -1,5 +1,5 @@
 import { AGENT_OFFER_STATUS, OFFER_STATUS } from "@/constants/offerTypes";
-import { AlertCircle, AlertTriangle, Building, Calendar, CheckCircle, CheckCircle2, ClipboardCheck, Clock, DollarSign, Download, FileText, Info, Mail, PenTool, Shield, Upload } from "lucide-react";
+import { AlertCircle, AlertOctagon, AlertTriangle, Ban, Building, Calendar, CheckCircle, CheckCircle2, CircleCheckBig, ClipboardCheck, Clock, DollarSign, Download, FileText, Info, Mail, PenTool, Shield, Upload } from "lucide-react";
 
 export const getStatusInfo = (user) => {
   switch (user.is_active) {
@@ -97,11 +97,28 @@ export const getScheduleStatusColor = (status) => {
     case "cancelled":
       return "bg-red-500"
     case "rejected":
-      return "bg-gray-500"
+      return "bg-destructive text-destructive-foreground"
     default:
       return "bg-gray-400"
   }
 }
+
+export const getScheduleStatusIcon = (status) => {
+  switch (status) {
+    case "pending":
+      return Clock;
+    case "approved":
+      return CheckCircle;
+    case "completed":
+      return CircleCheckBig;
+    case "cancelled":
+      return Ban;
+    case "rejected":
+      return AlertOctagon;
+    default:
+      return null;
+  }
+};
 
 export const getOfferStatusColor = (status, role = "buyer") => {
   if (role === "buyer") {

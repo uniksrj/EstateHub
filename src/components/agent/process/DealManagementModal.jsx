@@ -16,7 +16,7 @@ import UploadDocumentModal from "../deal/UploadDocumentModal";
 import { userAPI } from "@/services/api";
 import { toast } from "sonner";
 
-export const DealManagementModal = ({ deal, isOpen, onClose, onUpdate }) => {
+export const DealManagementModal = ({ isOpen, onClose,deal, onUpdate }) => {
   const [activeTab, setActiveTab] = useState("process");
   const [expandedStep, setExpandedStep] = useState(deal?.status || null);
   const [documents, setDocuments] = useState([]);
@@ -43,13 +43,13 @@ export const DealManagementModal = ({ deal, isOpen, onClose, onUpdate }) => {
       setLoading(false);
     }
   };
-console.log("Deal Data :",deal);
+  console.log("Deal Data :", deal);
 
   const handleUploadComplete = (newDocument) => {
     setDocuments(prev => [...prev, newDocument]);
-    // if (typeof onUpdate === 'function') {
-    //   onUpdate({ ...deal });
-    // }
+    if (typeof onUpdate === 'function') {
+      onUpdate({ ...deal });
+    }
   };
 
   const handleMarkComplete = async (stepKey) => {
@@ -65,12 +65,21 @@ console.log("Deal Data :",deal);
     }
     try {
       const resp = await userAPI.changeStep(deal.id, stepKey);
+      console.log("response from chnage status data :", resp)
       const nextStep = getNextStep(stepKey);
-      onUpdate({
-        ...deal,
-        status: nextStep,
-        progress: resp?.data?.percentage
-      });
+      console.log("Next Step Key :", nextStep)
+      toast.success(`${step.label} marked as complete.`);
+      onUpdate(prevDeals =>
+        prevDeals.map(d =>
+          d.id === deal.id
+            ? {
+              ...d,
+              status: nextStep,
+              progress: resp?.data?.percentage
+            }
+            : d
+        )
+      );
 
       setExpandedStep(nextStep);
     } catch (error) {
@@ -141,7 +150,7 @@ console.log("Deal Data :",deal);
       </Badge>
     );
   };
-
+  console.log("This is after add next step data :", deal);
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
