@@ -457,7 +457,6 @@ export const DealManagementModal = ({ isOpen, onClose,deal, onUpdate }) => {
         onUploadComplete={handleUploadComplete}
       />
 
-      {/* View Document Modal */}
       <ViewDocumentModal
         isOpen={viewModal.open}
         onClose={() => setViewModal({ open: false, document: null })}

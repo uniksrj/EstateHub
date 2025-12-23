@@ -7,9 +7,12 @@ import { getAgentStatusInfo, getDaysUntilDeadline } from "@/utils/userHelpers";
 import { useMemo, useState } from "react";
 import { DealManagementModal } from "./DealManagementModal";
 import { Loading } from "@/pages/misc/Loading";
+import { DealUpdateModal } from "./DealUpdateModal";
 
 const DealPipeline = ({ deals, loading, setActiveDeals }) => {
   const [selectedDealId, setSelectedDealId] = useState(null);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [manageModalOpen, setManageModalOpen] = useState(false);
   const getPriorityColor = (priority) => {
     return priority === "high" ? "destructive" : "secondary";
   };
@@ -21,9 +24,23 @@ const DealPipeline = ({ deals, loading, setActiveDeals }) => {
 
   const handleManageDeal = (dealId) => {
     setSelectedDealId(Number(dealId));
+    setManageModalOpen(true);
+    setUpdateModalOpen(false);
   };
 
-  const handleCloseModal = () => {
+  const handleUpdateDeal = (dealId) => {
+    setSelectedDealId(Number(dealId));
+    setUpdateModalOpen(true);
+    setManageModalOpen(false); 
+  };
+
+  const handleCloseManageModal = () => {
+    setManageModalOpen(false);
+    setSelectedDealId(null);    
+  };
+
+  const handleCloseUpdateModal = () => {
+    setUpdateModalOpen(false);
     setSelectedDealId(null);
   };
 
@@ -108,7 +125,7 @@ const DealPipeline = ({ deals, loading, setActiveDeals }) => {
                   <Button size="sm" variant="outline" onClick={() => handleManageDeal(deal?.id)}>
                     Manage
                   </Button>
-                  <Button size="sm">
+                  <Button size="sm" onClick={() => handleUpdateDeal(deal?.id)}>
                     Update
                   </Button>
                 </div>
@@ -125,14 +142,20 @@ const DealPipeline = ({ deals, loading, setActiveDeals }) => {
             Add New Deal
           </Button>
         </div>
-        {selectedDeal && (
-          <DealManagementModal
-            isOpen={true}
-            onClose={handleCloseModal}
-            deal={selectedDeal}
-            onUpdate={setActiveDeals}
-          />
-        )}
+        <DealManagementModal
+          isOpen={manageModalOpen}
+          onClose={handleCloseManageModal}
+          deal={selectedDeal}
+          onUpdate={setActiveDeals}
+        />
+
+        {/* Update Modal */}
+        <DealUpdateModal
+          isOpen={updateModalOpen}
+          onClose={handleCloseUpdateModal}
+          deal={selectedDeal}
+          onUpdate={setActiveDeals}
+        />
       </CardContent>
     </Card>
   );
