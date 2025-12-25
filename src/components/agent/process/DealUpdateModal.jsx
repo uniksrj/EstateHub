@@ -9,7 +9,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     CalendarIcon,
     ChevronUp,
@@ -21,15 +21,17 @@ import {
     MessageSquare,
     Send,
     FileText,
-    X
+    X,
+    ChevronRight
 } from "lucide-react";
 import { processSteps } from "@/data/demoData";
 import { toast } from "sonner";
+import { userAPI } from "@/services/api";
 
 export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     console.log("DealUpdateModal opened for deal:", deal);
     const [progress, setProgress] = useState(deal?.progress || 40);
-    const [status, setStatus] = useState(deal?.status || "earnest_money");
+    const [status, setStatus] = useState(deal?.status || "contract_generation");
     const [nextStep, setNextStep] = useState(deal?.nextStep || "Review Purchase Agreement");
     const [deadline, setDeadline] = useState(deal?.deadline ? new Date(deal.deadline) : null);
     const [priority, setPriority] = useState(deal?.priority || "high");
@@ -37,6 +39,24 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     const [selectedDocuments, setSelectedDocuments] = useState([]);
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+        if (isOpen && deal) {
+            fetchDocuments();
+        }
+    }, [isOpen, deal]);
+
+    const fetchDocuments = async () => {
+        setIsSaving(true)
+        try {
+            const response = await userAPI.get_document(deal.id);
+            setSelectedDocuments(response?.data?.document)
+        } catch (error) {
+            console.error('Error fetching documents:', error);
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
     if (!deal) return null;
 
@@ -50,16 +70,10 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
         // Auto-suggest stage based on progress
         const newStageIndex = Math.floor(value[0] / 20);
+        console.log("this is new stage index : ", newStageIndex)
         if (newStageIndex !== currentStepIndex && newStageIndex < processSteps.length) {
             setStatus(processSteps[newStageIndex].key);
-        }
-    };
-
-    // Handle status change with progress adjustment
-    const handleStatusChange = (newStatus) => {
-        setStatus(newStatus);
-        const newIndex = processSteps.findIndex(step => step.key === newStatus);
-        setProgress((newIndex + 1) * 20);
+        }        
     };
 
     // Toggle document selection
@@ -71,49 +85,141 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         );
     };
 
-    // Submit update
+    const canAdvanceToStage = (targetStageKey) => {
+        const currentStage = processSteps.find(s => s.key === deal.status);
+        const targetStage = processSteps.find(s => s.key === targetStageKey);
+
+        if (!currentStage || !targetStage) return true;
+
+        // Get current stage index
+        const currentIndex = processSteps.findIndex(s => s.key === deal.status);
+        const targetIndex = processSteps.findIndex(s => s.key === targetStageKey);
+
+        // Can only move forward if completing current stage
+        if (targetIndex > currentIndex) {
+            const requiredDocs = currentStage.requiredDocuments.filter(doc => doc.required);
+            const allRequiredReceived = requiredDocs.every(doc =>
+                selectedDocuments.includes(doc.type) ||
+                (deal.documents_received || []).includes(doc.type)
+            );
+            return allRequiredReceived;
+        }
+
+        // Can always move backward
+        return true;
+    };
+
+
+    const handleStatusChange = (newStatus) => {
+        const newIndex = processSteps.findIndex(step => step.key === newStatus);
+        const progressValue = (newIndex + 1) * 20;
+
+        setStatus(newStatus);
+        setProgress(progressValue);
+
+        // Auto-set next step suggestion
+        const stage = processSteps[newIndex];
+        if (stage) {
+            const firstRequiredDoc = stage.requiredDocuments.find(doc => doc.required);
+            if (firstRequiredDoc && !nextStep) {
+                setNextStep(`Submit ${firstRequiredDoc.name}`);
+            }
+        }
+    };
+
+    const getCurrentStageCompletion = () => {
+        const currentStage = processSteps.find(s => s.key === status);
+        if (!currentStage) return { completed: 0, total: 0 };
+
+        const requiredDocs = currentStage.requiredDocuments.filter(doc => doc.required);
+        const completedDocs = requiredDocs.filter(doc =>
+            selectedDocuments.includes(doc.type) ||
+            (deal.documents_received || []).includes(doc.type)
+        );
+
+        return {
+            completed: completedDocs.length,
+            total: requiredDocs.length,
+            percent: Math.round((completedDocs.length / requiredDocs.length) * 100)
+        };
+    };
+    const completion = getCurrentStageCompletion();
+
     const handleSubmit = async () => {
         setIsSaving(true);
         try {
+            // Determine if we're advancing to next stage
+            const currentIndex = processSteps.findIndex(step => step.key === deal.status);
+            const newIndex = processSteps.findIndex(step => step.key === status);
+
+            // Check if we're advancing to next stage
+            const isAdvancingStage = newIndex > currentIndex;
+
             // Prepare update data
             const updateData = {
                 progress,
                 status,
-                nextStep,
+                next_step: nextStep,
                 deadline: deadline ? format(deadline, 'yyyy-MM-dd') : null,
                 priority,
-                notes: notes.trim() ? notes : null,
-                updatedAt: new Date().toISOString()
+                notes: notes.trim() || null,
+                updated_at: new Date().toISOString()
             };
 
-            // Here you would call your API
-            // await userAPI.updateDeal(deal.id, updateData);
-
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            // Call parent update
-            if (typeof onUpdate === 'function') {
-                onUpdate({
-                    ...deal,
-                    ...updateData
-                });
+            // If moving to next stage, mark current stage as complete
+            if (isAdvancingStage) {
+                updateData.completed_stages = [
+                    ...(deal.completed_stages || []),
+                    deal.status
+                ];
             }
 
-            toast.success("Deal updated successfully");
+            // Call your API to update the deal
+            await userAPI.updateDeal(deal.id, updateData);
 
-            // Auto-generate message if notes exist
-            if (notes.trim()) {
-                toast.info("Consider sending update to clients via Messages");
+            // If documents were marked as received, update them too
+            if (selectedDocuments.length > 0) {
+                await Promise.all(
+                    selectedDocuments.map(docType =>
+                        userAPI.updateDocumentStatus(deal.id, docType, 'received')
+                    )
+                );
             }
+
+            // Update parent with new deal data
+            const updatedDeal = {
+                ...deal,
+                ...updateData,
+                // Update next step based on new stage
+                nextStep: nextStep || getDefaultNextStep(status)
+            };
+
+            if (onUpdate) {
+                onUpdate(updatedDeal);
+            }
+
+            toast.success(isAdvancingStage ?
+                `Advanced to ${processSteps[newIndex]?.label}` :
+                "Deal updated successfully"
+            );
 
             onClose();
+
         } catch (error) {
             toast.error("Failed to update deal");
             console.error(error);
         } finally {
             setIsSaving(false);
         }
+    };
+
+    // Helper function to get default next step for a stage
+    const getDefaultNextStep = (stageKey) => {
+        const stage = processSteps.find(s => s.key === stageKey);
+        if (!stage) return "Complete paperwork";
+
+        const nextDoc = stage.requiredDocuments.find(doc => doc.required);
+        return nextDoc ? `Submit ${nextDoc.name}` : "Complete stage requirements";
     };
 
     // Quick action buttons
@@ -140,7 +246,8 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
     // Document checklist for current step
     const currentStepDocuments = currentStep?.requiredDocuments || [];
-    const uploadedDocsCount = currentStepDocuments.filter(doc => selectedDocuments.includes(doc.type)).length;
+    const uploadedDocsCount = currentStepDocuments.filter(doc => selectedDocuments.some(delectDocs => delectDocs.document_type === doc.type)).length;
+    
     const requiredDocsCount = currentStepDocuments.filter(doc => doc.required).length;
 
     return (
@@ -154,6 +261,15 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
                 <div className="space-y-6 overflow-y-auto max-h-[70vh] pr-2">
                     {/* Progress Section */}
+                    {completion.total > 0 && (
+                        <div className="mt-2">
+                            <div className="flex justify-between text-xs text-muted-foreground">
+                                <span>Stage Completion</span>
+                                <span>{completion.percent}%</span>
+                            </div>
+                            <Progress value={completion.percent} className="h-1" />
+                        </div>
+                    )}
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
                             <Label htmlFor="progress">Progress: {progress}%</Label>
@@ -178,8 +294,14 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                             <div className="relative">
                                 <select
                                     value={status}
-                                    onChange={(e) => handleStatusChange(e.target.value)}
-                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                                    onChange={(e) => {
+                                        if (canAdvanceToStage(e.target.value)) {
+                                            handleStatusChange(e.target.value);
+                                        } else {
+                                            toast.error("Complete all required documents for current stage first");
+                                        }
+                                    }}
+                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 pr-8"
                                 >
                                     {processSteps.map((step) => (
                                         <option key={step.key} value={step.key}>
@@ -285,12 +407,12 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                         onClick={() => toggleDocument(doc.type)}
                                         className={cn(
                                             "h-4 w-4 rounded border flex items-center justify-center transition-colors",
-                                            selectedDocuments.includes(doc.type)
+                                            selectedDocuments.some(selectDoc => selectDoc.document_type === doc.type)
                                                 ? "bg-primary border-primary"
                                                 : "border-input"
                                         )}
                                     >
-                                        {selectedDocuments.includes(doc.type) && (
+                                        {selectedDocuments.some(selectDoc => selectDoc.document_type === doc.type) && (
                                             <CheckCircle className="h-3 w-3 text-primary-foreground" />
                                         )}
                                     </button>
@@ -334,6 +456,27 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                 </Button>
                             ))}
                         </div>
+                    </div>
+                    <div className="space-y-3">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                                const currentIndex = processSteps.findIndex(step => step.key === status);
+                                const nextStage = processSteps[currentIndex + 1];
+                                if (nextStage && canAdvanceToStage(nextStage.key)) {
+                                    handleStatusChange(nextStage.key);
+                                } else {
+                                    toast.error("Cannot advance - complete current stage requirements");
+                                }
+                            }}
+                            disabled={status === processSteps[processSteps.length - 1].key}
+                            className="flex items-center gap-2"
+                        >
+                            <ChevronRight className="h-4 w-4" />
+                            Advance to Next Stage
+                        </Button>
                     </div>
                 </div>
 
