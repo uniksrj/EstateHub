@@ -43,6 +43,11 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     useEffect(() => {
         if (isOpen && deal) {
             fetchDocuments();
+            setProgress(deal.progress || 40);
+            setStatus(deal.status || "contract_generation");
+            setNextStep(deal.nextStep || "Review Purchase Agreement");
+            setDeadline(deal.deadline ? new Date(deal.deadline) : null);
+            setPriority(deal.priority || "high");
         }
     }, [isOpen, deal]);
 
@@ -73,18 +78,19 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         console.log("this is new stage index : ", newStageIndex)
         if (newStageIndex !== currentStepIndex && newStageIndex < processSteps.length) {
             setStatus(processSteps[newStageIndex].key);
-        }        
+        }
     };
 
     // Toggle document selection
     const toggleDocument = (docType) => {
+        console.log("Selected Documents :", docType)
         setSelectedDocuments(prev =>
-            prev.includes(docType)
-                ? prev.filter(doc => doc !== docType)
-                : [...prev, docType]
-        );
+            prev.some(revData => revData.document_type === docType)
+                ? prev.filter(doc => doc.document_type !== docType)
+                : [...prev, { document_type: docType }]
+        );        
     };
-
+console.log("after Selected Documents :", selectedDocuments);
     const canAdvanceToStage = (targetStageKey) => {
         const currentStage = processSteps.find(s => s.key === deal.status);
         const targetStage = processSteps.find(s => s.key === targetStageKey);
@@ -243,11 +249,12 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             variant: "outline"
         }
     ];
+    console.log("this is status from :", deal);
 
     // Document checklist for current step
     const currentStepDocuments = currentStep?.requiredDocuments || [];
     const uploadedDocsCount = currentStepDocuments.filter(doc => selectedDocuments.some(delectDocs => delectDocs.document_type === doc.type)).length;
-    
+
     const requiredDocsCount = currentStepDocuments.filter(doc => doc.required).length;
 
     return (
@@ -304,12 +311,12 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                     className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 pr-8"
                                 >
                                     {processSteps.map((step) => (
-                                        <option key={step.key} value={step.key}>
+                                        <option key={step.key} selected={status === step.key} value={step.key}>
                                             {step.label}
                                         </option>
                                     ))}
                                 </select>
-                                <ChevronDown className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground pointer-events-none" />
+                                
                             </div>
                         </div>
 
