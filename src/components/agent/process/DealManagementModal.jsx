@@ -15,14 +15,17 @@ import ViewDocumentModal from "../deal/ViewDocumentModal";
 import UploadDocumentModal from "../deal/UploadDocumentModal";
 import { userAPI } from "@/services/api";
 import { toast } from "sonner";
+import { DeadlineStatusBadge } from "../DeadlineStatusBadge";
+import { DeadlineExtensionPanel } from "../deal/DeadlineExtensionPanel";
 
-export const DealManagementModal = ({ isOpen, onClose,deal, onUpdate }) => {
+export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
   const [activeTab, setActiveTab] = useState("process");
   const [expandedStep, setExpandedStep] = useState(deal?.status || null);
   const [documents, setDocuments] = useState([]);
   const [uploadModal, setUploadModal] = useState({ open: false, documentType: null });
   const [viewModal, setViewModal] = useState({ open: false, document: null });
   const [loading, setLoading] = useState(true);
+  const [extensionAdded, handleExtensionAdded] = useState(true);
 
   // Fetch documents when modal opens
   useEffect(() => {
@@ -175,9 +178,17 @@ export const DealManagementModal = ({ isOpen, onClose,deal, onUpdate }) => {
                 </Button>
               </div>
             </DialogTitle>
+            <div className="flex items-center gap-3">
+              <DeadlineStatusBadge status={deal?.deadline_status} />
+            </div>
           </DialogHeader>
-
           <ScrollArea className="h-full pr-4 max-h-[70vh]">
+            {deal?.deadline_status === 'missed' && (
+              <DeadlineExtensionPanel
+                deal={deal}
+                onExtensionAdded={handleExtensionAdded}
+              />
+            )}
             {activeTab === "process" && (
               <div className="space-y-4">
                 {/* Deal Overview */}

@@ -37,6 +37,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     const [priority, setPriority] = useState(deal?.priority || "high");
     const [notes, setNotes] = useState("");
     const [selectedDocuments, setSelectedDocuments] = useState([]);
+    const [documents, setDocuments] = useState([]);
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -48,14 +49,16 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             setNextStep(deal.nextStep || "Review Purchase Agreement");
             setDeadline(deal.deadline ? new Date(deal.deadline) : null);
             setPriority(deal.priority || "high");
+            const statusValues = documents.map(item => item.document_type);
+            setSelectedDocuments(statusValues);
         }
     }, [isOpen, deal]);
-
+    console.log("this is selected documents :", selectedDocuments);
     const fetchDocuments = async () => {
         setIsSaving(true)
         try {
             const response = await userAPI.get_document(deal.id);
-            setSelectedDocuments(response?.data?.document)
+            setDocuments(response?.data?.document)
         } catch (error) {
             console.error('Error fetching documents:', error);
         } finally {
@@ -85,12 +88,12 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     const toggleDocument = (docType) => {
         console.log("Selected Documents :", docType)
         setSelectedDocuments(prev =>
-            prev.some(revData => revData.document_type === docType)
-                ? prev.filter(doc => doc.document_type !== docType)
-                : [...prev, { document_type: docType }]
-        );        
+            prev.includes(docType)
+                ? prev.filter(doc => doc !== docType)
+                : [...prev, docType]
+        );
     };
-console.log("after Selected Documents :", selectedDocuments);
+
     const canAdvanceToStage = (targetStageKey) => {
         const currentStage = processSteps.find(s => s.key === deal.status);
         const targetStage = processSteps.find(s => s.key === targetStageKey);
@@ -100,13 +103,11 @@ console.log("after Selected Documents :", selectedDocuments);
         // Get current stage index
         const currentIndex = processSteps.findIndex(s => s.key === deal.status);
         const targetIndex = processSteps.findIndex(s => s.key === targetStageKey);
-
         // Can only move forward if completing current stage
         if (targetIndex > currentIndex) {
             const requiredDocs = currentStage.requiredDocuments.filter(doc => doc.required);
             const allRequiredReceived = requiredDocs.every(doc =>
-                selectedDocuments.includes(doc.type) ||
-                (deal.documents_received || []).includes(doc.type)
+                selectedDocuments.includes(doc.type)
             );
             return allRequiredReceived;
         }
@@ -253,7 +254,7 @@ console.log("after Selected Documents :", selectedDocuments);
 
     // Document checklist for current step
     const currentStepDocuments = currentStep?.requiredDocuments || [];
-    const uploadedDocsCount = currentStepDocuments.filter(doc => selectedDocuments.some(delectDocs => delectDocs.document_type === doc.type)).length;
+    const uploadedDocsCount = currentStepDocuments.filter(doc => selectedDocuments.includes(doc.type)).length;
 
     const requiredDocsCount = currentStepDocuments.filter(doc => doc.required).length;
 
@@ -316,7 +317,7 @@ console.log("after Selected Documents :", selectedDocuments);
                                         </option>
                                     ))}
                                 </select>
-                                
+
                             </div>
                         </div>
 
@@ -414,12 +415,12 @@ console.log("after Selected Documents :", selectedDocuments);
                                         onClick={() => toggleDocument(doc.type)}
                                         className={cn(
                                             "h-4 w-4 rounded border flex items-center justify-center transition-colors",
-                                            selectedDocuments.some(selectDoc => selectDoc.document_type === doc.type)
+                                            selectedDocuments.includes(doc.type)
                                                 ? "bg-primary border-primary"
                                                 : "border-input"
                                         )}
                                     >
-                                        {selectedDocuments.some(selectDoc => selectDoc.document_type === doc.type) && (
+                                        {selectedDocuments.includes(doc.type) && (
                                             <CheckCircle className="h-3 w-3 text-primary-foreground" />
                                         )}
                                     </button>
@@ -462,28 +463,26 @@ console.log("after Selected Documents :", selectedDocuments);
                                     {action.label}
                                 </Button>
                             ))}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    const currentIndex = processSteps.findIndex(step => step.key === status);
+                                    const nextStage = processSteps[currentIndex + 1];
+                                    if (nextStage && canAdvanceToStage(nextStage.key)) {
+                                        handleStatusChange(nextStage.key);
+                                    } else {
+                                        toast.error("Cannot advance - complete current stage requirements");
+                                    }
+                                }}
+                                disabled={status === processSteps[processSteps.length - 1].key}
+                                className="flex items-center gap-2"
+                            >
+                                <ChevronRight className="h-4 w-4" />
+                                Advance to Next Stage
+                            </Button>
                         </div>
-                    </div>
-                    <div className="space-y-3">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                                const currentIndex = processSteps.findIndex(step => step.key === status);
-                                const nextStage = processSteps[currentIndex + 1];
-                                if (nextStage && canAdvanceToStage(nextStage.key)) {
-                                    handleStatusChange(nextStage.key);
-                                } else {
-                                    toast.error("Cannot advance - complete current stage requirements");
-                                }
-                            }}
-                            disabled={status === processSteps[processSteps.length - 1].key}
-                            className="flex items-center gap-2"
-                        >
-                            <ChevronRight className="h-4 w-4" />
-                            Advance to Next Stage
-                        </Button>
                     </div>
                 </div>
 

@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { DealManagementModal } from "./DealManagementModal";
 import { Loading } from "@/pages/misc/Loading";
 import { DealUpdateModal } from "./DealUpdateModal";
+import { Tooltip } from "recharts";
 
 const DealPipeline = ({ deals, loading, setActiveDeals }) => {
   const [selectedDealId, setSelectedDealId] = useState(null);
@@ -31,12 +32,12 @@ const DealPipeline = ({ deals, loading, setActiveDeals }) => {
   const handleUpdateDeal = (dealId) => {
     setSelectedDealId(Number(dealId));
     setUpdateModalOpen(true);
-    setManageModalOpen(false); 
+    setManageModalOpen(false);
   };
 
   const handleCloseManageModal = () => {
     setManageModalOpen(false);
-    setSelectedDealId(null);    
+    setSelectedDealId(null);
   };
 
   const handleCloseUpdateModal = () => {
@@ -125,8 +126,18 @@ const DealPipeline = ({ deals, loading, setActiveDeals }) => {
                   <Button size="sm" variant="outline" onClick={() => handleManageDeal(deal?.id)}>
                     Manage
                   </Button>
-                  <Button size="sm" onClick={() => handleUpdateDeal(deal?.id)}>
+                  <Button
+                    size="sm"
+                    onClick={() => handleUpdateDeal(deal?.id)}
+                    disabled={deal.deadline_status === 'missed'}
+                    className={deal.deadline_status === 'missed' ? 'opacity-50 cursor-not-allowed' : ''}
+                  >
                     Update
+                    {deal.deadline_status === 'missed' && (
+                      <Tooltip>
+                        <span className="ml-1 text-xs">⚠️ Deadline missed - Use Manage</span>
+                      </Tooltip>
+                    )}
                   </Button>
                 </div>
               </div>
