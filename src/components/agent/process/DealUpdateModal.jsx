@@ -72,14 +72,28 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     const currentStep = processSteps.find(step => step.key === status);
     const currentStepIndex = processSteps.findIndex(step => step.key === status);
 
-    // Handle progress change with stage adjustment
     const handleProgressChange = (value) => {
-        setProgress(value[0]);
+        const newProgress = value[0];
 
-        // Auto-suggest stage based on progress
-        const newStageIndex = Math.floor(value[0] / 20);
-        console.log("this is new stage index : ", newStageIndex)
-        if (newStageIndex !== currentStepIndex && newStageIndex < processSteps.length) {
+        const newStageIndex = Math.min(
+            Math.floor(newProgress / 20),
+            processSteps.length - 1
+        );
+        
+        const stage_key_item = processSteps[newStageIndex];
+        console.log("this is new key  which find :", stage_key_item)
+        if (!stage_key_item) return;
+        if (newStageIndex > currentStepIndex) {
+            const targetStage = processSteps[newStageIndex];
+            
+            if (!canAdvanceToStage(targetStage.key)) {
+                toast.error("Complete all required documents for current stage first");
+                return; 
+            }
+        }        
+        setProgress(newProgress);
+        
+        if (newStageIndex !== currentStepIndex) {
             setStatus(processSteps[newStageIndex].key);
         }
     };

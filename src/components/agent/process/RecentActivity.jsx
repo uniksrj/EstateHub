@@ -16,7 +16,7 @@ const RecentActivity = ({ dealId }) => {
   useEffect(() => {
     fetchActivity();
   }, []);
-
+  
   async function fetchActivity(){
     setLoading(true);
     try {
@@ -42,7 +42,6 @@ const RecentActivity = ({ dealId }) => {
     };
 
     activities?.forEach(activity => {
-      // This is simplified - you'd use actual date comparison logic
       if (activity?.time.includes('hour') || activity?.time.includes('minutes')) {
         groups.today.push(activity);
       } else if (activity?.time.includes('day') && parseInt(activity?.time) <= 1) {
