@@ -9,7 +9,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import {
     CalendarIcon,
     ChevronUp,
@@ -22,55 +22,125 @@ import {
     Send,
     FileText,
     X,
-    ChevronRight
+    ChevronRight,
+    Save
 } from "lucide-react";
 import { processSteps } from "@/data/demoData";
 import { toast } from "sonner";
 import { userAPI } from "@/services/api";
 
 export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
-    console.log("DealUpdateModal opened for deal:", deal);
-    const [progress, setProgress] = useState(deal?.progress || 40);
-    const [status, setStatus] = useState(deal?.status || "contract_generation");
-    const [nextStep, setNextStep] = useState(deal?.nextStep || "Review Purchase Agreement");
-    const [deadline, setDeadline] = useState(deal?.deadline ? new Date(deal.deadline) : null);
-    const [priority, setPriority] = useState(deal?.priority || "high");
+    // const [progress, setProgress] = useState(deal?.progress || 40);
+    // const [status, setStatus] = useState(deal?.status || "contract_generation");
+    // const [nextStep, setNextStep] = useState(deal?.nextStep || "Review Purchase Agreement");
+    // const [deadline, setDeadline] = useState(deal?.deadline ? new Date(deal.deadline) : null);
+    // const [priority, setPriority] = useState(deal?.priority || "high");
     const [notes, setNotes] = useState("");
-    const [selectedDocuments, setSelectedDocuments] = useState([]);
+    // const [selectedDocuments, setSelectedDocuments] = useState([]);
     const [documents, setDocuments] = useState([]);
-    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
+    // const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    // const [isSaving, setIsSaving] = useState(false);
+    // const [pendingUpdates, setPendingUpdates] = useState([]);
 
+    const initialState = {
+        progress: deal?.progress || 40,
+        status: deal?.status || "contract_generation",
+        nextStep: deal?.nextStep || "Review Purchase Agreement",
+        deadline: deal?.deadline ? new Date(deal.deadline) : null,
+        priority: deal?.priority || "high",
+
+        notes: [],
+        selectedDocuments: [],
+
+        isCalendarOpen: false,
+        isSaving: false,
+        pendingUpdates: []
+    };
+
+    function dealReducer(state, action) {
+        switch (action.type) {
+
+            case "UPDATE_FIELD":
+                return {
+                    ...state,
+                    [action.field]: action.value
+                };
+
+            case "ADD_NOTE":
+                return {
+                    ...state,
+                    notes: [...state.notes, action.value]
+                };
+
+            case "ADD_SELECTED_DOCUMENT":
+                return {
+                    ...state,
+                    selectedDocuments: [
+                        ...state.selectedDocuments,
+                        action.value
+                    ]
+                };
+
+            case "REMOVE_SELECTED_DOCUMENT":
+                return {
+                    ...state,
+                    selectedDocuments: state.selectedDocuments.filter(
+                        doc => doc.id !== action.id
+                    )
+                };
+
+            default:
+                return state;
+        }
+    }
+
+    const [state, dispatch] = useReducer(dealReducer, initialState);
+    console.log("this is deal data : ", deal);
     useEffect(() => {
         if (isOpen && deal) {
             fetchDocuments();
-            setProgress(deal.progress || 40);
-            setStatus(deal.status || "contract_generation");
-            setNextStep(deal.nextStep || "Review Purchase Agreement");
-            setDeadline(deal.deadline ? new Date(deal.deadline) : null);
-            setPriority(deal.priority || "high");
+            dispatch({ type: "UPDATE_FIELD", field: "progress", value: deal.progress || 40 });
+            dispatch({ type: "UPDATE_FIELD", field: "status", value: deal.status || "contract_generation" });
+            dispatch({ type: "UPDATE_FIELD", field: "nextStep", value: deal.nextStep || "Review Purchase Agreement" });
+            dispatch({ type: "UPDATE_FIELD", field: "deadline", value: deal.deadline ? new Date(deal.deadline) : null });
+            dispatch({ type: "UPDATE_FIELD", field: "priority", value: deal.priority || "high" });
             const statusValues = documents.map(item => item.document_type);
-            setSelectedDocuments(statusValues);
+            dispatch({ type: "UPDATE_FIELD", field: "selectedDocuments", value: statusValues });
         }
     }, [isOpen, deal]);
-    console.log("this is selected documents :", selectedDocuments);
+
     const fetchDocuments = async () => {
-        setIsSaving(true)
+        dispatch({ type: "UPDATE_FIELD", field: "isSaving", value: true });
         try {
             const response = await userAPI.get_document(deal.id);
             setDocuments(response?.data?.document)
         } catch (error) {
             console.error('Error fetching documents:', error);
         } finally {
-            setIsSaving(false);
+            dispatch({ type: "UPDATE_FIELD", field: "isSaving", value: false });
         }
     };
 
     if (!deal) return null;
 
     // Get current step details
-    const currentStep = processSteps.find(step => step.key === status);
-    const currentStepIndex = processSteps.findIndex(step => step.key === status);
+    const currentStep = processSteps.find(step => step.key === state.status);
+    const currentStepIndex = processSteps.findIndex(step => step.key === state.status);
+    console.log("Current state Info:", state);
+    const hasChanges =
+        state.progress !== deal.progress ||
+        state.status !== deal.status ||
+        state.nextStep !== deal.nextStep ||
+        (state.deadline ? format(state.deadline, 'yyyy-MM-dd') : null) !== deal.deadline ||
+        state.priority !== deal.priority ||
+        state.notes !== deal.notes ||
+        state.selectedDocuments.length > 0;
+    const pendingUpdatesCount = Object.values(state.pendingUpdates).reduce((count, value) => {
+        if (Array.isArray(value)) {
+            return count + value.length;
+        }
+        return count;
+    }, 0);
 
     const handleProgressChange = (value) => {
         const newProgress = value[0];
@@ -79,33 +149,35 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             Math.floor(newProgress / 20),
             processSteps.length - 1
         );
-        
+
         const stage_key_item = processSteps[newStageIndex];
         console.log("this is new key  which find :", stage_key_item)
         if (!stage_key_item) return;
         if (newStageIndex > currentStepIndex) {
             const targetStage = processSteps[newStageIndex];
-            
+
             if (!canAdvanceToStage(targetStage.key)) {
                 toast.error("Complete all required documents for current stage first");
-                return; 
+                return;
             }
-        }        
-        setProgress(newProgress);
-        
+        }
+        dispatch({ type: "UPDATE_FIELD", field: "progress", value: newProgress });
+        dispatch({ type: "UPDATE_FIELD", field: "nextStep", value: `Complete ${processSteps[newStageIndex].label} requirements` });
         if (newStageIndex !== currentStepIndex) {
-            setStatus(processSteps[newStageIndex].key);
+            dispatch({ type: "UPDATE_FIELD", field: "status", value: processSteps[newStageIndex].key });
         }
     };
 
     // Toggle document selection
     const toggleDocument = (docType) => {
-        console.log("Selected Documents :", docType)
-        setSelectedDocuments(prev =>
-            prev.includes(docType)
-                ? prev.filter(doc => doc !== docType)
-                : [...prev, docType]
-        );
+        dispatch({
+            type: state.selectedDocuments.includes(docType)
+                ? "REMOVE_SELECTED_DOCUMENT"
+                : "ADD_SELECTED_DOCUMENT",
+            ...(state.selectedDocuments.includes(docType)
+                ? { id: docType }
+                : { value: docType })
+        });
     };
 
     const canAdvanceToStage = (targetStageKey) => {
@@ -114,19 +186,17 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
         if (!currentStage || !targetStage) return true;
 
-        // Get current stage index
         const currentIndex = processSteps.findIndex(s => s.key === deal.status);
         const targetIndex = processSteps.findIndex(s => s.key === targetStageKey);
-        // Can only move forward if completing current stage
+
         if (targetIndex > currentIndex) {
             const requiredDocs = currentStage.requiredDocuments.filter(doc => doc.required);
             const allRequiredReceived = requiredDocs.every(doc =>
-                selectedDocuments.includes(doc.type)
+                state.selectedDocuments.includes(doc.type)
             );
             return allRequiredReceived;
         }
 
-        // Can always move backward
         return true;
     };
 
@@ -135,15 +205,16 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         const newIndex = processSteps.findIndex(step => step.key === newStatus);
         const progressValue = (newIndex + 1) * 20;
 
-        setStatus(newStatus);
-        setProgress(progressValue);
+        dispatch({ type: "UPDATE_FIELD", field: "status", value: newStatus });
+        dispatch({ type: "UPDATE_FIELD", field: "progress", value: progressValue });
 
-        // Auto-set next step suggestion
         const stage = processSteps[newIndex];
+        console.log("Stage info for next step determination:", stage);
+        dispatch({ type: "UPDATE_FIELD", field: "nextStep", value: `Complete ${stage.label} requirements` });
         if (stage) {
             const firstRequiredDoc = stage.requiredDocuments.find(doc => doc.required);
-            if (firstRequiredDoc && !nextStep) {
-                setNextStep(`Submit ${firstRequiredDoc.name}`);
+            if (firstRequiredDoc && !state.nextStep) {
+                dispatch({ type: "UPDATE_FIELD", field: "nextStep", value: `Submit ${firstRequiredDoc.name}` });
             }
         }
     };
@@ -154,7 +225,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
         const requiredDocs = currentStage.requiredDocuments.filter(doc => doc.required);
         const completedDocs = requiredDocs.filter(doc =>
-            selectedDocuments.includes(doc.type) ||
+            state.selectedDocuments.includes(doc.type) ||
             (deal.documents_received || []).includes(doc.type)
         );
 
@@ -167,7 +238,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     const completion = getCurrentStageCompletion();
 
     const handleSubmit = async () => {
-        setIsSaving(true);
+        dispatch({ type: "UPDATE_FIELD", field: "isSaving", value: true });
         try {
             // Determine if we're advancing to next stage
             const currentIndex = processSteps.findIndex(step => step.key === deal.status);
@@ -178,12 +249,12 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
             // Prepare update data
             const updateData = {
-                progress,
+                progress: state.progress,
                 status,
-                next_step: nextStep,
-                deadline: deadline ? format(deadline, 'yyyy-MM-dd') : null,
-                priority,
-                notes: notes.trim() || null,
+                next_step: state.nextStep,
+                deadline: state.deadline ? format(state.deadline, 'yyyy-MM-dd') : null,
+                priority: state.priority,
+                notes: state.notes.trim() || null,
                 updated_at: new Date().toISOString()
             };
 
@@ -199,9 +270,9 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             await userAPI.updateDeal(deal.id, updateData);
 
             // If documents were marked as received, update them too
-            if (selectedDocuments.length > 0) {
+            if (state.selectedDocuments.length > 0) {
                 await Promise.all(
-                    selectedDocuments.map(docType =>
+                    state.selectedDocuments.map(docType =>
                         userAPI.updateDocumentStatus(deal.id, docType, 'received')
                     )
                 );
@@ -212,7 +283,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                 ...deal,
                 ...updateData,
                 // Update next step based on new stage
-                nextStep: nextStep || getDefaultNextStep(status)
+                nextStep: state.nextStep || getDefaultNextStep(status)
             };
 
             if (onUpdate) {
@@ -230,7 +301,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             toast.error("Failed to update deal");
             console.error(error);
         } finally {
-            setIsSaving(false);
+            dispatch({ type: "UPDATE_FIELD", field: "isSaving", value: false });
         }
     };
 
@@ -243,13 +314,16 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         return nextDoc ? `Submit ${nextDoc.name}` : "Complete stage requirements";
     };
 
+    function setPriority(level) {
+        dispatch({ type: "UPDATE_FIELD", field: "priority", value: level });
+    }
     // Quick action buttons
     const quickActions = [
         {
             label: "Mark as Urgent",
             icon: AlertCircle,
             action: () => setPriority("high"),
-            variant: priority === "high" ? "destructive" : "outline"
+            variant: state.priority === "high" ? "destructive" : "outline"
         },
         {
             label: "Send Update",
@@ -257,18 +331,18 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             action: () => window.open(`/messages?deal=${deal.id}`, '_blank'),
             variant: "outline"
         },
-        {
-            label: "Upload Doc",
-            icon: Upload,
-            action: () => window.open(`/documents/upload?deal=${deal.id}`, '_blank'),
-            variant: "outline"
-        }
+        // {
+        //     label: "Upload Doc",
+        //     icon: Upload,
+        //     action: () => window.open(`/documents/upload?deal=${deal.id}`, '_blank'),
+        //     variant: "outline"
+        // }
     ];
     console.log("this is status from :", deal);
 
     // Document checklist for current step
     const currentStepDocuments = currentStep?.requiredDocuments || [];
-    const uploadedDocsCount = currentStepDocuments.filter(doc => selectedDocuments.includes(doc.type)).length;
+    const uploadedDocsCount = currentStepDocuments.filter(doc => state.selectedDocuments.includes(doc.type)).length;
 
     const requiredDocsCount = currentStepDocuments.filter(doc => doc.required).length;
 
@@ -280,6 +354,8 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                         <span>Quick Update - {deal.address}</span>
                     </DialogTitle>
                 </DialogHeader>
+
+
 
                 <div className="space-y-6 overflow-y-auto max-h-[70vh] pr-2">
                     {/* Progress Section */}
@@ -294,14 +370,14 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                     )}
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="progress">Progress: {progress}%</Label>
-                            <Badge variant={progress >= 80 ? "default" : progress >= 50 ? "secondary" : "destructive"}>
-                                {progress >= 80 ? "Almost Done" : progress >= 50 ? "On Track" : "Getting Started"}
+                            <Label htmlFor="progress">Progress: {state.progress}%</Label>
+                            <Badge variant={state.progress >= 80 ? "default" : state.progress >= 50 ? "secondary" : "destructive"}>
+                                {state.progress >= 80 ? "Almost Done" : state.progress >= 50 ? "On Track" : "Getting Started"}
                             </Badge>
                         </div>
                         <Slider
                             id="progress"
-                            value={[progress]}
+                            value={[state.progress]}
                             onValueChange={handleProgressChange}
                             max={100}
                             step={5}
@@ -339,8 +415,9 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                             <Label>Next Step</Label>
                             <input
                                 type="text"
-                                value={nextStep}
-                                onChange={(e) => setNextStep(e.target.value)}
+                                disabled
+                                value={state.nextStep}
+                                // onChange={(e) => setNextStep(e.target.value)}
                                 placeholder="Enter next action..."
                                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                             />
@@ -353,30 +430,32 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                             <Label>Deadline</Label>
                             <div className="overflow-x-auto whitespace-nowrap">
                                 <div className="inline-block min-w-full">
-                                    <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                                    <Popover open={state.isCalendarOpen} onOpenChange={() => dispatch({ type: "UPDATE_FIELD", field: "isCalendarOpen", value: !state.isCalendarOpen })}>
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant="outline"
                                                 className={cn(
                                                     "w-full justify-start text-left font-normal inline-block",
-                                                    !deadline && "text-muted-foreground"
+                                                    !state.deadline && "text-muted-foreground"
                                                 )}
+                                                disabled
                                             >
                                                 <CalendarIcon className="mr-2 h-4 w-4 inline-block align-middle" />
                                                 <span className="inline-block align-middle overflow-x-auto">
-                                                    {deadline ? format(deadline, "PPP") : <span>Pick a date</span>}
+                                                    {state.deadline ? format(state.deadline, "PPP") : <span>Pick a date</span>}
                                                 </span>
                                             </Button>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-auto p-0" align="start">
                                             <Calendar
                                                 mode="single"
-                                                selected={deadline}
-                                                onSelect={(date) => {
-                                                    setDeadline(date);
-                                                    setIsCalendarOpen(false);
-                                                }}
+                                                selected={state.deadline}
+                                                // onSelect={(date) => {
+                                                //     setDeadline(date);
+                                                //     setIsCalendarOpen(false);
+                                                // }}
                                                 initialFocus
+                                                disabled
                                             />
                                         </PopoverContent>
                                     </Popover>
@@ -393,7 +472,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                             key={level}
                                             type="button"
                                             size="sm"
-                                            variant={priority === level ? "default" : "outline"}
+                                            variant={state.priority === level ? "default" : "outline"}
                                             onClick={() => setPriority(level)}
                                             className="flex-1 capitalize min-w-[80px]"
                                         >
@@ -429,12 +508,12 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                         onClick={() => toggleDocument(doc.type)}
                                         className={cn(
                                             "h-4 w-4 rounded border flex items-center justify-center transition-colors",
-                                            selectedDocuments.includes(doc.type)
+                                            state.selectedDocuments.includes(doc.type)
                                                 ? "bg-primary border-primary"
                                                 : "border-input"
                                         )}
                                     >
-                                        {selectedDocuments.includes(doc.type) && (
+                                        {state.selectedDocuments.includes(doc.type) && (
                                             <CheckCircle className="h-3 w-3 text-primary-foreground" />
                                         )}
                                     </button>
@@ -458,6 +537,20 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                             placeholder="Add internal notes or client update..."
                             className="w-full min-h-[80px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 resize-none"
                         />
+                        <Button
+                            onClick={() => {
+                                dispatch({
+                                    type: "ADD_NOTE",
+                                    value: {
+                                        text: notes,
+                                        createdAt: new Date()
+                                    }
+                                });
+                                setNotes("");
+                            }}
+                        >
+                            Add Note
+                        </Button>
                     </div>
 
                     {/* Quick Actions */}
@@ -507,27 +600,31 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                         variant="outline"
                         onClick={onClose}
                         className="flex-1"
-                        disabled={isSaving}
+                        disabled={state.isSaving}
                     >
                         Cancel
                     </Button>
                     <Button
                         type="button"
+                        variant="outline"
                         onClick={handleSubmit}
-                        disabled={isSaving}
-                        className="flex-1 gap-2"
+                        disabled={state.isSaving || !hasChanges}
                     >
-                        {isSaving ? (
-                            <>
-                                <Clock className="h-4 w-4 animate-spin" />
-                                Saving...
-                            </>
-                        ) : (
-                            <>
-                                <Send className="h-4 w-4" />
-                                Save & Update
-                            </>
-                        )}
+                        <Save className="h-4 w-4 mr-2" />
+                        Save Step
+                    </Button>
+
+                    {/* Bulk Save */}
+                    <Button
+                        type="button"
+                        onClick={handleSubmit}
+                        disabled={state.isSaving || pendingUpdatesCount === 0}
+                        className="col-span-2"
+                    >
+                        <Send className="h-4 w-4 mr-2" />
+                        {pendingUpdatesCount > 0
+                            ? `Save All ${pendingUpdatesCount} Changes`
+                            : 'Save All Changes'}
                     </Button>
                 </div>
             </DialogContent>
