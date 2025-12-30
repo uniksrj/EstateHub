@@ -85,7 +85,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                 return {
                     ...state,
                     selectedDocuments: state.selectedDocuments.filter(
-                        doc => doc.id !== action.id
+                        doc => doc !== action.id
                     )
                 };
 
@@ -104,8 +104,8 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             dispatch({ type: "UPDATE_FIELD", field: "nextStep", value: deal.nextStep || "Review Purchase Agreement" });
             dispatch({ type: "UPDATE_FIELD", field: "deadline", value: deal.deadline ? new Date(deal.deadline) : null });
             dispatch({ type: "UPDATE_FIELD", field: "priority", value: deal.priority || "high" });
-            const statusValues = documents.map(item => item.document_type);
-            dispatch({ type: "UPDATE_FIELD", field: "selectedDocuments", value: statusValues });
+            const filteredDocument = documents.map(item => item.document_type);
+            dispatch({ type: "UPDATE_FIELD", field: "selectedDocuments", value: filteredDocument });
         }
     }, [isOpen, deal]);
 
@@ -126,14 +126,14 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     // Get current step details
     const currentStep = processSteps.find(step => step.key === state.status);
     const currentStepIndex = processSteps.findIndex(step => step.key === state.status);
-    console.log("Current state Info:", state);
+    
     const hasChanges =
         state.progress !== deal.progress ||
         state.status !== deal.status ||
         state.nextStep !== deal.nextStep ||
         (state.deadline ? format(state.deadline, 'yyyy-MM-dd') : null) !== deal.deadline ||
         state.priority !== deal.priority ||
-        state.notes !== deal.notes ||
+        // state.notes.find(note => note.stage === state.status) !== deal.notes ||
         state.selectedDocuments.length > 0;
     const pendingUpdatesCount = Object.values(state.pendingUpdates).reduce((count, value) => {
         if (Array.isArray(value)) {
@@ -141,7 +141,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         }
         return count;
     }, 0);
-
+console.log("Current state haschanges Info:", state);
     const handleProgressChange = (value) => {
         const newProgress = value[0];
 
@@ -155,9 +155,9 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         if (!stage_key_item) return;
         if (newStageIndex > currentStepIndex) {
             const targetStage = processSteps[newStageIndex];
-
-            if (!canAdvanceToStage(targetStage.key)) {
-                toast.error("Complete all required documents for current stage first");
+            const result = canAdvanceToStage(targetStage.key);
+            if (!result.canAdvance) {
+                toast.error(result.message);
                 return;
             }
         }
@@ -168,6 +168,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         }
     };
 
+    console.log("Selected Documents:", state.selectedDocuments);
     // Toggle document selection
     const toggleDocument = (docType) => {
         dispatch({
@@ -194,10 +195,23 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             const allRequiredReceived = requiredDocs.every(doc =>
                 state.selectedDocuments.includes(doc.type)
             );
-            return allRequiredReceived;
+            if (notes !== "") {
+                return {
+                    canAdvance: false,
+                    message: "Please save the note before advancing the stage."
+                };
+            }
+
+            if (!allRequiredReceived) {
+                return {
+                    canAdvance: false,
+                    message: "Please upload all required documents before advancing."
+                };
+            }
+            return { canAdvance: true };
         }
 
-        return true;
+        return { canAdvance: true };
     };
 
 
@@ -220,7 +234,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     };
 
     const getCurrentStageCompletion = () => {
-        const currentStage = processSteps.find(s => s.key === status);
+        const currentStage = processSteps.find(s => s.key === state.status);
         if (!currentStage) return { completed: 0, total: 0 };
 
         const requiredDocs = currentStage.requiredDocuments.filter(doc => doc.required);
@@ -235,8 +249,8 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             percent: Math.round((completedDocs.length / requiredDocs.length) * 100)
         };
     };
-    const completion = getCurrentStageCompletion();
 
+    //Handle submit data to backend for saving
     const handleSubmit = async () => {
         dispatch({ type: "UPDATE_FIELD", field: "isSaving", value: true });
         try {
@@ -305,7 +319,6 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         }
     };
 
-    // Helper function to get default next step for a stage
     const getDefaultNextStep = (stageKey) => {
         const stage = processSteps.find(s => s.key === stageKey);
         if (!stage) return "Complete paperwork";
@@ -317,7 +330,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     function setPriority(level) {
         dispatch({ type: "UPDATE_FIELD", field: "priority", value: level });
     }
-    // Quick action buttons
+
     const quickActions = [
         {
             label: "Mark as Urgent",
@@ -331,19 +344,11 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             action: () => window.open(`/messages?deal=${deal.id}`, '_blank'),
             variant: "outline"
         },
-        // {
-        //     label: "Upload Doc",
-        //     icon: Upload,
-        //     action: () => window.open(`/documents/upload?deal=${deal.id}`, '_blank'),
-        //     variant: "outline"
-        // }
     ];
-    console.log("this is status from :", deal);
 
-    // Document checklist for current step
+    const completion = getCurrentStageCompletion();
     const currentStepDocuments = currentStep?.requiredDocuments || [];
     const uploadedDocsCount = currentStepDocuments.filter(doc => state.selectedDocuments.includes(doc.type)).length;
-
     const requiredDocsCount = currentStepDocuments.filter(doc => doc.required).length;
 
     return (
@@ -391,18 +396,19 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                             <Label>Current Stage</Label>
                             <div className="relative">
                                 <select
-                                    value={status}
+                                    value={state.status}
                                     onChange={(e) => {
-                                        if (canAdvanceToStage(e.target.value)) {
+                                        const result = canAdvanceToStage(e.target.value);
+                                        if (result.canAdvance) {
                                             handleStatusChange(e.target.value);
                                         } else {
-                                            toast.error("Complete all required documents for current stage first");
+                                            toast.error(result.message);
                                         }
                                     }}
                                     className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 pr-8"
                                 >
                                     {processSteps.map((step) => (
-                                        <option key={step.key} selected={status === step.key} value={step.key}>
+                                        <option key={step.key} selected={state.status === step.key} value={step.key}>
                                             {step.label}
                                         </option>
                                     ))}
@@ -537,11 +543,13 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                             placeholder="Add internal notes or client update..."
                             className="w-full min-h-[80px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 resize-none"
                         />
+                        <p className="line-clamp-1">{state.notes.find(note => note.stage === state.status)?.text || ""}</p>
                         <Button
                             onClick={() => {
                                 dispatch({
                                     type: "ADD_NOTE",
                                     value: {
+                                        stage: state.status,
                                         text: notes,
                                         createdAt: new Date()
                                     }
@@ -575,12 +583,13 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => {
-                                    const currentIndex = processSteps.findIndex(step => step.key === status);
+                                    const currentIndex = processSteps.findIndex(step => step.key === state.status);
                                     const nextStage = processSteps[currentIndex + 1];
-                                    if (nextStage && canAdvanceToStage(nextStage.key)) {
+                                    const result = canAdvanceToStage(nextStage.key);
+                                    if (nextStage && result.canAdvance) {
                                         handleStatusChange(nextStage.key);
                                     } else {
-                                        toast.error("Cannot advance - complete current stage requirements");
+                                        toast.error(result.message);
                                     }
                                 }}
                                 disabled={status === processSteps[processSteps.length - 1].key}
