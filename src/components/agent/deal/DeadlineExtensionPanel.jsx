@@ -17,7 +17,8 @@ import { formatDate } from '@/utils/userHelpers';
 export const DeadlineExtensionPanel = ({
     deal,
     onExtensionAdded,
-    className
+    className,
+    setMissedDeadline
 }) => {
     const [extensionDays, setExtensionDays] = useState('3');
     const [extensionReason, setExtensionReason] = useState('');
@@ -39,10 +40,12 @@ export const DeadlineExtensionPanel = ({
             if (onExtensionAdded) {
                 onExtensionAdded(response.data);
             }
+            if (setMissedDeadline) {
+                setMissedDeadline(false);
+            }
 
             toast.success(`Added ${extensionDays}-day extension`);
 
-            // Reset form
             setExtensionReason('');
 
         } catch (error) {
@@ -57,7 +60,7 @@ export const DeadlineExtensionPanel = ({
     };
 
     return (
-        <div className={`border border-red-300 bg-red-50 rounded-lg p-4 mb-4 ${className}`}>
+        <div className={`border border-red-300 bg-card rounded-lg p-4 mb-4 ${className}`}>
             <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                     <AlertCircle className="h-5 w-5 text-red-600" />
@@ -124,7 +127,7 @@ export const DeadlineExtensionPanel = ({
                         value={extensionReason}
                         onChange={(e) => setExtensionReason(e.target.value)}
                         placeholder="Why is the extension needed? (Required)"
-                        className="w-full min-h-[80px] rounded-md border border-input bg-white p-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                        className="w-full min-h-[80px] rounded-md border border-input bg-card p-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                         disabled={isSubmitting}
                         required
                     />

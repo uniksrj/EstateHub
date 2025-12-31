@@ -26,12 +26,14 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
   const [viewModal, setViewModal] = useState({ open: false, document: null });
   const [loading, setLoading] = useState(true);
   const [extensionAdded, handleExtensionAdded] = useState(true);
+  const [missedDeadline, setMissedDeadline] = useState(deal?.deadline_status === 'missed');
 
   // Fetch documents when modal opens
   useEffect(() => {
     if (isOpen && deal) {
       fetchDocuments();
       setExpandedStep(deal.status);
+      setMissedDeadline(deal?.deadline_status === 'missed');
     }
   }, [isOpen, deal]);
 
@@ -172,6 +174,7 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                 <Button
                   variant={activeTab === "documents" ? "default" : "outline"}
                   size="sm"
+                  disabled={missedDeadline}
                   onClick={() => setActiveTab("documents")}
                 >
                   Documents
@@ -187,6 +190,7 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
               <DeadlineExtensionPanel
                 deal={deal}
                 onExtensionAdded={handleExtensionAdded}
+                setMissedDeadline={setMissedDeadline}
               />
             )}
             {activeTab === "process" && (
@@ -343,14 +347,14 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                           )}
                                         </div>
                                       </div>
-                                      <div className="flex items-center gap-2 flex-shrink-0">
+                                      <div className="flex items-center gap-2 flex-shrink-0 relative group">
                                         <DocumentStatus document={doc} />
                                         <Button
                                           size="sm"
                                           variant="ghost"
-                                          disabled={loading}
+                                          disabled={loading || missedDeadline}
                                           onClick={(e) => doc.uploaded ? handleViewClick(doc.document, e) : handleUploadClick(doc, e)}
-                                          className="transition-colors duration-200"
+                                          className="transition-colors duration-200 "
                                         >
                                           {doc.uploaded ? (
                                             <Eye className="size-3" />
@@ -358,6 +362,36 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                             <Upload className="size-3" />
                                           )}
                                         </Button>
+                                        {missedDeadline && (
+                                          <div
+                                            className="
+                                            absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+                                            opacity-0 scale-95
+                                            transition-all duration-200
+                                            group-hover:opacity-100 group-hover:scale-100
+                                            pointer-events-none
+                                          "
+                                          >
+                                            <div className="
+                                              relative  min-w-[180px] max-w-[240px]
+                                              rounded-xl bg-white px-4 py-2
+                                              text-xs font-medium text-gray-800
+                                              shadow-[0_8px_20px_rgba(0,0,0,0.15)]
+                                              border border-gray-200 text-center
+                                            ">
+                                              Need to add extension
+
+                                              <span
+                                                className="
+                                               absolute top-6 bottom-0 right-9
+                                              h-3 w-3 rotate-45
+                                              bg-white
+                                              border-r border-b border-gray-200
+                                              "
+                                              />
+                                            </div>
+                                          </div>
+                                        )}
                                       </div>
                                     </div>
                                   ))}
