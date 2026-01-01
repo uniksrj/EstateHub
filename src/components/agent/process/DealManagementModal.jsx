@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import {
   X, FileText, CheckCircle2, ChevronDown, ChevronUp,
   Calendar, User, Download, Upload, MessageSquare,
-  Eye, CheckCircle, Clock, AlertCircle, Plus
+  Eye, CheckCircle, Clock, AlertCircle, Plus,
+  CalendarIcon
 } from "lucide-react";
 import { processSteps } from "@/data/demoData";
 import ViewDocumentModal from "../deal/ViewDocumentModal";
@@ -17,6 +18,10 @@ import { userAPI } from "@/services/api";
 import { toast } from "sonner";
 import { DeadlineStatusBadge } from "../DeadlineStatusBadge";
 import { DeadlineExtensionPanel } from "../deal/DeadlineExtensionPanel";
+import DatePicker from "react-datepicker";
+import { Label } from "@/components/ui/label";
+import { format } from "date-fns";
+import { Popover, PopoverTrigger } from "@/components/ui/popover";
 
 export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
   const [activeTab, setActiveTab] = useState("process");
@@ -27,6 +32,14 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
   const [loading, setLoading] = useState(true);
   const [extensionAdded, handleExtensionAdded] = useState(true);
   const [missedDeadline, setMissedDeadline] = useState(deal?.deadline_status === 'missed');
+  const [extraFields, setExtraFields] = useState({
+    earnestAmount: '',
+    earnestPaymentMethod: '',
+    earnestReference: '',
+    earnestStatus: '',
+    earnestDueDate: null,
+    earnestReceivedDate: null
+  });
 
   // Fetch documents when modal opens
   useEffect(() => {
@@ -92,6 +105,23 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
       toast("something went wrong!" + error.message)
     }
 
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const payload = { 
+        earnest_amount: extraFields.earnestAmount,
+        earnest_payment_method: extraFields.earnestPaymentMethod,
+        earnest_reference: extraFields.earnestReference,
+        earnest_status: extraFields.earnestStatus,
+        earnest_due_date: extraFields.earnestDueDate ? format(new Date(extraFields.earnestDueDate), 'yyyy-MM-dd') : null,
+        earnest_received_date: extraFields.earnestReceivedDate ? format(new Date(extraFields.earnestReceivedDate), 'yyyy-MM-dd') : null,
+      };
+      await userAPI.update_earnest_deal(deal.id, payload);
+    } catch (error) {
+      console.error("Error updating earnest money details:", error);
+      toast.error("Error updating earnest money details: " + error.message);
+    }
   };
 
   const getNextStep = (currentStep) => {
@@ -230,7 +260,7 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                         <div
                           key={step.key}
                           className={`
-                            border rounded-lg transition-all duration-300 ease-in-out overflow-hidden
+                            border rounded-lg transition-all duration-300 ease-in-out overflow-hidden 
                             ${isCurrent ? 'border-primary bg-primary/5 shadow-sm' : 'border-gray-200'}
                             ${isExpanded ? 'bg-card shadow-md' : 'hover:bg-primary-foreground'}
                           `}
@@ -241,7 +271,7 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                             onClick={() => toggleStep(step.key)}
                           >
                             <div className={`
-                              p-2 rounded-full transition-colors duration-200
+                              p-2 rounded-full transition-colors duration-200 
                               ${isCurrent ? 'bg-primary text-primary-foreground' :
                                 isCompleted ? 'bg-green-100 text-green-600' :
                                   'bg-gray-100 text-gray-500'}
@@ -291,7 +321,7 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
                           {/* Step Content */}
                           <div className={`
-                            transition-all duration-300 ease-in-out overflow-hidden
+                            transition-all duration-300 ease-in-out overflow-y-auto
                             ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
                           `}>
                             <div className="px-4 pb-4 border-t pt-4 space-y-4">
@@ -395,6 +425,119 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                       </div>
                                     </div>
                                   ))}
+
+                                  {step.key === 'earnest_money' && (
+                                    <div className="border bg-card rounded-lg p-4 space-y-4">
+                                      <h4 className="font-semibold">Earnest Money Details</h4>
+
+                                      <div className="grid grid-cols-1 gap-4">
+                                        {/* Amount */}
+                                        <div className="space-y-2">
+                                          <Label>Amount</Label>
+                                          <div className="flex">
+                                            <span className="px-3 py-2 border border-r-0 rounded-l-md">$</span>
+                                            <input
+                                              type="number"
+                                              value={extraFields.earnestAmount}
+                                              onChange={(e) => setExtraFields({ ...extraFields, earnestAmount: e.target.value })}
+                                              placeholder="0.00"
+                                              className="flex-1 rounded-r-md border px-3 py-2"
+                                            />
+                                          </div>
+                                        </div>
+
+                                        {/* Payment Method */}
+                                        <div className="space-y-2">
+                                          <Label>Payment Method</Label>
+                                          <select
+                                            value={extraFields.earnestPaymentMethod}
+                                            onChange={(e) => setExtraFields({ ...extraFields, earnestPaymentMethod: e.target.value })}
+                                            className="w-full rounded-md border px-3 py-2"
+                                          >
+                                            <option value="">Select</option>
+                                            <option value="wire">Wire Transfer</option>
+                                            <option value="check">Cashier's Check</option>
+                                            <option value="cash">Cash</option>
+                                            <option value="other">Other</option>
+                                          </select>
+                                        </div>
+                                      </div>
+
+                                      {/* Reference Number */}
+                                      <div className="space-y-2">
+                                        <Label>Reference / Check #</Label>
+                                        <input
+                                          type="text"
+                                          value={extraFields.earnestReference}
+                                          onChange={(e) => setExtraFields({ ...extraFields, earnestReference: e.target.value })}
+                                          placeholder="Wire reference or check number"
+                                          className="w-full rounded-md border px-3 py-2"
+                                        />
+                                      </div>
+
+                                      {/* Status */}
+                                      <div className="space-y-2">
+                                        <Label>Status</Label>
+                                        <div className="flex gap-2">
+                                          {['pending', 'received', 'cleared'].map((s) => (
+                                            <Button
+                                              key={s}
+                                              type="button"
+                                              size="sm"
+                                              variant={extraFields.earnestStatus === s ? "default" : "outline"}
+                                              onClick={() => setExtraFields({ ...extraFields, earnestStatus: s })}
+                                              className="capitalize"
+                                            >
+                                              {s}
+                                            </Button>
+                                          ))}
+                                        </div>
+                                      </div>
+
+                                      {/* Dates */}
+                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                          <Label>Due Date</Label>
+                                          <div className="relative">
+                                            <input
+                                              type="date"
+                                              value={extraFields.earnestDueDate || ''}
+                                              onChange={(e) => setExtraFields({ ...extraFields, earnestDueDate: e.target.value })}
+                                              className="w-full rounded-md border overflow-hidden border-gray-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                            />
+                                            <CalendarIcon className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
+                                          </div>
+                                        </div>
+                                        {extraFields.earnestStatus === 'received' && (
+                                        <div className="space-y-2">
+                                          <Label>Received Date</Label>
+                                          <div className="relative">
+                                            <input
+                                              type="date"
+                                              value={extraFields.earnestReceivedDate || ''}
+                                              onChange={(e) => setExtraFields({ ...extraFields, earnestReceivedDate: e.target.value })}
+                                              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                            />
+                                            <CalendarIcon className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
+                                          </div>
+                                        </div>
+                                        )}
+                                      </div>
+                                      <div className="flex justify-end">
+                                        <Button
+                                          className="cursor-pointer"
+                                          type="button"
+                                          size="sm"
+                                          onClick={() => {
+                                            handleUpdate();
+                                            toast.success("Earnest Money details saved.");
+                                          }}
+                                        >
+                                          Save
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>

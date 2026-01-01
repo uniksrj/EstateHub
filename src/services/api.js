@@ -160,7 +160,9 @@ export const userAPI = {
   changeStep : (deal_id, stepKey) => api.post(`/api/agent/deals/${deal_id}/complete-step/${stepKey}`,{}),
   getAllDetailsActivity : (data) => api.get(`/api/agent/activities`, {data}),
   updateDeal : (deal_id, data) => api.post(`/api/agent/update_deal/${deal_id}`, {data}),
-  addDeadlineExtension : (deal_id , data) => api.post(`/api/agent/add_deadline_extension/${deal_id}`, data)
+  addDeadlineExtension : (deal_id , data) => api.post(`/api/agent/add_deadline_extension/${deal_id}`, data),
+  update_earnest_deal : (deal_id , data) => api.post(`/api/agent/update_earnest_deal/${deal_id}`, data),
+  updateDocumentsDetails : (deal_id, data) => api.post(`/api/agent/update_documents_details/${deal_id}`, data),
 }
 
 export const superAdminAPI = {

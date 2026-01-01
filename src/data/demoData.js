@@ -1042,6 +1042,13 @@ export const processSteps = [
       { type: "emd_receipt", name: "EMD Receipt", required: true },
       { type: "wire_instructions", name: "Wire Instructions", required: true },
       { type: "funds_verification", name: "Proof of Funds", required: true }
+    ],
+    extraFields: [
+      { key: 'earnest_amount', label: 'Amount', type: 'currency' },
+      { key: 'earnest_payment_method', label: 'Payment Method', type: 'select' },
+      { key: 'earnest_status', label: 'Status', type: 'status' },
+      { key: 'earnest_due_date', label: 'Due Date', type: 'date' },
+      { key: 'earnest_received_date', label: 'Received Date', type: 'date' }
     ]
   },
   {

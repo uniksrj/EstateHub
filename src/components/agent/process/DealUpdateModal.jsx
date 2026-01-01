@@ -30,17 +30,8 @@ import { toast } from "sonner";
 import { userAPI } from "@/services/api";
 
 export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
-    // const [progress, setProgress] = useState(deal?.progress || 40);
-    // const [status, setStatus] = useState(deal?.status || "contract_generation");
-    // const [nextStep, setNextStep] = useState(deal?.nextStep || "Review Purchase Agreement");
-    // const [deadline, setDeadline] = useState(deal?.deadline ? new Date(deal.deadline) : null);
-    // const [priority, setPriority] = useState(deal?.priority || "high");
     const [notes, setNotes] = useState("");
-    // const [selectedDocuments, setSelectedDocuments] = useState([]);
     const [documents, setDocuments] = useState([]);
-    // const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-    // const [isSaving, setIsSaving] = useState(false);
-    // const [pendingUpdates, setPendingUpdates] = useState([]);
 
     const initialState = {
         progress: deal?.progress || 40,
@@ -69,7 +60,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             case "ADD_NOTE":
                 return {
                     ...state,
-                    notes: [...state.notes, action.value]
+                    notes: [...state.notes.filter(note => note.stage !== action.value.stage), action.value]
                 };
 
             case "ADD_SELECTED_DOCUMENT":
@@ -104,10 +95,14 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             dispatch({ type: "UPDATE_FIELD", field: "nextStep", value: deal.nextStep || "Review Purchase Agreement" });
             dispatch({ type: "UPDATE_FIELD", field: "deadline", value: deal.deadline ? new Date(deal.deadline) : null });
             dispatch({ type: "UPDATE_FIELD", field: "priority", value: deal.priority || "high" });
-            const filteredDocument = documents.map(item => item.document_type);
-            dispatch({ type: "UPDATE_FIELD", field: "selectedDocuments", value: filteredDocument });
         }
     }, [isOpen, deal]);
+
+    useEffect(() => {
+        const filteredDocument = documents.map(item => item.document_type);
+        console.log("full document list :", documents)
+        dispatch({ type: "UPDATE_FIELD", field: "selectedDocuments", value: filteredDocument });
+    }, [documents])
 
     const fetchDocuments = async () => {
         dispatch({ type: "UPDATE_FIELD", field: "isSaving", value: true });
@@ -126,7 +121,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     // Get current step details
     const currentStep = processSteps.find(step => step.key === state.status);
     const currentStepIndex = processSteps.findIndex(step => step.key === state.status);
-    
+
     const hasChanges =
         state.progress !== deal.progress ||
         state.status !== deal.status ||
@@ -141,7 +136,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         }
         return count;
     }, 0);
-console.log("Current state haschanges Info:", state);
+    console.log("Current state haschanges Info:", state);
     const handleProgressChange = (value) => {
         const newProgress = value[0];
 
@@ -182,7 +177,7 @@ console.log("Current state haschanges Info:", state);
     };
 
     const canAdvanceToStage = (targetStageKey) => {
-        const currentStage = processSteps.find(s => s.key === deal.status);
+        const currentStage = processSteps.find(s => s.key === state.status);
         const targetStage = processSteps.find(s => s.key === targetStageKey);
 
         if (!currentStage || !targetStage) return true;
@@ -208,9 +203,18 @@ console.log("Current state haschanges Info:", state);
                     message: "Please upload all required documents before advancing."
                 };
             }
+            let allData = {
+                progress: state.progress,
+                status: state.status,
+                nextStep: state.nextStep,
+                deadline: state.deadline,
+                priority: state.priority,
+                notes: state.notes,
+                selectedDocuments: state.selectedDocuments
+            }
+            dispatch({ type: "UPDATE_FIELD", field: "pendingUpdates", value: allData });
             return { canAdvance: true };
         }
-
         return { canAdvance: true };
     };
 
@@ -250,54 +254,54 @@ console.log("Current state haschanges Info:", state);
         };
     };
 
-    //Handle submit data to backend for saving
+    
     const handleSubmit = async () => {
         dispatch({ type: "UPDATE_FIELD", field: "isSaving", value: true });
         try {
-            // Determine if we're advancing to next stage
             const currentIndex = processSteps.findIndex(step => step.key === deal.status);
             const newIndex = processSteps.findIndex(step => step.key === status);
 
-            // Check if we're advancing to next stage
             const isAdvancingStage = newIndex > currentIndex;
 
             // Prepare update data
+            // const updateData = {
+            //     progress: state.progress,
+            //     status: state.status,
+            //     next_step: state.nextStep,
+            //     deadline: state.deadline ? format(state.deadline, 'yyyy-MM-dd') : null,
+            //     priority: state.priority,
+            //     notes: state.notes || null,
+            //     updated_at: new Date().toISOString(),
+            //     documents : state.selectedDocuments
+            // };
+
             const updateData = {
                 progress: state.progress,
-                status,
-                next_step: state.nextStep,
-                deadline: state.deadline ? format(state.deadline, 'yyyy-MM-dd') : null,
+                next_step: state.status,
                 priority: state.priority,
-                notes: state.notes.trim() || null,
-                updated_at: new Date().toISOString()
             };
 
-            // If moving to next stage, mark current stage as complete
-            if (isAdvancingStage) {
-                updateData.completed_stages = [
-                    ...(deal.completed_stages || []),
-                    deal.status
-                ];
+            if (canAdvanceToStage(state.status).canAdvance === false) {
+                toast.error("Select the required document before saving.");
+                dispatch({ type: "UPDATE_FIELD", field: "isSaving", value: false });
+                return;
             }
-
-            // Call your API to update the deal
+            
             await userAPI.updateDeal(deal.id, updateData);
 
-            // If documents were marked as received, update them too
+            const docData = {
+                document_types: state.selectedDocuments,
+                notes : state.notes || null,                
+            }
+            
             if (state.selectedDocuments.length > 0) {
-                await Promise.all(
-                    state.selectedDocuments.map(docType =>
-                        userAPI.updateDocumentStatus(deal.id, docType, 'received')
-                    )
-                );
+                await userAPI.updateDocumentsDetails(deal.id, docData, 'received')
             }
 
-            // Update parent with new deal data
             const updatedDeal = {
                 ...deal,
                 ...updateData,
-                // Update next step based on new stage
-                nextStep: state.nextStep || getDefaultNextStep(status)
+                nextStep: state.nextStep || getDefaultNextStep(state.status)
             };
 
             if (onUpdate) {
@@ -350,7 +354,7 @@ console.log("Current state haschanges Info:", state);
     const currentStepDocuments = currentStep?.requiredDocuments || [];
     const uploadedDocsCount = currentStepDocuments.filter(doc => state.selectedDocuments.includes(doc.type)).length;
     const requiredDocsCount = currentStepDocuments.filter(doc => doc.required).length;
-
+    // console.log("This is a selected document :",state.selectedDocuments)
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-xl md:max-w-2xl lg:max-w-3xl w-full max-h-[90vh] overflow-hidden">
@@ -617,7 +621,7 @@ console.log("Current state haschanges Info:", state);
                         type="button"
                         variant="outline"
                         onClick={handleSubmit}
-                        disabled={state.isSaving || !hasChanges}
+                        disabled={state.isSaving || !hasChanges || pendingUpdatesCount > 0}
                     >
                         <Save className="h-4 w-4 mr-2" />
                         Save Step
@@ -632,7 +636,7 @@ console.log("Current state haschanges Info:", state);
                     >
                         <Send className="h-4 w-4 mr-2" />
                         {pendingUpdatesCount > 0
-                            ? `Save All ${pendingUpdatesCount} Changes`
+                            ? `Save All Changes`
                             : 'Save All Changes'}
                     </Button>
                 </div>
