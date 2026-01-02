@@ -12,16 +12,11 @@ import { format } from "date-fns";
 import { useEffect, useReducer, useState } from "react";
 import {
     CalendarIcon,
-    ChevronUp,
-    ChevronDown,
-    Clock,
     AlertCircle,
     CheckCircle,
-    Upload,
     MessageSquare,
     Send,
     FileText,
-    X,
     ChevronRight,
     Save
 } from "lucide-react";
@@ -30,6 +25,7 @@ import { toast } from "sonner";
 import { userAPI } from "@/services/api";
 
 export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
+    console.log("Deal data in DealUpdateModal:", deal);
     const [notes, setNotes] = useState("");
     const [documents, setDocuments] = useState([]);
 
@@ -95,6 +91,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
             dispatch({ type: "UPDATE_FIELD", field: "nextStep", value: deal.nextStep || "Review Purchase Agreement" });
             dispatch({ type: "UPDATE_FIELD", field: "deadline", value: deal.deadline ? new Date(deal.deadline) : null });
             dispatch({ type: "UPDATE_FIELD", field: "priority", value: deal.priority || "high" });
+            dispatch({ type: "UPDATE_FIELD", field: "notes", value: deal.notes || [] });
         }
     }, [isOpen, deal]);
 
@@ -277,8 +274,9 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
             const updateData = {
                 progress: state.progress,
-                next_step: state.status,
+                nextStep: state.status,
                 priority: state.priority,
+                status: state.status,
             };
 
             if (canAdvanceToStage(state.status).canAdvance === false) {
@@ -300,10 +298,9 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
             const updatedDeal = {
                 ...deal,
-                ...updateData,
-                nextStep: state.nextStep || getDefaultNextStep(state.status)
+                ...updateData
             };
-
+            console.log("This is updating data :", updatedDeal);
             if (onUpdate) {
                 onUpdate(updatedDeal);
             }

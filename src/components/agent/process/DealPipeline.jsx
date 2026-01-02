@@ -153,20 +153,21 @@ const DealPipeline = ({ deals, loading, setActiveDeals }) => {
             Add New Deal
           </Button>
         </div>
-        <DealManagementModal
+        {manageModalOpen && (<DealManagementModal
           isOpen={manageModalOpen}
           onClose={handleCloseManageModal}
           deal={selectedDeal}
-          onUpdate={setActiveDeals}
-        />
+          onUpdate={setActiveDeals} />)}
 
         {/* Update Modal */}
-        <DealUpdateModal
-          isOpen={updateModalOpen}
-          onClose={handleCloseUpdateModal}
-          deal={selectedDeal}
-          onUpdate={setActiveDeals}
-        />
+        {updateModalOpen && (
+          <DealUpdateModal
+            isOpen={updateModalOpen}
+            onClose={handleCloseUpdateModal}
+            deal={selectedDeal}
+            onUpdate={setActiveDeals}
+          />
+        )}
       </CardContent>
     </Card>
   );

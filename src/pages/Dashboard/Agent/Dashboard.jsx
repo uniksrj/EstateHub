@@ -59,6 +59,16 @@ export default function AgentDashboard() {
     }
   }
 
+    const handleUpdateDeal = (updatedDeal) => {
+    setActiveDeals(prevDeals =>
+      prevDeals.map(deal =>
+        Number(deal.id) === Number(updatedDeal.id)
+          ? updatedDeal
+          : deal
+      )
+    );
+  };
+
   const calculateDashboardStats = (propertiesData) => {
     const propertiesList = propertiesData?.data?.data || [];
     const pendingProperties = propertiesList.filter(p => p.status === "pending").length;
@@ -149,7 +159,7 @@ export default function AgentDashboard() {
         {/* OVERVIEW TAB - Just 2 main components */}
         <TabsContent value="overview" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
-            <DealPipeline deals={activeDeals} loading={loading} setActiveDeals={setActiveDeals}/>
+            <DealPipeline deals={activeDeals} loading={loading} setActiveDeals={handleUpdateDeal}/>
             <RecentActivity />
           </div>
         </TabsContent>
