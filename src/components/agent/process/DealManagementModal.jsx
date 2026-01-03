@@ -18,10 +18,8 @@ import { userAPI } from "@/services/api";
 import { toast } from "sonner";
 import { DeadlineStatusBadge } from "../DeadlineStatusBadge";
 import { DeadlineExtensionPanel } from "../deal/DeadlineExtensionPanel";
-import DatePicker from "react-datepicker";
 import { Label } from "@/components/ui/label";
 import { format } from "date-fns";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
 
 export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
   const [activeTab, setActiveTab] = useState("process");
@@ -109,7 +107,7 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
   const handleUpdate = async () => {
     try {
-      const payload = { 
+      const payload = {
         earnest_amount: extraFields.earnestAmount,
         earnest_payment_method: extraFields.earnestPaymentMethod,
         earnest_reference: extraFields.earnestReference,
@@ -130,13 +128,15 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
   };
 
   const getStepDocuments = (stepKey) => {
+    console.log("Getting documents for step:", documents);
     const step = processSteps.find(s => s.key === stepKey);
     return step.requiredDocuments.map(reqDoc => {
       const uploadedDoc = documents.find(doc => doc.document_type === reqDoc.type);
+      // console.log("Getting documents for step:", uploadedDoc);
       return {
         ...reqDoc,
         uploaded: !!uploadedDoc,
-        document: uploadedDoc
+        document: uploadedDoc,
       };
     });
   };
@@ -360,71 +360,76 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                   Required Documents
                                 </h5>
                                 <div className="space-y-2">
-                                  {stepDocuments.map((doc) => (
-                                    <div
-                                      key={doc.type}
-                                      className="flex items-center justify-between text-sm p-3 bg-muted/30 rounded-lg transition-colors duration-200 hover:bg-muted/50"
-                                    >
-                                      <div className="flex items-center gap-3 min-w-0">
-                                        <FileText className={`size-4 flex-shrink-0 ${doc.uploaded ? 'text-green-500' : 'text-muted-foreground'
-                                          }`} />
-                                        <div className="min-w-0">
-                                          <div className="font-medium truncate">{doc.name}</div>
-                                          {doc.document && (
-                                            <div className="text-xs text-muted-foreground">
-                                              Uploaded {new Date(doc.document.created_at).toLocaleDateString()}
-                                            </div>
-                                          )}
+                                  {stepDocuments.map((doc) => {
+                                    const isMarkedReceived = documents.find(d => String(d.document_type) === String(doc.type) && d.marked_received_at !== null);  
+                                    console.log("Document Received Status :", missedDeadline);                                  
+                                    const titleTXT = isMarkedReceived ? "This document has been received in onsite documentation process." : missedDeadline ? "Cannot upload document until deadline extension is added." : "";
+                                    return (
+                                      <div
+                                        key={doc.type}
+                                        className="flex items-center justify-between text-sm p-3 bg-muted/30 rounded-lg transition-colors duration-200 hover:bg-muted/50"
+                                      >
+                                        <div className="flex items-center gap-3 min-w-0">
+                                          <FileText className={`size-4 flex-shrink-0 ${doc.uploaded ? 'text-green-500' : 'text-muted-foreground'
+                                            }`} />
+                                          <div className="min-w-0">
+                                            <div className="font-medium truncate">{doc.name}</div>
+                                            {doc.document && (
+                                              <div className="text-xs text-muted-foreground">
+                                                Uploaded {new Date(doc.document.created_at).toLocaleDateString()}
+                                              </div>
+                                            )}
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="flex items-center gap-2 flex-shrink-0 relative group">
-                                        <DocumentStatus document={doc} />
-                                        <Button
-                                          size="sm"
-                                          variant="ghost"
-                                          disabled={loading || missedDeadline}
-                                          onClick={(e) => doc.uploaded ? handleViewClick(doc.document, e) : handleUploadClick(doc, e)}
-                                          className="transition-colors duration-200 "
-                                        >
-                                          {doc.uploaded ? (
-                                            <Eye className="size-3" />
-                                          ) : (
-                                            <Upload className="size-3" />
-                                          )}
-                                        </Button>
-                                        {missedDeadline && (
-                                          <div
-                                            className="
+                                        <div className="flex items-center gap-2 flex-shrink-0 relative group">
+                                          <DocumentStatus document={doc} />
+                                          <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            disabled={loading || missedDeadline || isMarkedReceived}
+                                            onClick={(e) => doc.uploaded ? handleViewClick(doc.document, e) : handleUploadClick(doc, e)}
+                                            className="transition-colors duration-200 "
+                                          >
+                                            {doc.uploaded ? (
+                                              <Eye className="size-3" />
+                                            ) : (
+                                              <Upload className="size-3" />
+                                            )}
+                                          </Button>
+                                          {(missedDeadline || isMarkedReceived) && (
+                                            <div
+                                              className="
                                             absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                                             opacity-0 scale-95
                                             transition-all duration-200
                                             group-hover:opacity-100 group-hover:scale-100
                                             pointer-events-none
                                           "
-                                          >
-                                            <div className="
+                                            >
+                                              <div className="
                                               relative  min-w-[180px] max-w-[240px]
                                               rounded-xl bg-white px-4 py-2
                                               text-xs font-medium text-gray-800
                                               shadow-[0_8px_20px_rgba(0,0,0,0.15)]
                                               border border-gray-200 text-center
                                             ">
-                                              Need to add extension
+                                                {titleTXT}
 
-                                              <span
-                                                className="
-                                               absolute top-6 bottom-0 right-9
+                                                <span
+                                                  className="
+                                               absolute -bottom-2 right-9
                                               h-3 w-3 rotate-45
                                               bg-white
                                               border-r border-b border-gray-200
                                               "
-                                              />
+                                                />
+                                              </div>
                                             </div>
-                                          </div>
-                                        )}
+                                          )}
+                                        </div>
                                       </div>
-                                    </div>
-                                  ))}
+                                    );
+                                  })}
 
                                   {step.key === 'earnest_money' && (
                                     <div className="border bg-card rounded-lg p-4 space-y-4">
@@ -509,18 +514,18 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                           </div>
                                         </div>
                                         {extraFields.earnestStatus === 'received' && (
-                                        <div className="space-y-2">
-                                          <Label>Received Date</Label>
-                                          <div className="relative">
-                                            <input
-                                              type="date"
-                                              value={extraFields.earnestReceivedDate || ''}
-                                              onChange={(e) => setExtraFields({ ...extraFields, earnestReceivedDate: e.target.value })}
-                                              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-                                            />
-                                            <CalendarIcon className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
+                                          <div className="space-y-2">
+                                            <Label>Received Date</Label>
+                                            <div className="relative">
+                                              <input
+                                                type="date"
+                                                value={extraFields.earnestReceivedDate || ''}
+                                                onChange={(e) => setExtraFields({ ...extraFields, earnestReceivedDate: e.target.value })}
+                                                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                              />
+                                              <CalendarIcon className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
+                                            </div>
                                           </div>
-                                        </div>
                                         )}
                                       </div>
                                       <div className="flex justify-end">
@@ -634,10 +639,10 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
             )}
           </ScrollArea>
         </DialogContent>
-      </Dialog>
+      </Dialog >
 
       {/* Upload Document Modal */}
-      <UploadDocumentModal
+      < UploadDocumentModal
         isOpen={uploadModal.open}
         onClose={() => setUploadModal({ open: false, documentType: null })}
         deal={deal}

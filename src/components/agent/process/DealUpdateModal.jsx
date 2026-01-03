@@ -256,7 +256,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         dispatch({ type: "UPDATE_FIELD", field: "isSaving", value: true });
         try {
             const currentIndex = processSteps.findIndex(step => step.key === deal.status);
-            const newIndex = processSteps.findIndex(step => step.key === status);
+            const newIndex = processSteps.findIndex(step => step.key === state.status);
 
             const isAdvancingStage = newIndex > currentIndex;
 
@@ -274,7 +274,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
             const updateData = {
                 progress: state.progress,
-                nextStep: state.status,
+                nextStep: processSteps[newIndex + 1].key,
                 priority: state.priority,
                 status: state.status,
             };
