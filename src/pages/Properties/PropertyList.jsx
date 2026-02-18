@@ -42,7 +42,7 @@ const PropertyList = () => {
     setLoading(true)
     try {
       const params = Object.fromEntries(searchParams)
-      const response = await propertiesAPI.getAll(params)
+      const response = await propertiesAPI.getPropertyByType(params)
       console.log(response.data);
       setLastPage(response.data.last_page);
       setProperties(response.data)

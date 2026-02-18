@@ -41,8 +41,8 @@ const PostAcceptanceProcess = () => {
                       <StepIcon className={`size-5 ${step.iconColor}`} />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-lg">{step.title}</h4>
-                      <p className="text-sm text-muted-foreground">{step.description}</p>
+                      <h4 className="font-semibold text-lg text-black">{step.title}</h4>
+                      <p className="text-sm text-muted-foreground ">{step.description}</p>
                     </div>
                   </div>
                   {/* {getStatusBadge(step.status)} */}
@@ -50,12 +50,12 @@ const PostAcceptanceProcess = () => {
 
                 <div className="grid gap-4 md:grid-cols-2 mt-3">
                   <div>
-                    <h5 className="font-medium text-sm mb-2">Tasks:</h5>
+                    <h5 className="font-medium text-sm mb-2 text-black">Tasks:</h5>
                     <ul className="text-sm space-y-1">
                       {step.tasks.map((task, index) => (
                         <li key={index} className="flex items-center gap-2">
-                          <div className={`size-1 rounded-full ${step.iconColor} bg-current opacity-50`} />
-                          {task}
+                          <div className={`size-1 rounded-full  ${step.iconColor} bg-current opacity-50`} />
+                          <span className="text-black">{task}</span>
                         </li>
                       ))}
                     </ul>
@@ -63,12 +63,12 @@ const PostAcceptanceProcess = () => {
 
                   <div className="space-y-2 mr-4">
                     <div className="flex justify-between text-sm">
-                      <span className="font-medium">Duration:</span>
-                      <span>{step.duration}</span>
+                      <span className="font-medium text-black">Duration:</span>
+                      <span className="text-black">{step.duration}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="font-medium">Responsible:</span>
-                      <span>{step.responsible}</span>
+                      <span className="font-medium text-black">Responsible:</span>
+                      <span className="text-black">{step.responsible}</span>
                     </div>
                   </div>
                 </div>

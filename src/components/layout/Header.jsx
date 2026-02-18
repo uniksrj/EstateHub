@@ -90,11 +90,17 @@ const Header = () => {
             </Link>
             <div
               className="relative"
-              onMouseEnter={() => supportHover && setOpenDropdown("properties")}
-            // onMouseLeave={() => supportHover && setOpenDropdown(null)}
+              onMouseEnter={() => {
+                if (supportHover) setOpenDropdown("properties");
+              }}
+              onMouseLeave={() => {
+                if (supportHover) setOpenDropdown(null);
+              }}
             >
               <button
-                onClick={() => handleToggle("properties")}
+                onClick={() => {
+                  if (!supportHover) handleToggle("properties");
+                }}
                 aria-expanded={openDropdown === "properties"}
                 aria-controls="properties-menu"
                 className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/properties") ? "text-accent" : "text-foreground"
@@ -108,20 +114,20 @@ const Header = () => {
               <div
                 id="properties-menu"
                 role="menu"
-                className={`absolute left-0 mt-2 w-48 rounded-lg shadow-md ring-1 ring-black/6 border border-border z-50 transform transition duration-150 origin-top-left
+                className={`absolute left-0 top-full w-48 rounded-lg shadow-md ring-1 ring-black/6 border border-border z-50 transform transition duration-150 origin-top-left
                   ${openDropdown === "properties" ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}`}
                 style={{ backgroundColor: "var(--popover)" }}
               >
-                <Link to="/properties/for-sale" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                <Link to="/properties?type=for-sale" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
                   For Sale
                 </Link>
-                <Link to="/properties/for-rent" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                <Link to="/properties?type=for-rent" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
                   For Rent
                 </Link>
-                <Link to="/properties/new" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                <Link to="/properties?type=new" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
                   New Listings
                 </Link>
-                <Link to="/properties/luxury" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                <Link to="/properties?type=luxury" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
                   Luxury Homes
                 </Link>
               </div>

@@ -224,15 +224,12 @@ console.log("property list", property);
               <h2 className="text-xl font-semibold mb-4">Features</h2>
               <div className="grid md:grid-cols-2 gap-2">
                 {property?.features && property.features.trim() !== '' ? (
-                  property.features.split(',')
-                    .map(f => f.trim())
-                    .filter(f => f !== '')
-                    .map((feature, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-accent rounded-full"></div>
-                        <span className="text-sm">{feature}</span>
-                      </div>
-                    ))
+                  JSON.parse(property.features).map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-accent rounded-full"></div>
+                      <span className="text-sm">{feature.replace(/\[\]/g, "")}</span>
+                    </div>
+                  ))
                 ) : (
                   <p className="text-sm text-muted-foreground">No features listed.</p>
                 )}

@@ -1,4 +1,3 @@
-// components/agent/process/DealUpdateModal.jsx
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -86,7 +85,7 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     useEffect(() => {
         if (isOpen && deal) {
             fetchDocuments();
-            dispatch({ type: "UPDATE_FIELD", field: "progress", value: deal.progress || 40 });
+            dispatch({ type: "UPDATE_FIELD", field: "progress", value: deal.progress || 0 });
             dispatch({ type: "UPDATE_FIELD", field: "status", value: deal.status || "contract_generation" });
             dispatch({ type: "UPDATE_FIELD", field: "nextStep", value: deal.nextStep || "Review Purchase Agreement" });
             dispatch({ type: "UPDATE_FIELD", field: "deadline", value: deal.deadline ? new Date(deal.deadline) : null });

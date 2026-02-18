@@ -37,6 +37,7 @@ import DocumentsPage from "@/pages/Dashboard/Buyer/DocumentsPage"
 import MarketInsights from "@/pages/Dashboard/Buyer/MarketInsights"
 import HomePage from "@/pages/Home/HomePage"
 import Offers from "@/pages/Dashboard/offer/Offers "
+import PropertyByType from "@/pages/Dashboard/Buyer/PropertyByType"
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -70,7 +71,7 @@ export const router = createBrowserRouter([
             errorElement: <div>Error loading property</div>,
           },
         ],
-      },
+      },      
       {
         path: "contact", Component: ContactPage
       },
@@ -83,10 +84,10 @@ export const router = createBrowserRouter([
       {
         path: "auth",
         children: [
-          { index: true, Component: AuthPage,},
+          { index: true, Component: AuthPage, },
           { path: "login", Component: AuthPage },
           { path: "register", Component: AuthPage },
-          { path: "forgot-password", Component: ForgotPassword,},
+          { path: "forgot-password", Component: ForgotPassword, },
           { path: "reset-password", Component: ResetPassword, },
         ],
       },
@@ -98,17 +99,19 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
         children: [
-          { index: true, Component: Dashboard,},
-          { path: "add-property", Component: AddProperty,},
-          { path: "manage-properties", Component: ManageProperties,},
-          { path: "users",
+          { index: true, Component: Dashboard, },
+          { path: "add-property", Component: AddProperty, },
+          { path: "manage-properties", Component: ManageProperties, },
+          {
+            path: "users",
             element: (
               <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
                 <UserManagementPage />
               </ProtectedRoute>
             )
           },
-          { path: "properties",
+          {
+            path: "properties",
             element: (
               <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
                 <Propertiespage />
@@ -130,7 +133,7 @@ export const router = createBrowserRouter([
           { path: "add-property", Component: AddProperty },
           { path: "manage-properties", Component: ManageProperties },
           { path: "properties", Component: ListingPage },
-          { path: "properties/:id/edit", Component: AddProperty, errorElement: <div>Error loading property</div>,},
+          { path: "properties/:id/edit", Component: AddProperty, errorElement: <div>Error loading property</div>, },
           { path: "inquiries", Component: SellerInquiryPage },
         ],
       },
@@ -168,13 +171,13 @@ export const router = createBrowserRouter([
           { index: true, Component: AgentDashboard },
           { path: "inquiries", Component: AgentInquiry },
           { path: "add-property", Component: AddProperty },
-          { path: "manage-properties", Component: ManageProperties},
+          { path: "manage-properties", Component: ManageProperties },
           { path: "offers", Component: Offers },
-          { path: "properties", Component: AgentListing},
-          { path: "pipeline", Component: AgentPipeline},
-          { path: "clients", Component: AgentClients},
+          { path: "properties", Component: AgentListing },
+          { path: "pipeline", Component: AgentPipeline },
+          { path: "clients", Component: AgentClients },
           { path: "schedule", Component: SchedulePage },
-          { path: "deal-losses", Component: AgentDealLosses},
+          { path: "deal-losses", Component: AgentDealLosses },
           { path: "properties/:id/edit", Component: AddProperty, errorElement: <div>Error loading property</div>, },
         ],
       },
