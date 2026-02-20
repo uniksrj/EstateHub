@@ -1,14 +1,16 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, MessageSquare, Calendar, FileText, Users, Home, Bell } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const QuickActions = () => {
+  const navigate = useNavigate()
   const actions = [
     {
       title: "Add New Listing",
       description: "Create a new property listing",
       icon: Plus,
-      onClick: () => console.log("Add new listing"),
+      onClick: () => navigate("/agent/add-property"),
       variant: "default",
       color: "bg-blue-500 hover:bg-blue-600"
     },
@@ -16,7 +18,7 @@ const QuickActions = () => {
       title: "Schedule Tour",
       description: "Arrange property viewings",
       icon: Calendar,
-      onClick: () => console.log("Schedule tour"),
+      onClick: () => navigate("/agent/schedule"),
       variant: "outline"
     },
     {

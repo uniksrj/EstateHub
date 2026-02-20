@@ -65,7 +65,7 @@ const RegisterForm = () => {
         try {
             const result = await register(data);
             if (result.success) {
-                navigate("/dashboard");
+                navigate("/");
             } else {
                 toast({
                     title: "Registration Notice",
@@ -73,12 +73,15 @@ const RegisterForm = () => {
                     variant: "destructive",
                 })
                 setError(result.error);
+                navigate("/auth/register");
             }
         } catch (err) {
             console.error(err);
             setError("An unexpected error occurred. Please try again.");
+            navigate("/auth/register");
         } finally {
             setLoading(false);
+            navigate("/auth/register");
         }
     };
 

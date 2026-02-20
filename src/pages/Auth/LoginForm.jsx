@@ -110,12 +110,12 @@ const LoginForm = () => {
                 </div>
 
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
+                    {/* <div className="flex items-center space-x-2">
                         <input id="remember" type="checkbox" className="rounded border-border" disabled={loading} />
                         <Label htmlFor="remember" className="text-sm">
                             Remember me
                         </Label>
-                    </div>
+                    </div> */}
                     <Link to="/auth/forgot-password" className="text-sm text-accent hover:underline">
                         Forgot password?
                     </Link>

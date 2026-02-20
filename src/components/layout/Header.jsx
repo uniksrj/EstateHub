@@ -161,8 +161,12 @@ const Header = () => {
 
               <div
                 className="relative"
-                onMouseEnter={() => supportHover && setOpenDropdown("agents")}
-              // onMouseLeave={() => supportHover && setOpenDropdown(null)}
+                onMouseEnter={() => {
+                  if (supportHover) setOpenDropdown("agents");
+                }}
+                onMouseLeave={() => {
+                  if (supportHover) setOpenDropdown(null);
+                }}
               >
                 <button
                   onClick={() => handleToggle("agents")}
@@ -178,7 +182,7 @@ const Header = () => {
                 <div
                   id="agents-menu"
                   role="menu"
-                  className={`absolute left-0 mt-2 w-48 rounded-lg shadow-md ring-1 ring-black/6 border border-border z-50 transform transition duration-150 origin-top-left
+                  className={`absolute left-0 top-full w-48 rounded-lg shadow-md ring-1 ring-black/6 border border-border z-50 transform transition duration-150 origin-top-left
                   ${openDropdown === "agents" ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
                   style={{ backgroundColor: "var(--popover)" }}
                 >
