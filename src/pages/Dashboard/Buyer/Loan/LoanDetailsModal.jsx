@@ -1,7 +1,7 @@
 import React from 'react';
 import { XCircle, TrendingUp, Calendar, DollarSign, Home, AlertCircle } from 'lucide-react';
 
-const LoanDetailsModal = ({ isOpen, onClose, loan, onApply }) => {
+const LoanDetailsModal = ({ isOpen, onClose, loan, onApply, showApplyButton = true }) => {
   if (!isOpen) return null;
 
   const formatCurrency = (amount) => {
@@ -16,7 +16,7 @@ const LoanDetailsModal = ({ isOpen, onClose, loan, onApply }) => {
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      
+
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="relative bg-card rounded-xl shadow-2xl border border-border w-full max-w-2xl">
           {/* Header */}
@@ -140,23 +140,26 @@ const LoanDetailsModal = ({ isOpen, onClose, loan, onApply }) => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-3 pt-4 border-t border-border">
-              <button
-                onClick={() => {
-                  onApply(loan);
-                  onClose();
-                }}
-                className="flex-1 bg-primary text-primary-foreground py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-              >
-                Apply for this Loan
-              </button>
-              <button
-                onClick={onClose}
-                className="flex-1 border border-input text-card-foreground py-3 rounded-lg font-medium hover:bg-muted transition-colors"
-              >
-                Close
-              </button>
-            </div>
+            {showApplyButton && onApply && (
+              <div className="flex gap-3 pt-4 border-t border-border">
+                <button
+                  onClick={() => {
+                    onApply(loan);
+                    onClose();
+                  }}
+                  className="flex-1 bg-primary text-primary-foreground py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                >
+                  Apply for this Loan
+                </button>
+                <button
+                  onClick={onClose}
+                  className="flex-1 border border-input text-card-foreground py-3 rounded-lg font-medium hover:bg-muted transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            )}
+
           </div>
         </div>
       </div>

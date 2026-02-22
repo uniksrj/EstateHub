@@ -387,6 +387,7 @@ const Offers = () => {
         filters={filters}
         onFilterChange={handleFilterChange}
         onAction={handleAction}
+        user={user}
       />
 
       <ConfirmationModal

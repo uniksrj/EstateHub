@@ -1,35 +1,41 @@
 import React, { useState } from 'react';
-import { DollarSign, User, Mail, Phone, Home, Briefcase, CheckCircle, XCircle, ArrowLeft, FileText, Upload } from 'lucide-react';
+import { DollarSign, User, Mail, Phone, Home, Briefcase, CheckCircle, XCircle, ArrowLeft, FileText, Upload, Badge, Info } from 'lucide-react';
+import { loanOptions } from '@/data/loanData';
+import { calculateMonthlyPayment, generateLoanDetails } from '@/utils/loan';
 
-const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
-  const [step, setStep] = useState(1);
+const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, userDetails, loanDetails, initialLoanDetails }) => {
+  const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
     // Personal Info
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
+    firstName: userDetails?.name?.split(' ')[0] || '',
+    lastName: userDetails?.name?.split(' ').slice(1).join(' ') || '',
+    email: userDetails?.email || '',
+    phone: userDetails?.phone || '',
     dateOfBirth: '',
     ssn: '',
-    
+
     // Employment
     employmentStatus: 'employed',
     employerName: '',
     jobTitle: '',
     yearsAtJob: '',
     annualIncome: '',
-    
+
     // Property
-    propertyAddress: '',
-    propertyType: 'singleFamily',
+    propertyAddress: propertyDetails ?
+      `${propertyDetails.address}, ${propertyDetails.city}, ${propertyDetails.state} ${propertyDetails.zip}` : '',
+    propertyType: propertyDetails?.property_type || 'singleFamily',
+    propertyPrice: propertyDetails?.price || '',
+    propertyId: propertyDetails?.id || null,
     occupancyType: 'primary',
-    
+    offerId: offerDetails?.id || null,
+
     // Financial
     downPayment: '',
     creditScore: '',
     hasBankruptcies: false,
     bankruptcyExplanation: '',
-    
+
     // Documents
     documents: {
       id: null,
@@ -42,12 +48,12 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-
+  const [selectedLoan, setSelectedLoan] = useState(initialLoanDetails || null);
   if (!isOpen) return null;
 
   const validateStep = (stepNumber) => {
     const newErrors = {};
-    
+
     if (stepNumber === 1) {
       if (!formData.firstName) newErrors.firstName = 'First name is required';
       if (!formData.lastName) newErrors.lastName = 'Last name is required';
@@ -58,19 +64,19 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
       if (!formData.ssn) newErrors.ssn = 'SSN is required';
       else if (formData.ssn.replace(/\D/g, '').length !== 9) newErrors.ssn = 'SSN must be 9 digits';
     }
-    
+
     if (stepNumber === 2) {
       if (!formData.employerName && formData.employmentStatus === 'employed') {
         newErrors.employerName = 'Employer name is required';
       }
       if (!formData.annualIncome) newErrors.annualIncome = 'Annual income is required';
     }
-    
+
     if (stepNumber === 3) {
       if (!formData.propertyAddress) newErrors.propertyAddress = 'Property address is required';
       if (!formData.downPayment) newErrors.downPayment = 'Down payment amount is required';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -82,7 +88,11 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
   };
 
   const handleBack = () => {
-    setStep(step - 1);
+    if (step === 1 && !initialLoanDetails) {
+      setStep(0);
+    } else {
+      setStep(step - 1);
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -112,9 +122,9 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
 
   const handleSubmit = async () => {
     if (!validateStep(step)) return;
-    
+
     setIsSubmitting(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
@@ -139,10 +149,19 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
     { number: 5, name: 'Review & Submit', icon: CheckCircle }
   ];
 
+  const handleLoanSelect = (loan) => {
+    console.log("Selected loan inside function:", loan);
+    const final_price = offerDetails?.status === 'accepted' ? offerDetails.final_price : propertyDetails?.price || 400000;
+    const fullLoan = generateLoanDetails(loan, final_price);
+    setSelectedLoan(fullLoan);
+    setStep(1);
+  };
+
+  console.log("Selected propertyDetails Details:", offerDetails);
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
@@ -150,7 +169,7 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="relative bg-card rounded-xl shadow-2xl border border-border w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-          
+
           {!isSuccess ? (
             <>
               {/* Header */}
@@ -170,19 +189,17 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                   {steps.map((s, idx) => (
                     <div key={s.number} className="flex-1">
                       <div className="flex items-center">
-                        <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                          s.number === step
-                            ? 'bg-primary text-primary-foreground'
-                            : s.number < step
+                        <div className={`flex items-center justify-center w-8 h-8 rounded-full ${s.number === step
+                          ? 'bg-primary text-primary-foreground'
+                          : s.number < step
                             ? 'bg-success text-success-foreground'
                             : 'bg-muted text-muted-foreground'
-                        }`}>
+                          }`}>
                           <s.icon className="w-4 h-4" />
                         </div>
                         {idx < steps.length - 1 && (
-                          <div className={`flex-1 h-1 mx-2 ${
-                            s.number < step ? 'bg-success' : 'bg-muted'
-                          }`} />
+                          <div className={`flex-1 h-1 mx-2 ${s.number < step ? 'bg-success' : 'bg-muted'
+                            }`} />
                         )}
                       </div>
                       <div className="text-xs mt-1 text-muted-foreground">{s.name}</div>
@@ -218,11 +235,104 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                   </div>
                 )}
 
+                {propertyDetails && (
+                  <div className="bg-primary/5 border-b border-primary/20 p-4">
+                    <div className="flex items-center gap-4">
+                      {propertyDetails.image && (
+                        <img src={propertyDetails.image} alt={propertyDetails.title} className="w-16 h-16 rounded-lg object-cover" />
+                      )}
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-card-foreground">{propertyDetails.title}</h3>
+                        <p className="text-sm text-muted-foreground">{propertyDetails.address}</p>
+                        <div className="flex gap-4 mt-1 text-sm">
+                          <span>{propertyDetails.bedrooms} beds</span>
+                          <span>{propertyDetails.bathrooms} baths</span>
+                          <span>{propertyDetails.square_feet?.toLocaleString()} sqft</span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground">Purchase Price</p>
+                        <p className="text-xl font-bold text-primary">{formatCurrency(offerDetails.status === 'accepted' ? offerDetails.final_price : propertyDetails.price)}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {step === 0 && (
+                  <div className="p-6">
+                    <h3 className="text-lg font-semibold text-card-foreground mb-4">Choose Your Loan Type</h3>
+                    <div className="space-y-4">
+                      {loanOptions.map((loan, idx) => {
+                        const monthly = calculateMonthlyPayment(propertyDetails?.price || 400000, loan.rate, loan.term);
+                        return (
+                          <div
+                            key={idx}
+                            onClick={() => handleLoanSelect(loan)}
+                            className="border border-border rounded-lg p-4 hover:border-primary cursor-pointer transition-all"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="font-semibold text-card-foreground">{loan.type}</h4>
+                                <p className="text-sm text-muted-foreground">{loan.rate}% APR</p>
+                                <p className="text-xs text-muted-foreground mt-1">{loan.description}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-lg font-bold text-primary">{formatCurrency(monthly)}/mo</p>
+                                <p className="text-xs text-muted-foreground">estimated</p>
+                              </div>
+                            </div>
+                            {loan.recommended && (
+                              <span className="bg-green-500/10 text-green-600 px-2 py-1 rounded-md inline-block mt-2">
+                                Recommended
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {selectedLoan && step > 0 && (
+                  <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold text-primary">Selected Loan</h3>
+                      <span className="text-xs bg-muted px-2 py-1 rounded-full">Estimated</span>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div>
+                        <div className="text-xs text-muted-foreground">Loan Type</div>
+                        <div className="font-medium text-card-foreground">{selectedLoan.type}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-muted-foreground">Interest Rate</div>
+                        <div className="font-medium text-card-foreground">{selectedLoan.rate}%</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-muted-foreground">Monthly Payment</div>
+                        <div className="font-medium text-card-foreground">{formatCurrency(selectedLoan.monthlyPI)}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-muted-foreground">Loan Amount</div>
+                        <div className="font-medium text-card-foreground">{formatCurrency(selectedLoan.loanAmount)}</div>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-start gap-3 rounded-lg border border-accent bg-accent/10 p-3 text-sm">
+                      <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent-foreground" />
+                      <p className="text-foreground/80">
+                        This is an estimate based on the property price and selected loan terms.
+                        The final loan amount, interest rate, and monthly payment may vary after
+                        underwriting and based on your financial profile.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 {/* Step 1: Personal Information */}
                 {step === 1 && (
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-card-foreground">Personal Information</h3>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-card-foreground mb-1">
@@ -232,15 +342,14 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                           type="text"
                           value={formData.firstName}
                           onChange={(e) => handleInputChange('firstName', e.target.value)}
-                          className={`w-full p-3 border rounded-lg bg-background ${
-                            errors.firstName ? 'border-destructive' : 'border-input'
-                          }`}
+                          className={`w-full p-3 border rounded-lg bg-background ${errors.firstName ? 'border-destructive' : 'border-input'
+                            }`}
                         />
                         {errors.firstName && (
                           <p className="text-xs text-destructive mt-1">{errors.firstName}</p>
                         )}
                       </div>
-                      
+
                       <div>
                         <label className="block text-sm font-medium text-card-foreground mb-1">
                           Last Name *
@@ -249,9 +358,8 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                           type="text"
                           value={formData.lastName}
                           onChange={(e) => handleInputChange('lastName', e.target.value)}
-                          className={`w-full p-3 border rounded-lg bg-background ${
-                            errors.lastName ? 'border-destructive' : 'border-input'
-                          }`}
+                          className={`w-full p-3 border rounded-lg bg-background ${errors.lastName ? 'border-destructive' : 'border-input'
+                            }`}
                         />
                         {errors.lastName && (
                           <p className="text-xs text-destructive mt-1">{errors.lastName}</p>
@@ -268,15 +376,14 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                           type="email"
                           value={formData.email}
                           onChange={(e) => handleInputChange('email', e.target.value)}
-                          className={`w-full p-3 border rounded-lg bg-background ${
-                            errors.email ? 'border-destructive' : 'border-input'
-                          }`}
+                          className={`w-full p-3 border rounded-lg bg-background ${errors.email ? 'border-destructive' : 'border-input'
+                            }`}
                         />
                         {errors.email && (
                           <p className="text-xs text-destructive mt-1">{errors.email}</p>
                         )}
                       </div>
-                      
+
                       <div>
                         <label className="block text-sm font-medium text-card-foreground mb-1">
                           Phone *
@@ -285,9 +392,8 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                           type="tel"
                           value={formData.phone}
                           onChange={(e) => handleInputChange('phone', e.target.value)}
-                          className={`w-full p-3 border rounded-lg bg-background ${
-                            errors.phone ? 'border-destructive' : 'border-input'
-                          }`}
+                          className={`w-full p-3 border rounded-lg bg-background ${errors.phone ? 'border-destructive' : 'border-input'
+                            }`}
                         />
                         {errors.phone && (
                           <p className="text-xs text-destructive mt-1">{errors.phone}</p>
@@ -304,15 +410,14 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                           type="date"
                           value={formData.dateOfBirth}
                           onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
-                          className={`w-full p-3 border rounded-lg bg-background ${
-                            errors.dateOfBirth ? 'border-destructive' : 'border-input'
-                          }`}
+                          className={`w-full p-3 border rounded-lg bg-background ${errors.dateOfBirth ? 'border-destructive' : 'border-input'
+                            }`}
                         />
                         {errors.dateOfBirth && (
                           <p className="text-xs text-destructive mt-1">{errors.dateOfBirth}</p>
                         )}
                       </div>
-                      
+
                       <div>
                         <label className="block text-sm font-medium text-card-foreground mb-1">
                           Social Security Number *
@@ -322,9 +427,8 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                           placeholder="XXX-XX-XXXX"
                           value={formData.ssn}
                           onChange={(e) => handleInputChange('ssn', e.target.value)}
-                          className={`w-full p-3 border rounded-lg bg-background ${
-                            errors.ssn ? 'border-destructive' : 'border-input'
-                          }`}
+                          className={`w-full p-3 border rounded-lg bg-background ${errors.ssn ? 'border-destructive' : 'border-input'
+                            }`}
                         />
                         {errors.ssn && (
                           <p className="text-xs text-destructive mt-1">{errors.ssn}</p>
@@ -338,7 +442,7 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                 {step === 2 && (
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-card-foreground">Employment & Income</h3>
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-card-foreground mb-1">
                         Employment Status
@@ -367,15 +471,14 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                               type="text"
                               value={formData.employerName}
                               onChange={(e) => handleInputChange('employerName', e.target.value)}
-                              className={`w-full p-3 border rounded-lg bg-background ${
-                                errors.employerName ? 'border-destructive' : 'border-input'
-                              }`}
+                              className={`w-full p-3 border rounded-lg bg-background ${errors.employerName ? 'border-destructive' : 'border-input'
+                                }`}
                             />
                             {errors.employerName && (
                               <p className="text-xs text-destructive mt-1">{errors.employerName}</p>
                             )}
                           </div>
-                          
+
                           <div>
                             <label className="block text-sm font-medium text-card-foreground mb-1">
                               Job Title
@@ -401,7 +504,7 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                               className="w-full p-3 border border-input rounded-lg bg-background"
                             />
                           </div>
-                          
+
                           <div>
                             <label className="block text-sm font-medium text-card-foreground mb-1">
                               Annual Income *
@@ -412,9 +515,8 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                                 type="number"
                                 value={formData.annualIncome}
                                 onChange={(e) => handleInputChange('annualIncome', e.target.value)}
-                                className={`w-full pl-10 p-3 border rounded-lg bg-background ${
-                                  errors.annualIncome ? 'border-destructive' : 'border-input'
-                                }`}
+                                className={`w-full pl-10 p-3 border rounded-lg bg-background ${errors.annualIncome ? 'border-destructive' : 'border-input'
+                                  }`}
                               />
                             </div>
                             {errors.annualIncome && (
@@ -431,7 +533,7 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                 {step === 3 && (
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-card-foreground">Loan Details</h3>
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-card-foreground mb-1">
                         Property Address *
@@ -440,9 +542,8 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                         type="text"
                         value={formData.propertyAddress}
                         onChange={(e) => handleInputChange('propertyAddress', e.target.value)}
-                        className={`w-full p-3 border rounded-lg bg-background ${
-                          errors.propertyAddress ? 'border-destructive' : 'border-input'
-                        }`}
+                        className={`w-full p-3 border rounded-lg bg-background ${errors.propertyAddress ? 'border-destructive' : 'border-input'
+                          }`}
                         placeholder="123 Main St, City, State 12345"
                       />
                       {errors.propertyAddress && (
@@ -466,7 +567,7 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                           <option value="multiFamily">Multi-family (2-4 units)</option>
                         </select>
                       </div>
-                      
+
                       <div>
                         <label className="block text-sm font-medium text-card-foreground mb-1">
                           Occupancy Type
@@ -494,16 +595,15 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                             type="number"
                             value={formData.downPayment}
                             onChange={(e) => handleInputChange('downPayment', e.target.value)}
-                            className={`w-full pl-10 p-3 border rounded-lg bg-background ${
-                              errors.downPayment ? 'border-destructive' : 'border-input'
-                            }`}
+                            className={`w-full pl-10 p-3 border rounded-lg bg-background ${errors.downPayment ? 'border-destructive' : 'border-input'
+                              }`}
                           />
                         </div>
                         {errors.downPayment && (
                           <p className="text-xs text-destructive mt-1">{errors.downPayment}</p>
                         )}
                       </div>
-                      
+
                       <div>
                         <label className="block text-sm font-medium text-card-foreground mb-1">
                           Estimated Credit Score
@@ -551,7 +651,7 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                 {step === 4 && (
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-card-foreground">Required Documents</h3>
-                    
+
                     <div className="space-y-3">
                       {[
                         { key: 'id', label: 'Government ID', accept: '.jpg,.png,.pdf' },
@@ -600,7 +700,7 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                 {step === 5 && (
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-card-foreground">Review Your Application</h3>
-                    
+
                     <div className="space-y-4">
                       <div className="p-4 bg-card border border-border rounded-lg">
                         <h4 className="font-medium text-card-foreground mb-2">Personal Information</h4>
@@ -653,7 +753,7 @@ const LoanApplicationModal = ({ isOpen, onClose, loanDetails }) => {
                   >
                     {step > 1 ? 'Back' : 'Cancel'}
                   </button>
-                  
+
                   <button
                     onClick={step === 5 ? handleSubmit : handleNext}
                     disabled={isSubmitting}

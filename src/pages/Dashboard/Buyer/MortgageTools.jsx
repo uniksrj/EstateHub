@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Calculator, DollarSign, Home, TrendingUp, Calendar, Percent, ArrowRight, Download, Share2 } from 'lucide-react';
 import LoanDetailsModal from './Loan/LoanDetailsModal';
 import LoanApplicationModal from './Loan/LoanApplicationModal';
-import LoanComparisonCard from './Loan/LoanComparisonCard';
+import LoanComparison from '@/components/buyer/offer/loan/LoanComparison';
 
 const MortgageTools = () => {
   const [formData, setFormData] = useState({
@@ -216,56 +216,7 @@ const MortgageTools = () => {
     };
   };
 
-  const generateLoanDetails = (loan) => {
-    const loanAmount = calculations.loanAmount || 400000; // Use current loan amount or default
 
-    // Calculate monthly payment for this specific loan
-    const monthlyRate = loan.rate / 100 / 12;
-    const numberOfPayments = loan.type.includes('15') ? 180 :
-      loan.type.includes('30') ? 360 :
-        loan.type.includes('5/1') ? 60 : 360; // ARM initial fixed period
-
-    const monthlyPI = loanAmount *
-      (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
-      (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
-
-    // Generate first year amortization
-    const schedule = [];
-    let balance = loanAmount;
-
-    for (let i = 1; i <= 12; i++) {
-      const interest = balance * monthlyRate;
-      const principal = monthlyPI - interest;
-      balance -= principal;
-
-      schedule.push({
-        month: i,
-        payment: monthlyPI,
-        principal,
-        interest,
-        balance: Math.max(0, balance)
-      });
-    }
-
-    const totalInterest = (monthlyPI * numberOfPayments) - loanAmount;
-    const totalCost = loanAmount + totalInterest;
-
-    return {
-      ...loan,
-      loanAmount,
-      monthlyPI,
-      totalInterest,
-      totalCost,
-      schedule,
-      armDetails: loan.type.includes('ARM') ? {
-        fixedPeriod: 5,
-        adjustmentCap: 2,
-        lifetimeCap: 5,
-        margin: 2.75,
-        index: 'SOFR'
-      } : null
-    };
-  };
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -529,359 +480,285 @@ const MortgageTools = () => {
 
             {/* Compare Loans */}
             {activeTab === 'compare' && (
-              <div className="bg-card rounded-xl shadow-lg border border-border p-6">
-                <h2 className="text-xl font-semibold text-card-foreground mb-6">Compare Loan Options</h2>
-                <div className="space-y-4">
-                  {[
-                    {
-                      type: '30-Year Fixed',
-                      rate: 6.5,
-                      description: 'Stable monthly payments for the life of the loan',
-                      pros: ['Predictable payments', 'Lower monthly payment', 'Good for long-term ownership'],
-                      cons: ['Higher interest rate', 'More interest paid over time'],
-                      recommended: true
-                    },
-                    {
-                      type: '15-Year Fixed',
-                      rate: 6.0,
-                      description: 'Build equity faster with higher monthly payments',
-                      pros: ['Lower interest rate', 'Pay off loan faster', 'Less total interest'],
-                      cons: ['Higher monthly payment', 'Less cash flow flexibility'],
-                      recommended: false
-                    },
-                    {
-                      type: '5/1 ARM',
-                      rate: 5.75,
-                      description: 'Fixed rate for 5 years, then adjusts annually',
-                      pros: ['Lower initial rate', 'Good for short-term ownership', 'Lower initial payments'],
-                      cons: ['Rate can increase', 'Payment uncertainty', 'Complex terms'],
-                      recommended: false,
-                      armDetails: {
-                        fixedPeriod: 5,
-                        adjustmentCap: 2,
-                        lifetimeCap: 5,
-                        margin: 2.75,
-                        index: 'SOFR'
-                      }
-                    }
-                  ].map((loan, index) => {
-                    // Calculate payment for this loan option
-                    const loanAmount = calculations.loanAmount || 400000;
-                    const monthlyRate = loan.rate / 100 / 12;
-                    const numberOfPayments = loan.type === '15-Year Fixed' ? 180 :
-                      loan.type === '30-Year Fixed' ? 360 : 360;
+              <LoanComparison
+                loanAmount={calculations.loanAmount || 400000}
+                onLoanSelect={(loan) => {
+                  setSelectedLoan(loan);
+                  setShowApplicationModal(true);
+                }}
+                showApplyButton={false}
+                title="Compare Loan Options"
+                description="Compare different loan types to find the best option for your situation"
+              />
+            )}
 
-                    const monthlyPI = loanAmount *
-                      (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
-                      (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+            {/* Results Sidebar */}
+            {activeTab === 'calculator' && (
+              <div className="space-y-6">
+                {/* Payment Breakdown */}
+                <div className="bg-card rounded-xl shadow-lg border border-border p-6">
+                  <h2 className="text-xl font-semibold text-card-foreground mb-4">Payment Breakdown</h2>
 
-                    const totalInterest = (monthlyPI * numberOfPayments) - loanAmount;
+                  <div className="space-y-4">
+                    <div className="text-center py-4">
+                      <div className="text-3xl font-bold text-primary mb-2">
+                        {formatCurrency(calculations.monthlyPayment)}
+                      </div>
+                      <div className="text-sm text-muted-foreground">per month</div>
+                    </div>
 
-                    // Generate amortization schedule
-                    const schedule = [];
-                    let balance = loanAmount;
-                    for (let i = 1; i <= 12; i++) {
-                      const interest = balance * monthlyRate;
-                      const principal = monthlyPI - interest;
-                      balance -= principal;
-                      schedule.push({ month: i, payment: monthlyPI, principal, interest, balance });
-                    }
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Principal & Interest</span>
+                        <span className="font-medium text-card-foreground">{formatCurrency(calculations.principalInterest)}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Property Tax</span>
+                        <span className="font-medium text-card-foreground">{formatCurrency(calculations.tax)}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Home Insurance</span>
+                        <span className="font-medium text-card-foreground">{formatCurrency(calculations.insurance)}</span>
+                      </div>
+                      {calculations.pmi > 0 && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">PMI</span>
+                          <span className="font-medium text-card-foreground">{formatCurrency(calculations.pmi)}</span>
+                        </div>
+                      )}
+                    </div>
 
-                    const loanWithDetails = {
-                      ...loan,
-                      payment: monthlyPI,
-                      loanAmount,
-                      monthlyPI,
-                      totalInterest,
-                      totalCost: loanAmount + totalInterest,
-                      schedule,
-                      armDetails: loan.armDetails || null
-                    };
+                    <div className="border-t border-border pt-3">
+                      <div className="flex justify-between items-center font-semibold">
+                        <span className="text-card-foreground">Total Monthly Payment</span>
+                        <span className="text-primary">{formatCurrency(calculations.totalPayment)}</span>
+                      </div>
+                    </div>
+                  </div>
 
-                    return (
-                      <LoanComparisonCard
-                        key={index}
-                        loan={loanWithDetails}
-                        onViewDetails={(loan) => {
-                          setSelectedLoan(loan);
-                          setShowDetailsModal(true);
-                        }}
-                        onApply={(loan) => {
-                          setSelectedLoan(loan);
-                          setShowApplicationModal(true);
-                        }}
-                      />
-                    );
-                  })}
+                  <div className="mt-6 space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Loan Amount</span>
+                      <span className="text-card-foreground">{formatCurrency(calculations.loanAmount)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Down Payment</span>
+                      <span className="text-card-foreground">{formatCurrency(calculations.downPaymentAmount)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Total Interest Paid</span>
+                      <span className="text-card-foreground">
+                        {formatCurrency(calculations.principalInterest * formData.loanTerm * 12 - calculations.loanAmount)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex gap-3">
+                    <button className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground py-2 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors duration-200">
+                      <Download className="w-4 h-4" />
+                      Save
+                    </button>
+                    <button className="flex-1 flex items-center justify-center gap-2 border border-input text-card-foreground py-2 px-4 rounded-lg font-medium hover:bg-muted transition-colors duration-200">
+                      <Share2 className="w-4 h-4" />
+                      Share
+                    </button>
+                  </div>
+                </div>
+
+                {/* Quick Tips */}
+                <div className="bg-card rounded-xl shadow-lg border border-border p-6">
+                  <h2 className="text-xl font-semibold text-card-foreground mb-4">Mortgage Tips</h2>
+                  <div className="space-y-3 text-sm">
+                    <div className="p-3 bg-primary/5 rounded-lg">
+                      <div className="font-medium text-card-foreground mb-1">20% Down Payment</div>
+                      <div className="text-muted-foreground">Avoid PMI by putting down 20% or more</div>
+                    </div>
+                    <div className="p-3 bg-primary/5 rounded-lg">
+                      <div className="font-medium text-card-foreground mb-1">Compare Rates</div>
+                      <div className="text-muted-foreground">Shop around with multiple lenders for the best rate</div>
+                    </div>
+                    <div className="p-3 bg-primary/5 rounded-lg">
+                      <div className="font-medium text-card-foreground mb-1">Credit Score</div>
+                      <div className="text-muted-foreground">A higher score can qualify you for better rates</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
-          </div>
+            {showModal && selectedLoan && (
+              <div className="fixed inset-0 z-50 overflow-y-auto">
+                {/* Backdrop */}
+                <div
+                  className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+                  onClick={() => setShowModal(false)}
+                />
 
-          {/* Results Sidebar */}
-          {activeTab === 'calculator' && (
-            <div className="space-y-6">
-              {/* Payment Breakdown */}
-              <div className="bg-card rounded-xl shadow-lg border border-border p-6">
-                <h2 className="text-xl font-semibold text-card-foreground mb-4">Payment Breakdown</h2>
-
-                <div className="space-y-4">
-                  <div className="text-center py-4">
-                    <div className="text-3xl font-bold text-primary mb-2">
-                      {formatCurrency(calculations.monthlyPayment)}
-                    </div>
-                    <div className="text-sm text-muted-foreground">per month</div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Principal & Interest</span>
-                      <span className="font-medium text-card-foreground">{formatCurrency(calculations.principalInterest)}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Property Tax</span>
-                      <span className="font-medium text-card-foreground">{formatCurrency(calculations.tax)}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Home Insurance</span>
-                      <span className="font-medium text-card-foreground">{formatCurrency(calculations.insurance)}</span>
-                    </div>
-                    {calculations.pmi > 0 && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">PMI</span>
-                        <span className="font-medium text-card-foreground">{formatCurrency(calculations.pmi)}</span>
+                {/* Modal */}
+                <div className="flex min-h-full items-center justify-center p-4">
+                  <div className="relative bg-card rounded-xl shadow-2xl border border-border w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                    {/* Header */}
+                    <div className="sticky top-0 bg-card border-b border-border p-6 flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-bold text-card-foreground">{selectedLoan.type}</h2>
+                        <p className="text-muted-foreground mt-1">{selectedLoan.description}</p>
                       </div>
-                    )}
-                  </div>
-
-                  <div className="border-t border-border pt-3">
-                    <div className="flex justify-between items-center font-semibold">
-                      <span className="text-card-foreground">Total Monthly Payment</span>
-                      <span className="text-primary">{formatCurrency(calculations.totalPayment)}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Loan Amount</span>
-                    <span className="text-card-foreground">{formatCurrency(calculations.loanAmount)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Down Payment</span>
-                    <span className="text-card-foreground">{formatCurrency(calculations.downPaymentAmount)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Total Interest Paid</span>
-                    <span className="text-card-foreground">
-                      {formatCurrency(calculations.principalInterest * formData.loanTerm * 12 - calculations.loanAmount)}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex gap-3">
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground py-2 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors duration-200">
-                    <Download className="w-4 h-4" />
-                    Save
-                  </button>
-                  <button className="flex-1 flex items-center justify-center gap-2 border border-input text-card-foreground py-2 px-4 rounded-lg font-medium hover:bg-muted transition-colors duration-200">
-                    <Share2 className="w-4 h-4" />
-                    Share
-                  </button>
-                </div>
-              </div>
-
-              {/* Quick Tips */}
-              <div className="bg-card rounded-xl shadow-lg border border-border p-6">
-                <h2 className="text-xl font-semibold text-card-foreground mb-4">Mortgage Tips</h2>
-                <div className="space-y-3 text-sm">
-                  <div className="p-3 bg-primary/5 rounded-lg">
-                    <div className="font-medium text-card-foreground mb-1">20% Down Payment</div>
-                    <div className="text-muted-foreground">Avoid PMI by putting down 20% or more</div>
-                  </div>
-                  <div className="p-3 bg-primary/5 rounded-lg">
-                    <div className="font-medium text-card-foreground mb-1">Compare Rates</div>
-                    <div className="text-muted-foreground">Shop around with multiple lenders for the best rate</div>
-                  </div>
-                  <div className="p-3 bg-primary/5 rounded-lg">
-                    <div className="font-medium text-card-foreground mb-1">Credit Score</div>
-                    <div className="text-muted-foreground">A higher score can qualify you for better rates</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          {showModal && selectedLoan && (
-            <div className="fixed inset-0 z-50 overflow-y-auto">
-              {/* Backdrop */}
-              <div
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-                onClick={() => setShowModal(false)}
-              />
-
-              {/* Modal */}
-              <div className="flex min-h-full items-center justify-center p-4">
-                <div className="relative bg-card rounded-xl shadow-2xl border border-border w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-                  {/* Header */}
-                  <div className="sticky top-0 bg-card border-b border-border p-6 flex items-center justify-between">
-                    <div>
-                      <h2 className="text-2xl font-bold text-card-foreground">{selectedLoan.type}</h2>
-                      <p className="text-muted-foreground mt-1">{selectedLoan.description}</p>
-                    </div>
-                    <button
-                      onClick={() => setShowModal(false)}
-                      className="p-2 hover:bg-muted rounded-lg transition-colors duration-200"
-                    >
-                      <svg className="w-5 h-5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6 space-y-6">
-                    {/* Key Metrics */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                      <div className="p-4 bg-primary/5 rounded-lg">
-                        <div className="text-sm text-muted-foreground">Interest Rate</div>
-                        <div className="text-2xl font-bold text-primary">{selectedLoan.rate}%</div>
-                      </div>
-                      <div className="p-4 bg-success/5 rounded-lg">
-                        <div className="text-sm text-muted-foreground">Monthly Payment</div>
-                        <div className="text-2xl font-bold text-success">{formatCurrency(selectedLoan.monthlyPI)}</div>
-                      </div>
-                      <div className="p-4 bg-warning/5 rounded-lg">
-                        <div className="text-sm text-muted-foreground">Total Interest</div>
-                        <div className="text-2xl font-bold text-warning">{formatCurrency(selectedLoan.totalInterest)}</div>
-                      </div>
-                      <div className="p-4 bg-destructive/5 rounded-lg">
-                        <div className="text-sm text-muted-foreground">Total Cost</div>
-                        <div className="text-2xl font-bold text-destructive">{formatCurrency(selectedLoan.totalCost)}</div>
-                      </div>
-                    </div>
-
-                    {/* Pros & Cons */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="p-4 bg-success/5 rounded-lg">
-                        <h3 className="font-semibold text-success mb-3">Pros</h3>
-                        <ul className="space-y-2">
-                          {selectedLoan.pros.map((pro, idx) => (
-                            <li key={idx} className="flex items-start gap-2 text-sm">
-                              <svg className="w-4 h-4 text-success mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
-                              <span className="text-card-foreground">{pro}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="p-4 bg-destructive/5 rounded-lg">
-                        <h3 className="font-semibold text-destructive mb-3">Cons</h3>
-                        <ul className="space-y-2">
-                          {selectedLoan.cons.map((con, idx) => (
-                            <li key={idx} className="flex items-start gap-2 text-sm">
-                              <svg className="w-4 h-4 text-destructive mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                              </svg>
-                              <span className="text-card-foreground">{con}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-
-                    {/* ARM Details if applicable */}
-                    {selectedLoan.armDetails && (
-                      <div className="p-4 bg-card border border-border rounded-lg">
-                        <h3 className="font-semibold text-card-foreground mb-3">ARM Details</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          <div>
-                            <div className="text-sm text-muted-foreground">Fixed Period</div>
-                            <div className="font-medium text-card-foreground">{selectedLoan.armDetails.fixedPeriod} years</div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground">Adjustment Cap</div>
-                            <div className="font-medium text-card-foreground">{selectedLoan.armDetails.adjustmentCap}%</div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground">Lifetime Cap</div>
-                            <div className="font-medium text-card-foreground">{selectedLoan.armDetails.lifetimeCap}%</div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground">Margin</div>
-                            <div className="font-medium text-card-foreground">{selectedLoan.armDetails.margin}%</div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Amortization Schedule */}
-                    <div>
-                      <h3 className="font-semibold text-card-foreground mb-3">First Year Amortization</h3>
-                      <div className="overflow-x-auto">
-                        <table className="w-full">
-                          <thead>
-                            <tr className="border-b border-border">
-                              <th className="text-left py-3 text-sm font-medium text-muted-foreground">Month</th>
-                              <th className="text-right py-3 text-sm font-medium text-muted-foreground">Payment</th>
-                              <th className="text-right py-3 text-sm font-medium text-muted-foreground">Principal</th>
-                              <th className="text-right py-3 text-sm font-medium text-muted-foreground">Interest</th>
-                              <th className="text-right py-3 text-sm font-medium text-muted-foreground">Balance</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {selectedLoan.schedule.map((row) => (
-                              <tr key={row.month} className="border-b border-border">
-                                <td className="py-3 text-sm text-card-foreground">{row.month}</td>
-                                <td className="py-3 text-sm text-card-foreground text-right">{formatCurrency(row.payment)}</td>
-                                <td className="py-3 text-sm text-success text-right">{formatCurrency(row.principal)}</td>
-                                <td className="py-3 text-sm text-destructive text-right">{formatCurrency(row.interest)}</td>
-                                <td className="py-3 text-sm text-card-foreground text-right">{formatCurrency(row.balance)}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-3 pt-4 border-t border-border">
-                      <button className="flex-1 bg-primary text-primary-foreground py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors duration-200">
-                        Apply for this Loan
-                      </button>
                       <button
                         onClick={() => setShowModal(false)}
-                        className="flex-1 border border-input text-card-foreground py-3 px-4 rounded-lg font-medium hover:bg-muted transition-colors duration-200"
+                        className="p-2 hover:bg-muted rounded-lg transition-colors duration-200"
                       >
-                        Close
+                        <svg className="w-5 h-5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                       </button>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6 space-y-6">
+                      {/* Key Metrics */}
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="p-4 bg-primary/5 rounded-lg">
+                          <div className="text-sm text-muted-foreground">Interest Rate</div>
+                          <div className="text-2xl font-bold text-primary">{selectedLoan.rate}%</div>
+                        </div>
+                        <div className="p-4 bg-success/5 rounded-lg">
+                          <div className="text-sm text-muted-foreground">Monthly Payment</div>
+                          <div className="text-2xl font-bold text-success">{formatCurrency(selectedLoan.monthlyPI)}</div>
+                        </div>
+                        <div className="p-4 bg-warning/5 rounded-lg">
+                          <div className="text-sm text-muted-foreground">Total Interest</div>
+                          <div className="text-2xl font-bold text-warning">{formatCurrency(selectedLoan.totalInterest)}</div>
+                        </div>
+                        <div className="p-4 bg-destructive/5 rounded-lg">
+                          <div className="text-sm text-muted-foreground">Total Cost</div>
+                          <div className="text-2xl font-bold text-destructive">{formatCurrency(selectedLoan.totalCost)}</div>
+                        </div>
+                      </div>
+
+                      {/* Pros & Cons */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="p-4 bg-success/5 rounded-lg">
+                          <h3 className="font-semibold text-success mb-3">Pros</h3>
+                          <ul className="space-y-2">
+                            {selectedLoan.pros.map((pro, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm">
+                                <svg className="w-4 h-4 text-success mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span className="text-card-foreground">{pro}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="p-4 bg-destructive/5 rounded-lg">
+                          <h3 className="font-semibold text-destructive mb-3">Cons</h3>
+                          <ul className="space-y-2">
+                            {selectedLoan.cons.map((con, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm">
+                                <svg className="w-4 h-4 text-destructive mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                <span className="text-card-foreground">{con}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      {/* ARM Details if applicable */}
+                      {selectedLoan.armDetails && (
+                        <div className="p-4 bg-card border border-border rounded-lg">
+                          <h3 className="font-semibold text-card-foreground mb-3">ARM Details</h3>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div>
+                              <div className="text-sm text-muted-foreground">Fixed Period</div>
+                              <div className="font-medium text-card-foreground">{selectedLoan.armDetails.fixedPeriod} years</div>
+                            </div>
+                            <div>
+                              <div className="text-sm text-muted-foreground">Adjustment Cap</div>
+                              <div className="font-medium text-card-foreground">{selectedLoan.armDetails.adjustmentCap}%</div>
+                            </div>
+                            <div>
+                              <div className="text-sm text-muted-foreground">Lifetime Cap</div>
+                              <div className="font-medium text-card-foreground">{selectedLoan.armDetails.lifetimeCap}%</div>
+                            </div>
+                            <div>
+                              <div className="text-sm text-muted-foreground">Margin</div>
+                              <div className="font-medium text-card-foreground">{selectedLoan.armDetails.margin}%</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Amortization Schedule */}
+                      <div>
+                        <h3 className="font-semibold text-card-foreground mb-3">First Year Amortization</h3>
+                        <div className="overflow-x-auto">
+                          <table className="w-full">
+                            <thead>
+                              <tr className="border-b border-border">
+                                <th className="text-left py-3 text-sm font-medium text-muted-foreground">Month</th>
+                                <th className="text-right py-3 text-sm font-medium text-muted-foreground">Payment</th>
+                                <th className="text-right py-3 text-sm font-medium text-muted-foreground">Principal</th>
+                                <th className="text-right py-3 text-sm font-medium text-muted-foreground">Interest</th>
+                                <th className="text-right py-3 text-sm font-medium text-muted-foreground">Balance</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {selectedLoan.schedule.map((row) => (
+                                <tr key={row.month} className="border-b border-border">
+                                  <td className="py-3 text-sm text-card-foreground">{row.month}</td>
+                                  <td className="py-3 text-sm text-card-foreground text-right">{formatCurrency(row.payment)}</td>
+                                  <td className="py-3 text-sm text-success text-right">{formatCurrency(row.principal)}</td>
+                                  <td className="py-3 text-sm text-destructive text-right">{formatCurrency(row.interest)}</td>
+                                  <td className="py-3 text-sm text-card-foreground text-right">{formatCurrency(row.balance)}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 pt-4 border-t border-border">
+                        {/* <button className="flex-1 bg-primary text-primary-foreground py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors duration-200">
+                        Apply for this Loan
+                      </button> */}
+                        <button
+                          onClick={() => setShowModal(false)}
+                          className="flex-1 border border-input text-card-foreground py-3 px-4 rounded-lg font-medium hover:bg-muted transition-colors duration-200"
+                        >
+                          Close
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-          <LoanDetailsModal
-            isOpen={showDetailsModal}
-            onClose={() => setShowDetailsModal(false)}
-            loan={selectedLoan}
-            onApply={(loan) => {
-              setShowDetailsModal(false);
-              setSelectedLoan(loan);
-              setShowApplicationModal(true);
-            }}
-          />
+            )}
+            <LoanDetailsModal
+              isOpen={showDetailsModal}
+              onClose={() => setShowDetailsModal(false)}
+              loan={selectedLoan}
+              onApply={(loan) => {
+                setShowDetailsModal(false);
+                setSelectedLoan(loan);
+                setShowApplicationModal(true);
+              }}
+              showApplyButton={false}
+            />
 
-          <LoanApplicationModal
-            isOpen={showApplicationModal}
-            onClose={() => setShowApplicationModal(false)}
-            loanDetails={selectedLoan}
-          />
+            <LoanApplicationModal
+              isOpen={showApplicationModal}
+              onClose={() => setShowApplicationModal(false)}
+              loanDetails={selectedLoan}
+
+            />
+          </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 
 

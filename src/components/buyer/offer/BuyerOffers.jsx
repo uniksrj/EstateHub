@@ -13,7 +13,8 @@ export const BuyerOffers = ({
   loading, 
   filters, 
   onFilterChange, 
-  onAction 
+  onAction ,
+  user
 }) => {
   const navigate = useNavigate();
   if (loading) return <Loading loading={loading} isLineLoader={true} />;
@@ -38,6 +39,7 @@ export const BuyerOffers = ({
         <BuyerOffersList 
           offers={filteredOffers} 
           onAction={onAction}
+          user={user}
           emptyState={
             <BuyerEmptyState onBrowseProperties={() => navigate('/buyer/search')} />
           }
