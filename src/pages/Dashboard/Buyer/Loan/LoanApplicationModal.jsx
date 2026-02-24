@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { DollarSign, User, Mail, Phone, Home, Briefcase, CheckCircle, XCircle, ArrowLeft, FileText, Upload, Badge, Info } from 'lucide-react';
 import { loanOptions } from '@/data/loanData';
 import { calculateMonthlyPayment, generateLoanDetails } from '@/utils/loan';
+import { toast } from 'sonner';
+import { userAPI } from '@/services/api';
 
 const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, userDetails, loanDetails, initialLoanDetails }) => {
   const [step, setStep] = useState(0);
@@ -77,6 +79,14 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
       if (!formData.downPayment) newErrors.downPayment = 'Down payment amount is required';
     }
 
+    if (stepNumber === 4) {
+      if (!formData.documents.id) newErrors.id = 'ID document is required';
+      if (!formData.documents.payStubs) newErrors.payStubs = 'Pay stubs are required';
+      if (!formData.documents.taxReturns) newErrors.taxReturns = 'Tax returns are required';
+      if (!formData.documents.bankStatements) newErrors.bankStatements = 'Bank statements are required';
+      if (!formData.downPayment) newErrors.downPayment = 'Down payment amount is required';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -118,14 +128,39 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
         [field]: file
       }
     }));
+    setErrors((prevErrors) => {
+      const updatedErrors = { ...prevErrors };
+      delete updatedErrors[field];
+      return updatedErrors;
+    });
   };
 
   const handleSubmit = async () => {
     if (!validateStep(step)) return;
-
     setIsSubmitting(true);
+    let toastId = null;
+    try {      
+      toastId = toast.loading("Submitting your loan application...");
 
-    // Simulate API call
+      await userAPI.save_property_loan_details(formData);
+      toast.success("Loan application submitted successfully!", {
+        id: toastId,
+        description: `Your loan application for ${propertyDetails.title} has been submitted.`
+      });
+
+    } catch (error) {
+      console.error("Failed to store loan application details to backend:", error);
+      if (toastId) {
+        toast.dismiss(toastId);
+      }
+      toast.error("Failed to submit offer", {
+        description: error.response?.data?.message || "Please check your connection and try again."
+      });
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
+
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSuccess(true);
@@ -157,7 +192,6 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
     setStep(1);
   };
 
-  console.log("Selected propertyDetails Details:", offerDetails);
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
@@ -666,6 +700,9 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
                               <p className="text-xs text-muted-foreground mt-1">
                                 Accepted formats: {doc.accept}
                               </p>
+                              {errors[doc.key] && (
+                                <p className="text-xs text-destructive mt-1">{errors[doc.key]}</p>
+                              )}
                             </div>
                             <label className="cursor-pointer">
                               <input

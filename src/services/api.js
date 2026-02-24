@@ -164,6 +164,7 @@ export const userAPI = {
   addDeadlineExtension : (deal_id , data) => api.post(`/api/agent/add_deadline_extension/${deal_id}`, data),
   update_earnest_deal : (deal_id , data) => api.post(`/api/agent/update_earnest_deal/${deal_id}`, data),
   updateDocumentsDetails : (deal_id, data) => api.post(`/api/agent/update_documents_details/${deal_id}`, data),
+  save_property_loan_details : (data) => api.post(`/api/buyer/save_property_loan_details`, data),
 }
 
 export const superAdminAPI = {

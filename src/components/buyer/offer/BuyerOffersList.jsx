@@ -1,5 +1,6 @@
 import {  useState } from "react"
 import LoanApplicationModal from "@/pages/Dashboard/Buyer/Loan/LoanApplicationModal"
+import BuyerOfferCard from "./BuyerOfferCard"
 
 export const BuyerOffersList = ({ offers, onAction, emptyState, user }) => {
   const [showLoanApplication, setShowLoanApplication] = useState(false)
