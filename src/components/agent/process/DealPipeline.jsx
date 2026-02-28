@@ -141,6 +141,11 @@ const DealPipeline = ({ deals, loading, setActiveDeals }) => {
                   </Button>
                 </div>
               </div>
+              {deal.loan_application && (
+                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                  Mortgage: {deal.loan_application.status}
+                </Badge>
+              )}
             </div>
           );
         })}

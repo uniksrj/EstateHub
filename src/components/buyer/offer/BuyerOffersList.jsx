@@ -4,8 +4,7 @@ import BuyerOfferCard from "./BuyerOfferCard"
 
 export const BuyerOffersList = ({ offers, onAction, emptyState, user }) => {
   const [showLoanApplication, setShowLoanApplication] = useState(false)
-  const [selectedOfferForMortgage, setSelectedOfferForMortgage] = useState(null)
-  const canApplyForMortgage = (offer) => offer.status === 'accepted' && !offer.hasMortgageApplication
+  const [selectedOfferForMortgage, setSelectedOfferForMortgage] = useState(null)  
   // const [selectedLoan, setSelectedLoan] = useState(null);
   const handleApplyForMortgage = (offer) => {
     setSelectedOfferForMortgage(offer)
@@ -27,7 +26,6 @@ export const BuyerOffersList = ({ offers, onAction, emptyState, user }) => {
             offer={offer}
             onAction={onAction}
             onApplyForMortgage={handleApplyForMortgage}
-            canApplyForMortgage={canApplyForMortgage}
             key={offer.id}
           />
         ))}

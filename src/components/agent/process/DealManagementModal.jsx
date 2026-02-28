@@ -209,6 +209,13 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                 >
                   Documents
                 </Button>
+                <Button
+                  variant={activeTab === "mortgage" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveTab("mortgage")}
+                >
+                  Mortgage
+                </Button>
               </div>
             </DialogTitle>
             <div className="flex items-center gap-3">
@@ -361,8 +368,8 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                 </h5>
                                 <div className="space-y-2">
                                   {stepDocuments.map((doc) => {
-                                    const isMarkedReceived = documents.find(d => String(d.document_type) === String(doc.type) && d.marked_received_at !== null);  
-                                    console.log("Document Received Status :", missedDeadline);                                  
+                                    const isMarkedReceived = documents.find(d => String(d.document_type) === String(doc.type) && d.marked_received_at !== null);
+                                    console.log("Document Received Status :", missedDeadline);
                                     const titleTXT = isMarkedReceived ? "This document has been received in onsite documentation process." : missedDeadline ? "Cannot upload document until deadline extension is added." : "";
                                     return (
                                       <div
@@ -635,6 +642,99 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                     </div>
                   ))}
                 </div>
+                {deal.loan_application && (
+                  <div className="border rounded-lg p-4 bg-white shadow-sm">
+                    <h5 className="font-medium mb-3 flex items-center gap-2">
+                      <FileText className="size-4" />
+                      Mortgage Documents
+                    </h5>
+                    <div className="space-y-2">
+                      {['appraisal', 'commitment_letter', 'underwriting_approval'].map(docType => {
+                        const doc = deal.loan_application.documents_status?.[docType];
+                        return (
+                          <div key={docType} className="flex items-center justify-between p-3 border rounded-lg">
+                            <span className="text-sm capitalize">{docType.replace('_', ' ')}</span>
+                            {doc ? (
+                              <Badge>Uploaded</Badge>
+                            ) : (
+                              <Badge variant="outline">Pending</Badge>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {activeTab === "mortgage" && deal.loan_application && (
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Mortgage Application</CardTitle>
+                    <CardDescription>
+                      Application #{deal.loan_application.application_number}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Loan Type</p>
+                      <p className="font-medium">{deal.loan_application.loan_type}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Interest Rate</p>
+                      <p className="font-medium">{deal.loan_application.interest_rate}%</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Loan Amount</p>
+                      <p className="font-medium">${deal.loan_application.loan_amount.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Monthly Payment</p>
+                      <p className="font-medium">${deal.loan_application.monthly_payment.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Down Payment</p>
+                      <p className="font-medium">${deal.loan_application.down_payment.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Status</p>
+                      <Badge>{deal.loan_application.status}</Badge>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Submitted</p>
+                      <p>{new Date(deal.loan_application.submitted_at).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Expected Decision</p>
+                      <p>{deal.loan_application.expected_decision_date ? new Date(deal.loan_application.expected_decision_date).toLocaleDateString() : 'TBD'}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Timeline / Status History */}
+                {deal.loan_application.timeline && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Mortgage Timeline</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {deal.loan_application.timeline.map((event, idx) => (
+                          <div key={idx} className="flex items-start gap-3">
+                            <div className="w-2 h-2 mt-2 rounded-full bg-primary" />
+                            <div>
+                              <p className="text-sm font-medium">{event.description}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {new Date(event.date).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             )}
           </ScrollArea>

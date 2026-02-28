@@ -7,7 +7,11 @@ import { getOfferStatusColor, getOfferStatusText } from "@/utils/userHelpers";
 import { OfferTerms } from "@/components/buyer/offer/OfferTerms"
 import { Link } from "react-router"
 
-const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage, canApplyForMortgage }) => {
+const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
+  console.log("this is offer lsit array :",  offer)
+  const mortgageStatus = offer.loanApplications?.[0]?.status ?? null; 
+  const canApplyForMortgage = ['pending', 'accepted', 'counter_offer'].includes(offer.status) && !offer.loanApplications?.[0]?.status;
+  // const canApplyForMortgage = (offer) => offer.status === 'accepted' && !offer.loanApplications?.[0]?.status;
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">
@@ -113,9 +117,9 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage, canApplyForMortga
               )}
 
               {/* Mortgage Applied Status Badge */}
-              {offer.hasMortgageApplication && (
+              {mortgageStatus && (
                 <Badge className="bg-blue-500 text-white">
-                  Mortgage Applied
+                  {mortgageStatus === 'approved' ? 'Mortgage Approved' : 'Mortgage Applied'}
                 </Badge>
               )}
 
