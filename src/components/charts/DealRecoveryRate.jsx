@@ -12,27 +12,31 @@ const recoveryData = [
 
 const DealRecoveryRate = () => {
   return (
-    <ResponsiveContainer width="100%" height={200}>
-      <BarChart data={recoveryData} layout="vertical">
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis type="number" domain={[0, 30]} />
-        <YAxis type="category" dataKey="type" width={80} />
-        <Tooltip 
-          formatter={(value, name) => {
-            if (name === 'recoveryRate') return [`${value}%`, 'Recovery Rate'];
-            return [value, 'Total Dead Deals'];
-          }}
-        />
-        <Bar dataKey="recoveryRate" name="recoveryRate">
-          {recoveryData.map((entry, index) => (
-            <Cell 
-              key={`cell-${index}`} 
-              fill={entry.recoveryRate > 20 ? '#10b981' : entry.recoveryRate > 15 ? '#f59e0b' : '#ef4444'} 
+    <div className="chart-scroll-box">
+      <div className="chart-scroll-inner h-[200px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={recoveryData} layout="vertical">
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis type="number" domain={[0, 30]} />
+            <YAxis type="category" dataKey="type" width={80} />
+            <Tooltip 
+              formatter={(value, name) => {
+                if (name === 'recoveryRate') return [`${value}%`, 'Recovery Rate'];
+                return [value, 'Total Dead Deals'];
+              }}
             />
-          ))}
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
+            <Bar dataKey="recoveryRate" name="recoveryRate">
+              {recoveryData.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={entry.recoveryRate > 20 ? '#10b981' : entry.recoveryRate > 15 ? '#f59e0b' : '#ef4444'} 
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 };
 

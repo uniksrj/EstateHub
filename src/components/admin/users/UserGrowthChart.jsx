@@ -11,40 +11,42 @@ export default function UserGrowthChart({value}) {
           <button className="px-3 py-1 text-xs bg-muted text-muted-foreground rounded-md">Month</button>
         </div>
       </div>
-      <div className="h-80">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={value.monthly_growth}>
-            <CartesianGrid strokeDasharray="3 3" className="opacity-30 stroke-border" />
-            <XAxis 
-              dataKey="date" 
-              tick={{ fontSize: 12 }}
-              tickLine={false}
-              stroke="var(--muted-foreground)"
-            />
-            <YAxis 
-              tick={{ fontSize: 12 }}
-              tickLine={false}
-              stroke="var(--muted-foreground)"
-            />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'var(--card)', 
-                border: ' 1px solid var(--border)',
-                borderRadius: 'var(--radius)',
-                color: 'var(--foreground)'
-              }}
-            />
-            <Legend />
-            <Line 
-              type="monotone" 
-              dataKey="users" 
-               stroke="var(--color-count)" 
-              strokeWidth={2}
-               dot={{ fill: 'var(--color-count)', strokeWidth: 2, r: 4 }}
-              activeDot={{ r: 6, fill: 'var(--primary)' }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+      <div className="chart-scroll-box">
+        <div className="chart-scroll-inner h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={value.monthly_growth}>
+              <CartesianGrid strokeDasharray="3 3" className="opacity-30 stroke-border" />
+              <XAxis 
+                dataKey="date" 
+                tick={{ fontSize: 12 }}
+                tickLine={false}
+                stroke="var(--muted-foreground)"
+              />
+              <YAxis 
+                tick={{ fontSize: 12 }}
+                tickLine={false}
+                stroke="var(--muted-foreground)"
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'var(--card)', 
+                  border: ' 1px solid var(--border)',
+                  borderRadius: 'var(--radius)',
+                  color: 'var(--foreground)'
+                }}
+              />
+              <Legend />
+              <Line 
+                type="monotone" 
+                dataKey="users" 
+                stroke="var(--color-count)" 
+                strokeWidth={2}
+                dot={{ fill: 'var(--color-count)', strokeWidth: 2, r: 4 }}
+                activeDot={{ r: 6, fill: 'var(--primary)' }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

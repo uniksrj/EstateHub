@@ -40,6 +40,10 @@ const Header = () => {
   const handleToggle = (key) => {
     setOpenDropdown((prev) => (prev === key ? null : key))
   }
+  const closeMenu = () => {
+    setIsMenuOpen(false)
+    setOpenDropdown(null)
+  }
 
   const handleLogout = async () => {
     try {
@@ -79,7 +83,7 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
             <Link
               to="/"
               className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/") ? "text-accent" : "text-foreground"
@@ -211,7 +215,7 @@ const Header = () => {
           </nav>
 
           {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-4">
             <ThemeToggle />
             {user ? (
               <div className="flex items-center space-x-4">
@@ -239,20 +243,20 @@ const Header = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button className="lg:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border">
+          <div className="lg:hidden py-4 border-t border-border max-h-[70vh] overflow-y-auto">
             <nav className="flex flex-col space-y-4">
               <Link
                 to="/"
                 className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/") ? "text-accent" : "text-foreground"
                   }`}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={closeMenu}
               >
                 Home
               </Link>
@@ -260,18 +264,65 @@ const Header = () => {
                 to="/properties"
                 className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/properties") ? "text-accent" : "text-foreground"
                   }`}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={closeMenu}
               >
                 Properties
               </Link>
+              <div className="pl-3 border-l border-border space-y-2">
+                <Link to="/properties?type=for-sale" className="block text-sm text-muted-foreground hover:text-accent" onClick={closeMenu}>
+                  For Sale
+                </Link>
+                <Link to="/properties?type=for-rent" className="block text-sm text-muted-foreground hover:text-accent" onClick={closeMenu}>
+                  For Rent
+                </Link>
+                <Link to="/properties?type=new" className="block text-sm text-muted-foreground hover:text-accent" onClick={closeMenu}>
+                  New Listings
+                </Link>
+                <Link to="/properties?type=luxury" className="block text-sm text-muted-foreground hover:text-accent" onClick={closeMenu}>
+                  Luxury Homes
+                </Link>
+              </div>
+
+              {(user?.role_id === 5 || !user) && (
+                <>
+                  <Link
+                    to="/agents"
+                    className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/agents") ? "text-accent" : "text-foreground"}`}
+                    onClick={closeMenu}
+                  >
+                    Agents
+                  </Link>
+                  <div className="pl-3 border-l border-border space-y-2">
+                    <Link to="/agents/top" className="block text-sm text-muted-foreground hover:text-accent" onClick={closeMenu}>
+                      Top Rated Agents
+                    </Link>
+                  </div>
+                </>
+              )}
+
+              <Link
+                to="/about"
+                className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/about") ? "text-accent" : "text-foreground"}`}
+                onClick={closeMenu}
+              >
+                About
+              </Link>
+              <Link
+                to="/contact"
+                className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/contact") ? "text-accent" : "text-foreground"}`}
+                onClick={closeMenu}
+              >
+                Contact
+              </Link>
+
               {user && (
                 <Link
                   to="/dashboard"
                   className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith("/dashboard") ? "text-accent" : "text-foreground"
                     }`}
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={closeMenu}
                 >
-                  Admin
+                  {user.role_id === 1 || user.role_id === 2 ? "Admin" : "Dashboard"}
                 </Link>
               )}
 
@@ -302,12 +353,12 @@ const Header = () => {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    <Link to="/auth/login" onClick={() => setIsMenuOpen(false)}>
+                    <Link to="/auth/login" onClick={closeMenu}>
                       <Button variant="ghost" size="sm" className="w-full justify-start cursor-pointer">
                         Login
                       </Button>
                     </Link>
-                    <Link to="/auth/register" onClick={() => setIsMenuOpen(false)}>
+                    <Link to="/auth/register" onClick={closeMenu}>
                       <Button size="sm" className="w-full cursor-pointer">
                         Sign Up
                       </Button>

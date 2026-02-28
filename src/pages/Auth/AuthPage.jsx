@@ -17,7 +17,7 @@ const AuthPage = () => {
   // },[location.pathname]);
     
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-background to-muted/20">
+    <div className="min-h-screen flex items-center justify-center px-4 py-6 sm:py-10 bg-gradient-to-br from-background to-muted/20">
       <div className="w-full max-w-6xl">
         
         <div className="flex items-center justify-center space-x-2 mb-8">
@@ -26,31 +26,13 @@ const AuthPage = () => {
         </div>
 
         <Card className="overflow-hidden">
-          <div className="relative h-[990px] w-full ">
-            {/* Sliding Container */}
-            <div
-              className={`absolute inset-0 flex transition-transform duration-200 ease-in-out ${
-                isLogin ? "translate-x-0" : "-translate-x-0"
-              }`}
-            >
-              {/* Login Panel */}
-              <div className="w-1/2 flex-shrink-0 p-8">
-                <LoginForm  />
-              </div>
-
-              {/* Register Panel */}
-              <div className="w-1/2 flex-shrink-0 p-8">
-                <RegisterForm  />
-              </div>
+          <div className="w-full grid lg:grid-cols-2">
+            <div className="p-4 sm:p-6 lg:p-8 order-2 lg:order-1">
+              {isLogin ? <LoginForm /> : <RegisterForm />}
             </div>
 
-            {/* Overlay Panel */}
-            <div
-              className={`absolute top-0 right-0 w-1/2 h-full bg-gradient-to-r from-accent to-accent/80 text-white flex items-center justify-center transition-transform duration-500 ease-in-out ${
-                isLogin ? "translate-x-0" : "-translate-x-full"
-              }`}
-            >
-              <div className="text-center px-8">
+            <div className="hidden lg:flex bg-gradient-to-r from-accent to-accent/80 text-white items-center justify-center p-8">
+              <div className="text-center max-w-md">
                 {isLogin ? (
                   <div>
                     <h2 className="text-3xl font-bold mb-4">New Here?</h2>
@@ -58,7 +40,7 @@ const AuthPage = () => {
                       Join EstateHub today and discover your dream property with our expert agents
                     </p>
                     <button
-                       onClick={() => navigate("/auth/register")}
+                      onClick={() => navigate("/auth/register")}
                       className="px-8 py-3 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors"
                     >
                       Sign Up
@@ -69,8 +51,38 @@ const AuthPage = () => {
                     <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
                     <p className="mb-6 opacity-90">Sign in to access your account and continue your property journey</p>
                     <button
-                     onClick={() => navigate("/auth/login")}
+                      onClick={() => navigate("/auth/login")}
                       className="px-8 py-3 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors"
+                    >
+                      Sign In
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="lg:hidden bg-gradient-to-r from-accent to-accent/80 text-white p-5 sm:p-6 order-1">
+              <div className="text-center">
+                {isLogin ? (
+                  <div>
+                    <h2 className="text-2xl font-bold mb-2">New Here?</h2>
+                    <p className="mb-4 opacity-90 text-sm sm:text-base">
+                      Join EstateHub today and discover your dream property.
+                    </p>
+                    <button
+                      onClick={() => navigate("/auth/register")}
+                      className="px-6 py-2.5 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors"
+                    >
+                      Sign Up
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <h2 className="text-2xl font-bold mb-2">Welcome Back!</h2>
+                    <p className="mb-4 opacity-90 text-sm sm:text-base">Sign in to access your account.</p>
+                    <button
+                      onClick={() => navigate("/auth/login")}
+                      className="px-6 py-2.5 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors"
                     >
                       Sign In
                     </button>

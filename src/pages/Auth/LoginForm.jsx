@@ -58,10 +58,10 @@ const LoginForm = () => {
     }
 
     return (
-        <div className="h-full flex flex-col justify-center p-4">
+        <div className="h-full flex flex-col p-1 sm:p-2">
             {/* <Toaster position="top-left" /> */}
-            <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold">Welcome Back</h2>
+            <div className="text-center mb-6">
+                <h2 className="text-2xl sm:text-3xl font-bold">Welcome Back</h2>
                 <p className="text-muted-foreground">Sign in to your account</p>
             </div>
 

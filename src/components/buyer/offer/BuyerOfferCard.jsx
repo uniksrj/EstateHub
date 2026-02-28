@@ -14,7 +14,7 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
   // const canApplyForMortgage = (offer) => offer.status === 'accepted' && !offer.loanApplications?.[0]?.status;
   return (
     <Card className="hover:shadow-md transition-shadow">
-      <CardContent className="p-6">
+      <CardContent className="p-4 sm:p-6">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Property Image */}
           <div className="flex-shrink-0">
@@ -32,9 +32,9 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
                 </h3>
 
                 {/* Property Address */}
-                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2 min-w-0">
                   <MapPin className="w-4 h-4" />
-                  <span>{offer.property?.address}</span>
+                  <span className="truncate sm:whitespace-normal sm:break-words">{offer.property?.address}</span>
                 </div>
 
                 {/* Property Details */}
@@ -80,7 +80,7 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
 
             {/* Buyer Actions */}
             <div className="flex flex-wrap gap-3">
-              <Link to={`/properties/${offer.property?.id}/view`}>
+              <Link className="w-full sm:w-auto" to={`/properties/${offer.property?.id}/view`}>
                 <Button variant="outline" size="sm">
                   <Eye className="w-4 h-4 mr-2" />
                   View Property
@@ -88,6 +88,7 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
               </Link>
 
               <Button
+                className="w-full sm:w-auto"
                 variant="outline"
                 size="sm"
                 onClick={() => onAction('view', offer)}
@@ -97,6 +98,7 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
               </Button>
 
               <Button
+                className="w-full sm:w-auto"
                 variant="outline"
                 size="sm"
                 onClick={() => onAction('contact', offer)}
@@ -107,8 +109,8 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
 
               {canApplyForMortgage && (
                 <Button
+                  className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white"
                   size="sm"
-                  className="bg-green-600 hover:bg-green-700 text-white"
                   onClick={() => onApplyForMortgage(offer)}
                 >
                   <CreditCard className="w-4 h-4 mr-2" />
@@ -127,6 +129,7 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
               {offer.status === 'pending' && (
                 <>
                   <Button
+                    className="w-full sm:w-auto"
                     variant="destructive"
                     size="sm"
                     onClick={() => onAction('cancel', offer)}
@@ -135,6 +138,7 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
                     Cancel Offer
                   </Button>
                   <Button
+                    className="w-full sm:w-auto"
                     variant="destructive"
                     size="sm"
                     onClick={() => onAction('delete', offer)}
@@ -146,8 +150,9 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
               )}
 
               {offer.status === 'counter_offer' && (
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                   <Button
+                    className="w-full sm:w-auto"
                     size="sm"
                     onClick={() => onAction('accept_counter', offer)}
                   >
@@ -155,6 +160,7 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
                     Accept Counter
                   </Button>
                   <Button
+                    className="w-full sm:w-auto"
                     variant="outline"
                     size="sm"
                     onClick={() => onAction('reject_counter', offer)}
@@ -166,8 +172,9 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
               )}
 
               {offer.status === 'expired' && (
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                   <Button
+                    className="w-full sm:w-auto"
                     variant="outline"
                     size="sm"
                     onClick={() => onAction('renew', offer)}
@@ -176,6 +183,7 @@ const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
                     Renew Offer
                   </Button>
                   <Button
+                    className="w-full sm:w-auto"
                     size="sm"
                     onClick={() => onAction('new_offer', offer)}
                   >

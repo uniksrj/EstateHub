@@ -41,15 +41,19 @@ const AgentPipeline = () => {
                 <CardDescription>Overview of your deals by stage</CardDescription>
             </CardHeader>
             <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={pipelineData?.pipeline || []} margin={{ top: 20, right: 30, left: 20, bottom: 5 }  }>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="stage" />
-                        <YAxis />
-                        <Tooltip formatter={(value, name) => [value, name === 'count' ? 'Deals' : 'Value ($)']} />
-                        <Bar dataKey="count" name="Deals" fill="#3b82f6" />
-                    </BarChart>
-                </ResponsiveContainer>
+                <div className="chart-scroll-box">
+                    <div className="chart-scroll-inner h-[300px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={pipelineData?.pipeline || []} margin={{ top: 20, right: 30, left: 20, bottom: 5 }  }>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="stage" />
+                                <YAxis />
+                                <Tooltip formatter={(value, name) => [value, name === 'count' ? 'Deals' : 'Value ($)']} />
+                                <Bar dataKey="count" name="Deals" fill="#3b82f6" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
             </CardContent>
         </Card>
     );

@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 
 export const OfferFilter = ({ searchTerm, statusFilter, sortBy, onFilterChange }) => {
     return (
-        <div className="bg-card rounded-xl shadow-lg border border-border p-6 mb-6">
+        <div className="bg-card rounded-xl shadow-lg border border-border p-4 sm:p-6 mb-6">
             <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
                 <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
                     {/* Search */}
@@ -22,7 +22,7 @@ export const OfferFilter = ({ searchTerm, statusFilter, sortBy, onFilterChange }
                     <select
                         value={statusFilter}
                         onChange={(e) => onFilterChange('statusFilter', e.target.value)}
-                        className="px-4 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
+                        className="w-full sm:w-auto px-4 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
                         <option value="all">All Statuses</option>
                         {Object.keys(OFFER_STATUS).map(status => (
@@ -36,7 +36,7 @@ export const OfferFilter = ({ searchTerm, statusFilter, sortBy, onFilterChange }
                     <select
                         value={sortBy}
                         onChange={(e) => onFilterChange('sortBy', e.target.value)}
-                        className="px-4 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
+                        className="w-full sm:w-auto px-4 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
                         <option value="newest">Newest First</option>
                         <option value="oldest">Oldest First</option>

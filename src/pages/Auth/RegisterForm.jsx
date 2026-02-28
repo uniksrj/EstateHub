@@ -95,25 +95,10 @@ const RegisterForm = () => {
 
     const showAgentFields = ['agent', 'broker'].includes(selectedRole);
 
-
-    const getRedirectPath = (userType) => {
-        switch (userType) {
-            case 'agent':
-            case 'broker':
-                return '/agent/dashboard';
-            case 'seller':
-                return '/seller/dashboard';
-            case 'investor':
-                return '/investor/dashboard';
-            default:
-                return '/buyer/dashboard';
-        }
-    };
-
     return (
-        <div className="h-full flex flex-col justify-center p-4">
+        <div className="h-full flex flex-col p-1 sm:p-2 min-w-0">
             <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold">Create Account</h2>
+                <h2 className="text-2xl sm:text-3xl font-bold">Create Account</h2>
                 <p className="text-muted-foreground">Join EstateHub today</p>
             </div>
 
@@ -433,7 +418,7 @@ const RegisterForm = () => {
 
                 <div className="space-y-2">
                     <Label htmlFor="terms">
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-start space-x-2">
                             <Checkbox
                                 id="terms"
                                 name="terms"
@@ -442,7 +427,7 @@ const RegisterForm = () => {
                                 required
                                 disabled={loading}
                             />
-                            <span>
+                            <span className="text-sm leading-relaxed">
                                 I agree to the{' '}
                                 <Link to="/terms-of-service" className="text-primary underline">
                                     Terms of Service

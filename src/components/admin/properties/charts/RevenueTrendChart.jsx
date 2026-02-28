@@ -32,22 +32,26 @@ const RevenueTrendChart = ({ data }) => {
         <CardDescription>Monthly revenue performance</CardDescription>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip content={<CustomTooltip />} />
-            <Line 
-              type="monotone" 
-              dataKey="revenue" 
-              stroke="var(--chart-5)" 
-              strokeWidth={3}
-              dot={{ fill: "var(--chart-5)", strokeWidth: 2, r: 4 }}
-              activeDot={{ r: 6 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        <div className="chart-scroll-box">
+          <div className="chart-scroll-inner h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip content={<CustomTooltip />} />
+                <Line 
+                  type="monotone" 
+                  dataKey="revenue" 
+                  stroke="var(--chart-5)" 
+                  strokeWidth={3}
+                  dot={{ fill: "var(--chart-5)", strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

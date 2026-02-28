@@ -13,35 +13,37 @@ export default function ActiveVsInactiveUsers({activeInactive}) {
   return (
     <div className="bg-card p-6 rounded-lg border border-border shadow-sm max-h-[420px]">
       <h3 className="text-lg font-semibold text-foreground mb-4">Active vs Inactive Users</h3>
-      <div className="flex items-center justify-between">
-        <div className="h-64 w-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={2}
-                dataKey="value"
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value) => [value.toLocaleString(), 'Users']}
-                contentStyle={{
-                  backgroundColor: '#ffffffff',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius)',
-                  // color: 'var(--foreground)'
-                }}
-              />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div className="chart-scroll-box w-full">
+          <div className="chart-scroll-inner h-64 w-full max-w-[320px] mx-auto">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={2}
+                  dataKey="value"
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value) => [value.toLocaleString(), 'Users']}
+                  contentStyle={{
+                    backgroundColor: '#ffffffff',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius)',
+                    // color: 'var(--foreground)'
+                  }}
+                />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
         <div className="space-y-4">
           <div className="text-center">
