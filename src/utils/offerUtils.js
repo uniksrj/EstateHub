@@ -93,7 +93,8 @@ export const transformBackendOffer = (backendOffer) => {
         includeLetter: specialConditions.include_letter || false,
         offerDate: backendOffer.offer_date?.split('T')[0],
         expiration: backendOffer.expires_at?.split('T')[0],
-        status: backendOffer.status
+        status: backendOffer.status,
+        loan_applications: backendOffer.loanApplications || [],
     };
 
     return {
@@ -115,6 +116,7 @@ export const transformBackendOffer = (backendOffer) => {
         created_at: backendOffer.created_at,
         updated_at: backendOffer.updated_at,
         buyer_info : backendOffer.buyer ?? [],
+        loanApplications : backendOffer.loan_applications ?? [],
 
         // Frontend display fields
         property: backendOffer.property || {},

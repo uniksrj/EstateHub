@@ -51,6 +51,7 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(initialLoanDetails || null);
+  const [applicationRefNumber, setApplicationRefNumber] = useState(`REF${Math.floor(100000 + Math.random() * 900000)}`);
   if (!isOpen) return null;
 
   const validateStep = (stepNumber) => {
@@ -141,11 +142,17 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
     let toastId = null;
     try {      
       toastId = toast.loading("Submitting your loan application...");
-
-      await userAPI.save_property_loan_details(formData);
+      
+      const UpdatedFormData = {
+        ...formData,
+        selectedLoan: selectedLoan,
+      }
+      let res = await userAPI.save_property_loan_details(UpdatedFormData);
+      console.log("Backend response after saving loan application:", res);
+      setApplicationRefNumber(res.data.application.application_number);
       toast.success("Loan application submitted successfully!", {
         id: toastId,
-        description: `Your loan application for ${propertyDetails.title} has been submitted.`
+        description: `Your loan application for ${propertyDetails.title} has been submitted. Reference Number: ${applicationRefNumber}`
       });
 
     } catch (error) {
@@ -823,7 +830,7 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
               <div className="p-4 bg-card border border-border rounded-lg mb-6">
                 <p className="text-sm text-muted-foreground">Application Reference Number</p>
                 <p className="text-lg font-mono font-bold text-card-foreground">
-                  LOA-{Math.random().toString(36).substring(2, 10).toUpperCase()}
+                  {applicationRefNumber}
                 </p>
               </div>
               <button
