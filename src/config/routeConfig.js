@@ -23,7 +23,7 @@ export const ROUTE_PERMISSIONS = {
   // Super Admin Only
   '/dashboard/users': [USER_ROLES.SUPERADMIN],
   '/dashboard/system': [USER_ROLES.SUPERADMIN],
-  '/dashboard/finance': [USER_ROLES.SUPERADMIN, USER_ROLES.ADMIN],
+  '/dashboard/finance': [USER_ROLES.SUPERADMIN],
   
   // Admin & Super Admin
   '/dashboard/analytics': [USER_ROLES.SUPERADMIN, USER_ROLES.ADMIN],
