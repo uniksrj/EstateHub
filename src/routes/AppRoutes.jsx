@@ -20,6 +20,7 @@ import Unauthorized from "@/pages/misc/Unauthorized"
 import ResetPassword from "@/pages/Auth/ResetPassword"
 import Propertiespage from "@/pages/Dashboard/Admin/Properties/Propertiespage"
 import FinancialReport from "@/pages/Dashboard/Admin/Finance/FinancialReport"
+import Systemsetting from "@/pages/Dashboard/Admin/System/Systemsetting"
 import ListingPage from "@/pages/Dashboard/Seller/properties/ListingPage"
 import FindProperties from "@/pages/Dashboard/Buyer/FindProperties"
 import FavoritePage from "@/pages/Dashboard/Buyer/FavoritePage"
@@ -124,6 +125,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
                 <FinancialReport />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: "system",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
+                <Systemsetting />
               </ProtectedRoute>
             )
           },
