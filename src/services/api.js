@@ -120,8 +120,12 @@ export const propertiesAPI = {
 
 // User API calls
 export const userAPI = {
-  getProfile: () => api.get("/user/profile"),
-  updateProfile: (profileData) => api.put("/user/profile", profileData),
+  getProfile: () => api.get("/api/user"),
+  updateProfile: (profileData) => api.post("/api/user/profile", profileData, {
+    headers: profileData instanceof FormData ? {
+      "Content-Type": "multipart/form-data",
+    } : undefined,
+  }),
   getProperties: (propertyDetails) => api.post("/api/properties/get-user-properties", propertyDetails,),
   getFavorites: () => api.get("/api/properties/get-favorite-properties"),
   toggleFavorite: (details) => api.post(`/api/properties/toggle-favorite`, details),

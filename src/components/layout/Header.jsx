@@ -220,8 +220,12 @@ const Header = () => {
             {user ? (
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2 text-sm">
-                  <User className="h-4 w-4" />
-                  <span>{user.name}</span>
+                  {/* <User className="h-4 w-4" />
+                  <span>{user.name}</span> */}
+                  <Link to="/profile" className="flex items-center space-x-2 text-sm">
+                    <User className="h-4 w-4" />
+                    <span>{user.name}</span>
+                  </Link>
                 </div>
                 <Button variant="ghost" size="sm" onClick={handleLogout}>
                   <LogOut className="h-4 w-4 mr-2" />
@@ -334,8 +338,10 @@ const Header = () => {
                 {user ? (
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2 text-sm">
-                      <User className="h-4 w-4" />
-                      <span>{user.name}</span>
+                      <Link to="/profile" className="flex items-center space-x-2 text-sm">
+                        <User className="h-4 w-4" />
+                        <span>{user.name}</span>
+                      </Link>
                     </div>
                     <Button variant="ghost" size="sm" onClick={handleLogout} className="w-full justify-start">
                       {loading ? (

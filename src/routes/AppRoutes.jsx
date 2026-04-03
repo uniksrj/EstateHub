@@ -40,6 +40,7 @@ import MarketInsights from "@/pages/Dashboard/Buyer/MarketInsights"
 import HomePage from "@/pages/Home/HomePage"
 import Offers from "@/pages/Dashboard/offer/Offers "
 import PropertyByType from "@/pages/Dashboard/Buyer/PropertyByType"
+import ProfilePage from "@/pages/Profile/ProfilePage"
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -73,7 +74,15 @@ export const router = createBrowserRouter([
             errorElement: <div>Error loading property</div>,
           },
         ],
-      },      
+      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "contact", Component: ContactPage
       },

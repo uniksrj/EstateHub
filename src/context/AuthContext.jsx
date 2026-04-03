@@ -10,6 +10,16 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  const persistUser = (nextUser) => {
+    if (nextUser) {
+      localStorage.setItem("user", JSON.stringify(nextUser))
+    } else {
+      localStorage.removeItem("user")
+    }
+
+    setUser(nextUser)
+  }
+
   useEffect(() => {
     // Check if user is logged in on app start
     // const token = localStorage.getItem("auth_token")
@@ -28,10 +38,9 @@ export const AuthProvider = ({ children }) => {
       console.log(user);
 
       // localStorage.setItem("auth_token", token)
-      localStorage.setItem("user", JSON.stringify(user))
       localStorage.setItem("chatToken",chatToken)
       toast.success('Login successful!');
-      setUser(user)
+      persistUser(user)
       return { success: true }
     } catch (error) {
       console.error('Login error:', error)
@@ -56,8 +65,7 @@ export const AuthProvider = ({ children }) => {
       const response = await authAPI.register(userData)
       const { user } = response.data
 
-      localStorage.setItem("user", JSON.stringify(user))
-      setUser(user)
+      persistUser(user)
 
       return { success: true }
     } catch (error) {
@@ -75,16 +83,37 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Logout error:", error)
     } finally {
-      localStorage.removeItem("user")
-      setUser(null)
+      persistUser(null)
     }
-  } 
+  }
+
+  const updateUser = (updates) => {
+    setUser((previousUser) => {
+      if (!previousUser) {
+        return previousUser
+      }
+
+      const nextUser =
+        typeof updates === "function"
+          ? updates(previousUser)
+          : { ...previousUser, ...updates }
+
+      if (nextUser) {
+        localStorage.setItem("user", JSON.stringify(nextUser))
+      } else {
+        localStorage.removeItem("user")
+      }
+
+      return nextUser
+    })
+  }
 
   const value = {
     user,
     login,
     register,
     logout,
+    updateUser,
     loading,
   }
 
