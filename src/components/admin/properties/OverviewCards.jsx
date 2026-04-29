@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building, Home, TrendingUp, DollarSign } from 'lucide-react';
 
-const OverviewCards = ({ data=[] }) => {
+const OverviewCards = ({ data = {} }) => {
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
@@ -23,8 +23,9 @@ const OverviewCards = ({ data=[] }) => {
   }
 
   const getGrowthColor = (growth) =>{
-    if (growth > 0) return 'text-green-600';
-    if (growth < 0) return 'text-red-600';
+    const safeGrowth = Number(growth ?? 0);
+    if (safeGrowth > 0) return 'text-green-600';
+    if (safeGrowth < 0) return 'text-red-600';
     return 'text-muted-foreground';    
   }
 
@@ -37,12 +38,12 @@ const OverviewCards = ({ data=[] }) => {
       value: formatNumber(data?.totalProperties || 0),
       description: formatGrowth(data?.propertiesGrowth || 0),
       icon: Building,
-      groth : data?.propertiesGrowth || 0
+      growth : data?.propertiesGrowth || 0
     },
     {
       title: 'Active Listings',
       value: formatNumber(data?.activeListings || 0),
-      description: `${data?.occupancyRate.toFixed(1)}% occupancy rate`,
+      description: `${Number(data?.occupancyRate ?? 0).toFixed(1)}% occupancy rate`,
       icon: Home,
     },
     {

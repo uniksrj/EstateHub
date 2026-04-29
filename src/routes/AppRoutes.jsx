@@ -9,8 +9,8 @@ import ManageProperties from "../pages/Dashboard/ManageProperties"
 import ProtectedRoute from "../components/common/ProtectedRoute"
 import AdminLayout from "../components/layout/AdminLayout"
 import ContactPage from "@/pages/Contact/ContactPage"
-import PrivacyPolicy from "@/pages/misc/PrivacyPolicy "
-import TermsOfService from "@/pages/misc/TermsOfService "
+import PrivacyPolicy from "@/pages/misc/PrivacyPolicy"
+import TermsOfService from "@/pages/misc/TermsOfService"
 import NotFound from "@/pages/misc/NotFound"
 import AdminDashboard from "@/pages/Dashboard/Admin/Analytics/Dashboard"
 import Dashboard from "@/components/dashboard/Dashboard"
@@ -33,12 +33,13 @@ import AgentPipeline from "@/pages/Dashboard/Agent/pipeline/AgentPipeline"
 import AgentDealLosses from "@/pages/Dashboard/Agent/deal-losses/AgentDealLosses"
 import AgentClients from "@/pages/Dashboard/Agent/AgentClients"
 import SchedulePage from "@/components/common/schedule/SchedulePage"
+import GuestRoute from "@/components/common/GuestRoute"
 import PreferencesAlerts from "@/pages/Dashboard/Buyer/PreferencesAlerts"
 import MortgageTools from "@/pages/Dashboard/Buyer/MortgageTools"
 import DocumentsPage from "@/pages/Dashboard/Buyer/DocumentsPage"
 import MarketInsights from "@/pages/Dashboard/Buyer/MarketInsights"
 import HomePage from "@/pages/Home/HomePage"
-import Offers from "@/pages/Dashboard/offer/Offers "
+import Offers from "@/pages/Dashboard/offer/Offers"
 import PropertyByType from "@/pages/Dashboard/Buyer/PropertyByType"
 import ProfilePage from "@/pages/Profile/ProfilePage"
 // Create the data router
@@ -87,13 +88,14 @@ export const router = createBrowserRouter([
         path: "contact", Component: ContactPage
       },
       {
-        path: "privacy-policy", Component: PrivacyPolicy
+        path: "privacy", Component: PrivacyPolicy
       },
       {
-        path: "terms-of-service", Component: TermsOfService
+        path: "terms", Component: TermsOfService
       },
       {
         path: "auth",
+        element: <GuestRoute />,
         children: [
           { index: true, Component: AuthPage, },
           { path: "login", Component: AuthPage },

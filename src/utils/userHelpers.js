@@ -1,5 +1,5 @@
 import { AGENT_OFFER_STATUS, OFFER_STATUS } from "@/constants/offerTypes";
-import { AlertCircle, AlertOctagon, AlertTriangle, Ban, Building, Calendar, CheckCircle, CheckCircle2, CircleCheckBig, ClipboardCheck, Clock, DollarSign, Download, FileText, Info, Mail, PenTool, Shield, Upload } from "lucide-react";
+import { AlertCircle, AlertOctagon, AlertTriangle, Ban, Building, Calendar, CheckCircle, CheckCircle2, CircleCheckBig, ClipboardCheck, Clock, DollarSign, Download, FileText, Info, Mail, PenTool, RefreshCcw, Shield, Upload } from "lucide-react";
 
 export const getStatusInfo = (user) => {
   switch (user.is_active) {
@@ -98,6 +98,8 @@ export const getScheduleStatusColor = (status) => {
       return "bg-red-500"
     case "rejected":
       return "bg-destructive text-destructive-foreground"
+    case "reschedule_requested":
+      return "bg-orange-500"
     default:
       return "bg-gray-400"
   }
@@ -115,6 +117,8 @@ export const getScheduleStatusIcon = (status) => {
       return Ban;
     case "rejected":
       return AlertOctagon;
+    case "reschedule_requested":
+      return RefreshCcw;
     default:
       return null;
   }

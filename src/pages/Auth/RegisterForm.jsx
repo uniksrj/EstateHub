@@ -429,11 +429,11 @@ const RegisterForm = () => {
                             />
                             <span className="text-sm leading-relaxed">
                                 I agree to the{' '}
-                                <Link to="/terms-of-service" className="text-primary underline">
+                                <Link to="/terms" className="text-primary underline">
                                     Terms of Service
                                 </Link>{' '}
                                 and{' '}
-                                <Link to="/privacy-policy" className="text-primary underline">
+                                <Link to="/privacy" className="text-primary underline">
                                     Privacy Policy
                                 </Link>
                                 *

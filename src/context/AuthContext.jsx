@@ -83,6 +83,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Logout error:", error)
     } finally {
+      localStorage.removeItem("chatToken")
       persistUser(null)
     }
   }

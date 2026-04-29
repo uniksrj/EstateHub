@@ -16,7 +16,7 @@ import { OriginalMsg } from './inquiry/OriginalMsg';
 import { HistoryInquiry } from './inquiry/HistoryInquiry';
 import { ActionButton } from './inquiry/ActionButton';
 import { ResponseInquiry } from './inquiry/ResponseInquiry';
-import echo from '../../echo.js';
+import echo, { refreshEchoAuth } from '../../echo.js';
 
 export const InquiryPage = ({
   userId,
@@ -35,6 +35,7 @@ export const InquiryPage = ({
   // using echo broadcasting message
   useEffect(() => {
     if (!selectedInquiry?.id) return;
+    refreshEchoAuth();
 
     console.log('🔐 Setting up channel for inquiry:', selectedInquiry.id);
 
@@ -57,10 +58,20 @@ export const InquiryPage = ({
       console.log('📨 📨 📨 EVENT RECEIVED:', event);
       console.log('🔍 Full event data:', JSON.stringify(event, null, 2));
 
-      // Update the state with the new response
-      setSelectedInquiry(prev => ({
-        ...prev,
-        responses: [...(prev.responses || []), event.response],
+      setInquiries((prev) =>
+        prev.map((inquiry) =>
+          inquiry.id === selectedInquiry.id
+            ? {
+                ...inquiry,
+                responses: [...(inquiry.responses || []), event.response],
+              }
+            : inquiry
+        )
+      );
+
+      setSelectedInquiry((prev) => ({
+        ...(prev || {}),
+        responses: [...(prev?.responses || []), event.response],
       }));
     });
 

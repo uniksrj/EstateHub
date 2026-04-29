@@ -76,6 +76,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("user")
+      localStorage.removeItem("chatToken")
       setTimeout(() => {
         window.location.href = "/auth/login"
       }, 1000)
