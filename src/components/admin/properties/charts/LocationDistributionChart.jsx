@@ -38,31 +38,35 @@ const LocationDistributionChart = ({ data }) => {
         <CardDescription>Property distribution and average prices by location</CardDescription>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-            <XAxis dataKey="location" />
-            <YAxis />
-            <Tooltip content={<CustomTooltip />} />
-            <Area 
-              type="monotone" 
-              dataKey="properties" 
-              stroke="var(--chart-3)" 
-              fill="var(--chart-3)" 
-              fillOpacity={0.3}
-              name="Properties"
-            />
-            <Area 
-              type="monotone" 
-              dataKey="avgPrice" 
-              stroke="var(--chart-4)" 
-              fill="var(--chart-4)" 
-              fillOpacity={0.3}
-              name="Avg Price"
-            />
-            <Legend />
-          </AreaChart>
-        </ResponsiveContainer>
+        <div className="chart-scroll-box">
+          <div className="chart-scroll-inner h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                <XAxis dataKey="location" />
+                <YAxis />
+                <Tooltip content={<CustomTooltip />} />
+                <Area 
+                  type="monotone" 
+                  dataKey="properties" 
+                  stroke="var(--chart-3)" 
+                  fill="var(--chart-3)" 
+                  fillOpacity={0.3}
+                  name="Properties"
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="avgPrice" 
+                  stroke="var(--chart-4)" 
+                  fill="var(--chart-4)" 
+                  fillOpacity={0.3}
+                  name="Avg Price"
+                />
+                <Legend />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

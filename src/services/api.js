@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    // "Content-Type": "application/json",
+    "Content-Type": "application/json",
     Accept: "application/json",
   },
   withCredentials: true,
@@ -76,6 +76,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("user")
+      localStorage.removeItem("chatToken")
       setTimeout(() => {
         window.location.href = "/auth/login"
       }, 1000)
@@ -120,8 +121,12 @@ export const propertiesAPI = {
 
 // User API calls
 export const userAPI = {
-  getProfile: () => api.get("/user/profile"),
-  updateProfile: (profileData) => api.put("/user/profile", profileData),
+  getProfile: () => api.get("/api/user"),
+  updateProfile: (profileData) => api.post("/api/user/profile", profileData, {
+    headers: profileData instanceof FormData ? {
+      "Content-Type": "multipart/form-data",
+    } : undefined,
+  }),
   getProperties: (propertyDetails) => api.post("/api/properties/get-user-properties", propertyDetails,),
   getFavorites: () => api.get("/api/properties/get-favorite-properties"),
   toggleFavorite: (details) => api.post(`/api/properties/toggle-favorite`, details),
@@ -158,7 +163,13 @@ export const userAPI = {
     });
   },
   get_document : (deal_id) => api.get(`/api/agent/get_document_details/${deal_id}`),
-  changeStep : (deal_id, stepKey) => api.post(`/api/agent/deals/${deal_id}/complete-step/${stepKey}`)
+  changeStep : (deal_id, stepKey) => api.post(`/api/agent/deals/${deal_id}/complete-step/${stepKey}`,{}),
+  getAllDetailsActivity : (data) => api.get(`/api/agent/activities`, {data}),
+  updateDeal : (deal_id, data) => api.post(`/api/agent/update_deal/${deal_id}`, data),
+  addDeadlineExtension : (deal_id , data) => api.post(`/api/agent/add_deadline_extension/${deal_id}`, data),
+  update_earnest_deal : (deal_id , data) => api.post(`/api/agent/update_earnest_deal/${deal_id}`, data),
+  updateDocumentsDetails : (deal_id, data) => api.post(`/api/agent/update_documents_details/${deal_id}`, data),
+  save_property_loan_details : (data) => api.post(`/api/buyer/save_property_loan_details`, data),
 }
 
 export const superAdminAPI = {

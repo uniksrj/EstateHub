@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Loading } from '@/pages/misc/Loading';
-import { getDefaultOfferFormData } from '@/constants/offerTypes';
 import { useOffers } from '@/hooks/useOffers';
 import { toast } from 'sonner';
 import ContactSellerDialog from '@/components/buyer/ContactSellerDialog';
 import { OfferDetailsModal } from '@/components/buyer/offer/OfferDetailsModal';
 import { ConfirmationModal } from '@/components/common/ConfirmationModal';
 import { useAuth } from '@/hooks/useAuth';
-import { AgentOfferOverview } from '@/components/agent/offers/AgentOfferOverview';
 import { BuyerOffers } from '@/components/buyer/offer/BuyerOffers';
 import { AgentOffers } from '@/components/agent/offers/AgentOffers';
 import { CounterOfferModal } from '@/components/common/offers/CounterOfferModal';
@@ -74,7 +72,7 @@ const Offers = () => {
    * Filters and sorts offers based on current filter criteria
    */
   const filterOffers = () => {
-
+    console.log("Filtering offers with criteria:", offers);
     if (!offers || offers.length === 0) {
       setFilteredOffers([]);
       return;
@@ -109,14 +107,6 @@ const Offers = () => {
     });
 
     setFilteredOffers(filtered);
-  };
-
-  const handleCounterOffer = (offer) => {
-    setCounterModal({
-      isOpen: true,
-      offerId: offer.id,
-      offerAmount: offer.offer_amount
-    });
   };
 
   /**
@@ -387,6 +377,7 @@ const Offers = () => {
         filters={filters}
         onFilterChange={handleFilterChange}
         onAction={handleAction}
+        user={user}
       />
 
       <ConfirmationModal

@@ -32,46 +32,48 @@ export default function UserRetentionChart({retentionData}) {
   return (
     <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
       <h3 className="text-lg font-semibold text-foreground mb-4">User Retention Rate</h3>
-      <div className="h-80">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" className="opacity-30  stroke-border" />
-            <XAxis
-              dataKey="week"
-              tick={{ fontSize: 12 }}
-              tickLine={false}
-              stroke="var(--muted-foreground)"
-            />
-            <YAxis
-              tick={{ fontSize: 12 }}
-              tickLine={false}
-              stroke="var(--muted-foreground)"
-              tickFormatter={(value) => `${value}%`}
-            />
-            <Tooltip
-              formatter={(value) => [`${value}%`, '']}
-              contentStyle={{
-                backgroundColor: 'var(--card)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius)',
-                color: 'var(--foreground)'
-              }}
-            />
-            <Legend />
-            <Bar
-              dataKey="retained"
-              fill="#10b981"
-              name="Retained Users"
-              radius={[4, 4, 0, 0]}
-            />
-            <Bar
-              dataKey="churned"
-              fill="#ef4444"
-              name="Churned Users"
-              radius={[4, 4, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+      <div className="chart-scroll-box">
+        <div className="chart-scroll-inner h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" className="opacity-30  stroke-border" />
+              <XAxis
+                dataKey="week"
+                tick={{ fontSize: 12 }}
+                tickLine={false}
+                stroke="var(--muted-foreground)"
+              />
+              <YAxis
+                tick={{ fontSize: 12 }}
+                tickLine={false}
+                stroke="var(--muted-foreground)"
+                tickFormatter={(value) => `${value}%`}
+              />
+              <Tooltip
+                formatter={(value) => [`${value}%`, '']}
+                contentStyle={{
+                  backgroundColor: 'var(--card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius)',
+                  color: 'var(--foreground)'
+                }}
+              />
+              <Legend />
+              <Bar
+                dataKey="retained"
+                fill="#10b981"
+                name="Retained Users"
+                radius={[4, 4, 0, 0]}
+              />
+              <Bar
+                dataKey="churned"
+                fill="#ef4444"
+                name="Churned Users"
+                radius={[4, 4, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

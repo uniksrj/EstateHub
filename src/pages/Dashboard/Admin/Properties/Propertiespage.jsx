@@ -45,11 +45,11 @@ const PropertiesPage = () => {
 
   if (loading) {
     return (
-      < Loading loading={loading} isLineLoader={true} />
-    )
+      <Loading loading={loading} isLineLoader={true} />
+    );
   }
   if (!propertiesData) {
-    <Loading loading={true} isLineLoader={true} />
+    return <Loading loading={true} isLineLoader={true} />;
   }
 
   return (

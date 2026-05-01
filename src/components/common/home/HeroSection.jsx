@@ -38,7 +38,7 @@ const HeroSection = () => {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
                     {/* Text Content - Left Side */}
-                    <div className="text-center lg:text-left space-y-6 lg:space-y-8 order-2 lg:order-1">
+                    <div className="text-center lg:text-left space-y-6 lg:space-y-8 order-2 lg:order-1 min-w-0">
                         {/* Professional Badge */}
                         <div className="flex justify-center lg:justify-start items-center gap-4 mb-4 lg:mb-6">
                             <Badge className="bg-accent/20 text-accent border-accent/30 backdrop-blur-sm px-3 py-1 lg:px-4 lg:py-2 text-xs lg:text-sm font-semibold">
@@ -47,7 +47,7 @@ const HeroSection = () => {
                         </div>
 
                         {/* Enhanced Text Content with Better Typography */}
-                        <div className="relative min-h-[200px] lg:min-h-[280px] mb-4 lg:mb-6">
+                        <div className="relative min-h-[240px] sm:min-h-[260px] lg:min-h-[280px] mb-4 lg:mb-6">
                             {heroContent.map((content, index) => (
                                 <div
                                     key={index}
@@ -59,7 +59,7 @@ const HeroSection = () => {
                                         }`}
                                 >
                                     {/* Main Heading with Enhanced Font */}
-                                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 lg:mb-6 leading-tight tracking-tight">
+                                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 lg:mb-6 leading-tight tracking-tight break-words">
                                         {content.title}
                                         <span className="text-accent block bg-gradient-to-r from-accent to-accent/80 bg-clip-text text-transparent mt-2">
                                             {content.highlight}
@@ -91,7 +91,7 @@ const HeroSection = () => {
                         </div>
 
                         {/* Trust Indicators - Side by side on all screens */}
-                        <div className="flex flex-row items-center justify-center py-5 lg:py-0 lg:justify-start gap-6 lg:gap-8 pt-6 lg:pt-8 mt-6 lg:mt-8 border-t border-white/20">
+                        <div className="flex flex-wrap items-center justify-center py-5 lg:py-0 lg:justify-start gap-4 sm:gap-6 lg:gap-8 pt-6 lg:pt-8 mt-6 lg:mt-8 border-t border-white/20">
                             <div className="flex items-center gap-2 lg:gap-3">
                                 <Shield className="h-5 w-5 lg:h-6 lg:w-6 text-accent" />
                                 <span className="text-white/80 text-sm font-medium">Secure Transactions</span>

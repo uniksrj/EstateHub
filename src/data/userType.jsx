@@ -50,7 +50,7 @@ export const sidebars = {
     { label: "Schedule", path: "/agent/schedule", icon: Calendar },
     { label: "Pipeline", path: "/agent/pipeline", icon: Activity },
     { label: "Performance", path: "/agent/analytics", icon: BarChart3 },
-    { label: "Profile", path: "/agent/profile", icon: User },
+    // { label: "Profile", path: "/agent/profile", icon: User },
   ],
 
   buyer: [
@@ -59,6 +59,7 @@ export const sidebars = {
     { label: "Saved Properties", path: "/buyer/favorites", icon: Heart },
     { label: "My Criteria & Alerts", path: "/buyer/preferences-alerts", icon: Filter },
     { label: "Schedule Tours", path: "/buyer/schedule", icon: Calendar },
+    { label: "Inquiries", path: "/buyer/inquiries", icon: MessageSquare },
     { label: "My Offers", path: "/buyer/offers", icon: Tag },
     { label: "Mortgage Tools", path: "/buyer/mortgage-tools", icon: Calculator },
     { label: "Documents", path: "/buyer/documents", icon: FileText },
@@ -72,7 +73,7 @@ export const sidebars = {
     { label: "Offers", path: "/seller/offers", icon: Tag },
     { label: "Inquiries", path: "/seller/inquiries", icon: MessageSquare },
     { label: "Schedule", path: "/seller/schedule", icon: Calendar },
-    { label: "Profile", path: "/seller/profile", icon: User },
+    // { label: "Profile", path: "/seller/profile", icon: User },
   ],
 
   investor: [

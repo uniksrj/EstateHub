@@ -1,5 +1,5 @@
 import { AGENT_OFFER_STATUS, OFFER_STATUS } from "@/constants/offerTypes";
-import { AlertTriangle, CheckCircle, CheckCircle2, ClipboardCheck, DollarSign, FileText, Info, Shield } from "lucide-react";
+import { AlertCircle, AlertOctagon, AlertTriangle, Ban, Building, Calendar, CheckCircle, CheckCircle2, CircleCheckBig, ClipboardCheck, Clock, DollarSign, Download, FileText, Info, Mail, PenTool, RefreshCcw, Shield, Upload } from "lucide-react";
 
 export const getStatusInfo = (user) => {
   switch (user.is_active) {
@@ -97,11 +97,32 @@ export const getScheduleStatusColor = (status) => {
     case "cancelled":
       return "bg-red-500"
     case "rejected":
-      return "bg-gray-500"
+      return "bg-destructive text-destructive-foreground"
+    case "reschedule_requested":
+      return "bg-orange-500"
     default:
       return "bg-gray-400"
   }
 }
+
+export const getScheduleStatusIcon = (status) => {
+  switch (status) {
+    case "pending":
+      return Clock;
+    case "approved":
+      return CheckCircle;
+    case "completed":
+      return CircleCheckBig;
+    case "cancelled":
+      return Ban;
+    case "rejected":
+      return AlertOctagon;
+    case "reschedule_requested":
+      return RefreshCcw;
+    default:
+      return null;
+  }
+};
 
 export const getOfferStatusColor = (status, role = "buyer") => {
   if (role === "buyer") {
@@ -215,3 +236,47 @@ export const getDaysUntilDeadline = (deadline) => {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return diffDays;
 };
+
+export const getStatusBadge = (status) => {
+  const variants = {
+    completed: { variant: "default", label: "Completed" },
+    active: { variant: "secondary", label: "In Progress" },
+    pending: { variant: "outline", label: "Pending" },
+    urgent: { variant: "destructive", label: "Action Required" }
+  };
+  return variants[status] || variants.pending;
+};
+
+export const getTypeColor = (type) => {
+  const colors = {
+    document_upload: "text-blue-500",
+    document_signed: "text-green-500",
+    document_request: "text-amber-500",
+    step_completed: "text-green-500",
+    step_started: "text-blue-500",
+    payment_received: "text-green-500",
+    payment_due: "text-red-500",
+    message_sent: "text-blue-500",
+    deadline_approaching: "text-amber-500",
+    inspection_scheduled: "text-purple-500",
+    appraisal_ordered: "text-indigo-500"
+  };
+  return colors[type] || "text-gray-500";
+};
+
+export const getTypeIcon = (type) => {
+  const icons = {
+    document_upload: Upload,
+    document_signed: PenTool,
+    document_request: Download,
+    step_completed: CheckCircle2,
+    step_started: Clock,
+    payment_received: DollarSign,
+    payment_due: AlertCircle,
+    message_sent: Mail,
+    deadline_approaching: AlertCircle,
+    inspection_scheduled: Calendar,
+    appraisal_ordered: Building
+  };
+  return icons[type] || CheckCircle2;
+}; 

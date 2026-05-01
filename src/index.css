@@ -147,10 +147,20 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-gold: var(--gold);
 
 }
 
 @layer base {
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-height: 100%;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
@@ -158,6 +168,14 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
   }
 }
 
@@ -195,4 +213,42 @@
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--foreground));
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.fixed.inset-0 .relative {
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.chart-scroll-box {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.chart-scroll-inner {
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .chart-scroll-inner {
+    min-width: 640px;
+  }
+}
+
+@media (max-width: 640px) {
+  .chart-scroll-inner {
+    min-width: 520px;
+  }
 }

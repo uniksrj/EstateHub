@@ -7,7 +7,7 @@ import { Card, CardContent } from "../../components/ui/card"
 import { Input } from "../../components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
 import { Badge } from "../../components/ui/badge"
-import { Search, MapPin, Star, SlidersHorizontal } from "lucide-react"
+import { Search, MapPin, Star, SlidersHorizontal, MessageCircle, CalendarPlus, Handshake } from "lucide-react"
 import { propertiesAPI } from "../../services/api"
 import ImageCarousel from "@/components/common/ImageCarousel"
 import { Paginationlink } from "@/components/common/Pagination"
@@ -30,6 +30,12 @@ const PropertyList = () => {
   })
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page")) || 1);
   const [lastPage, setLastPage] = useState(1);
+
+  const [showOfferWizard, setShowOfferWizard] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [showContactDialog, setShowContactDialog] = useState(false);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const { offers, addNewOffer } = useOffers();
 
   useEffect(() => {
     fetchProperties()
@@ -90,7 +96,39 @@ const PropertyList = () => {
       minimumFractionDigits: 0,
     }).format(price)
   }
-  console.log("state save data", properties);
+
+  const contactSellerTrigger = useMemo(() => (
+    <Button variant="outline" size="sm" title="Contact Seller" onClick={() => setShowContactDialog(true)}>
+      <MessageCircle className="h-4 w-4" />
+    </Button>
+  ), []);
+
+  const scheduleTourTrigger = useMemo(() => (
+    <Button variant="outline" size="sm" onClick={() => setShowScheduleModal(true)} title="Schedule a Tour">
+      <CalendarPlus className="h-4 w-4" />
+    </Button>
+  ), []);
+
+  const makeOfferTrigger = useMemo(() => (
+    <Button variant="outline" size="sm" onClick={() => handleMakeOffer(properties)} title="Make Offer">
+      <Handshake className="w-4 h-4" />
+    </Button>
+  ), [properties]);
+
+  const handleNewOfferSubmit = (property, offerData) => {
+    addNewOffer(property, offerData);
+    setShowOfferWizard(false);
+  };
+
+
+  const handleMakeOffer = (property) => {
+    setSelectedProperty(property);
+    setShowOfferWizard(true);
+  };
+
+  const handleNewSchedule = (schedule) => {
+    toast.success(`Tour scheduled on ${schedule.date} at ${schedule.time}!`)
+  }
 
   return (
     <div className="min-h-screen py-8">
@@ -197,6 +235,7 @@ const PropertyList = () => {
               </Button>
             </div>
           </CardContent>
+
         </Card>
 
         {/* Properties Grid */}
@@ -255,6 +294,43 @@ const PropertyList = () => {
                     <Link to={buildPropertyPath(property)}>
                       <Button size="sm">View Details</Button>
                     </Link>
+                  </div>
+                  <div className="flex space-x-2 mt-4">
+                    <div className="flex items-center gap-3">
+                      {contactSellerTrigger}
+                      {showContactDialog && (
+                        <ContactSellerDialog
+                          property={properties}
+                          isOpen={showContactDialog}
+                          onClose={() => setShowContactDialog(false)}
+                        />
+                      )}
+
+                      {scheduleTourTrigger}
+                      {showScheduleModal && (
+                        <ScheduleManager
+                          mode="modal"
+                          isOpen={showScheduleModal}
+                          onClose={() => setShowScheduleModal(false)}
+                          property={properties}
+                          onScheduleCreated={handleNewSchedule}
+                        />
+                      )}
+
+                      {makeOfferTrigger}
+                    </div>
+
+                    {/* Offer Wizard */}
+                    {showOfferWizard && selectedProperty && (
+                      <OfferCreationWizard
+                        property={selectedProperty}
+                        onClose={() => {
+                          setShowOfferWizard(false);
+                          setSelectedProperty(null);
+                        }}
+                        onOfferSubmit={handleNewOfferSubmit}
+                      />
+                    )}
                   </div>
                 </CardContent>
               </Card>

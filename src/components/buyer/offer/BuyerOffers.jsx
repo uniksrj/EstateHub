@@ -13,12 +13,13 @@ export const BuyerOffers = ({
   loading, 
   filters, 
   onFilterChange, 
-  onAction 
+  onAction ,
+  user
 }) => {
   const navigate = useNavigate();
   if (loading) return <Loading loading={loading} isLineLoader={true} />;
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Buyer Header */}
         <div className="mb-8">
@@ -26,7 +27,7 @@ export const BuyerOffers = ({
             <div className="p-2 bg-primary/10 rounded-lg">
               <Tag className="w-6 h-6 text-primary" />
             </div>
-            <h1 className="text-3xl font-bold text-foreground">My Offers</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Offers</h1>
           </div>
           <p className="text-muted-foreground">Track and manage your property offers</p>
         </div>
@@ -38,6 +39,7 @@ export const BuyerOffers = ({
         <BuyerOffersList 
           offers={filteredOffers} 
           onAction={onAction}
+          user={user}
           emptyState={
             <BuyerEmptyState onBrowseProperties={() => navigate('/buyer/search')} />
           }

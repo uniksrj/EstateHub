@@ -30,7 +30,12 @@ export default function FavoritePage() {
                 let settleData = response.data.data;
                 console.log("return data for filter : ", settleData);
 
-                const filtered_data = settleData.filter((val) => val.favorites?.[0]?.user_id === user.id)
+                const filtered_data = settleData.map((val) => {
+                    const filteredFavorites = val.favorites?.filter(fav => fav.user_id === user.id) || [];
+                    return { ...val, favorites: filteredFavorites };
+                }).filter(val => val.favorites.length > 0);
+                    
+                // const filtered_data = settleData.filter((val) => val.favorites?.[0]?.user_id === user.id)
                 console.log("Filtered data : ", filtered_data);
 
                 setProperties(filtered_data)
