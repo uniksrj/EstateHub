@@ -7,6 +7,8 @@ import HeroSection from "@/components/common/home/HeroSection"
 import HowItWorksSection from "@/components/common/home/HowItWorksSection"
 import StatisticsSection from "@/components/common/home/StatisticsSection"
 import VideoTourSection from "@/components/common/home/VideoTourSection"
+import Seo from "@/components/common/Seo"
+import { organizationSchema } from "@/utils/seo"
 import { featuredPropertiesData } from "@/data/demoData"
 import { useState, useEffect } from "react"
 
@@ -42,6 +44,12 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Seo
+        title="Real Estate Marketplace"
+        description="Estate Hub helps buyers, sellers, agents, and investors discover and manage real estate listings."
+        canonicalPath="/"
+        schema={organizationSchema}
+      />
       <HeroSection />
       <StatisticsSection scrollY={scrollY} />
       <FeaturedPropertiesSection loading={loading} featuredProperties={featuredProperties} scrollY={scrollY} />

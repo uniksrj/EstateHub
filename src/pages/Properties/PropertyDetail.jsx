@@ -28,6 +28,8 @@ import InquiryForm from "@/components/common/InquiryForm"
 import ImageCarousel from "@/components/common/ImageCarousel"
 import AmenityIcons from "@/components/common/AmenityIcons"
 import { useAuth } from "@/hooks/useAuth"
+import Seo from "@/components/common/Seo"
+import { absoluteUrl, buildPropertyPath, propertyImageUrl, propertyLocation, truncateMeta } from "@/utils/seo"
 
 const PropertyDetail = () => {
   const { id } = useParams()
@@ -71,6 +73,47 @@ const PropertyDetail = () => {
       minimumFractionDigits: 0,
     }).format(price)
   }
+
+  const propertySchema = property ? {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: property.title,
+    description: truncateMeta(property.description, 300),
+    image: propertyImageUrl(property),
+    url: absoluteUrl(buildPropertyPath(property)),
+    category: property.property_type,
+    offers: {
+      "@type": "Offer",
+      price: property.price,
+      priceCurrency: "USD",
+      availability: property.status === "sold" ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
+      url: absoluteUrl(buildPropertyPath(property)),
+    },
+    additionalProperty: [
+      { "@type": "PropertyValue", name: "Property type", value: property.property_type },
+      { "@type": "PropertyValue", name: "Bedrooms", value: property.bedrooms },
+      { "@type": "PropertyValue", name: "Bathrooms", value: property.bathrooms },
+      { "@type": "PropertyValue", name: "Floor size", value: `${property.sq_ft || 0} sq ft` },
+    ],
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: property.address,
+      addressLocality: property.city,
+      addressRegion: property.state,
+      postalCode: property.zip_code,
+      addressCountry: property.country || "US",
+    },
+  } : null
+
+  const breadcrumbSchema = property ? {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+      { "@type": "ListItem", position: 2, name: "Properties", item: absoluteUrl("/properties") },
+      { "@type": "ListItem", position: 3, name: property.title, item: absoluteUrl(buildPropertyPath(property)) },
+    ],
+  } : null
 
   const toggleFavorite = async () => {
     try {
@@ -130,6 +173,14 @@ console.log("property list", property);
 
   return (
     <div className="min-h-screen py-8">
+      <Seo
+        title={`${property.title} in ${property.city}`}
+        description={`${formatPrice(property.price)} ${property.property_type} in ${propertyLocation(property)}. ${property.bedrooms} beds, ${property.bathrooms} baths. ${property.description}`}
+        canonicalPath={buildPropertyPath(property)}
+        image={propertyImageUrl(property)}
+        type="product"
+        schema={[propertySchema, breadcrumbSchema]}
+      />
       <div className="container mx-auto px-4">
         {/* Back Button */}
         <Link to="/properties" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-6">
@@ -139,7 +190,13 @@ console.log("property list", property);
 
         {/* Property Images */}
         <div className="grid grid-cols-1 mb-8">
-          <ImageCarousel image={property.images} className="h-48" />
+          <ImageCarousel
+            image={property.images}
+            altBase={property.title}
+            className="h-[60vh] max-h-[720px] min-h-[360px] bg-muted"
+            transformation="f_auto,q_auto,w_1600"
+            fit="contain"
+          />
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -156,7 +213,7 @@ console.log("property list", property);
                   </div>
                   <div className="flex items-center space-x-4">
                     <Badge variant="secondary" className="capitalize">
-                      {property.type}
+                      {property.property_type}
                     </Badge>
                     <div className="flex items-center">
                       <Star className="h-4 w-4 text-yellow-500 fill-current mr-1" />
