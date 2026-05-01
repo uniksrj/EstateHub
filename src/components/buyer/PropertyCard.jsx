@@ -12,6 +12,7 @@ import { toast } from "sonner"
 import ScheduleManager from "../common/schedule/ScheduleManager"
 import { useOffers } from "@/hooks/useOffers"
 import OfferCreationWizard from "@/pages/Dashboard/Buyer/OfferCreationWizard"
+import { buildPropertyPath, getImageUrl } from "@/utils/seo"
 
 
 export const PropertyCard = memo(function PropertyCard({
@@ -20,7 +21,7 @@ export const PropertyCard = memo(function PropertyCard({
     handleFavoriteChange
 }) {
     const { user } = useAuth()
-    const { offers, addNewOffer } = useOffers();
+    const { addNewOffer } = useOffers();
     const [isSaved, setIsSaved] = useState(
         property.favorites?.[0]?.user_id === user.id
     )
@@ -84,12 +85,14 @@ export const PropertyCard = memo(function PropertyCard({
 
     return (
         <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <Link to={`/properties/${property.id}/view`}>
+            <Link to={buildPropertyPath(property)}>
                 <div className="relative">
                     <img
-                        src={property.images[0]}
-                        alt={property.title}
+                        src={getImageUrl(property.images?.[0], "f_auto,q_auto,c_fill,w_480,h_320")}
+                        alt={`${property.title} in ${property.city || "Estate Hub"}`}
                         className="w-full h-48 object-cover"
+                        loading="lazy"
+                        decoding="async"
                     />
                     {/* <div className="absolute top-3 left-3">
                         <Badge className={property.is_featured ? "bg-orange-500" : "bg-blue-500"}>

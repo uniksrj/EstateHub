@@ -2,10 +2,16 @@
 import { Link } from "react-router"
 import { Button } from "../../components/ui/button"
 import { Home, ArrowLeft } from "lucide-react"
+import Seo from "@/components/common/Seo"
 
 const NotFound = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
+      <Seo
+        title="Page Not Found"
+        description="The Estate Hub page you requested could not be found."
+        canonicalPath="/404"
+      />
       <div className="text-center">
         <div className="mb-8">
           <h1 className="text-9xl font-bold text-muted-foreground/20">404</h1>

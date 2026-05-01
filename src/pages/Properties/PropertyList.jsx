@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { Link, useSearchParams } from "react-router"
+import { Link, useParams, useSearchParams } from "react-router"
 import { Button } from "../../components/ui/button"
 import { Card, CardContent } from "../../components/ui/card"
 import { Input } from "../../components/ui/input"
@@ -16,8 +16,10 @@ import { toast } from "sonner"
 import ContactSellerDialog from "@/components/buyer/ContactSellerDialog"
 import ScheduleManager from "@/components/common/schedule/ScheduleManager"
 import OfferCreationWizard from "../Dashboard/Buyer/OfferCreationWizard"
+import { buildPropertyPath, organizationSchema } from "@/utils/seo"
 
 const PropertyList = () => {
+  const { type } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const [properties, setProperties] = useState([])
   const [loading, setLoading] = useState(true)
@@ -41,7 +43,7 @@ const PropertyList = () => {
 
   useEffect(() => {
     fetchProperties()
-  }, [searchParams])
+  }, [searchParams, type])
 
   const handlePageChange = (page) => {
     const params = new URLSearchParams(searchParams);
@@ -132,6 +134,12 @@ const PropertyList = () => {
 
   return (
     <div className="min-h-screen py-8">
+      <Seo
+        title={type ? `${type.replace(/-/g, " ")} Properties` : "Properties"}
+        description="Browse homes, apartments, condos, townhouses, and commercial properties on Estate Hub."
+        canonicalPath={`/properties${type ? `/${type}` : ""}${currentPage > 1 ? `?page=${currentPage}` : ""}`}
+        schema={organizationSchema}
+      />
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -257,7 +265,7 @@ const PropertyList = () => {
                 <div className="aspect-video bg-muted relative">
                   {
                     property.images ? (
-                      <ImageCarousel image={property.images} />
+                      <ImageCarousel image={property.images} altBase={property.title} transformation="f_auto,q_auto,c_fill,w_640,h_360" />
                     ) : (
                       <div className="flex items-center justify-center h-full text-muted-foreground">
                         No Image
@@ -285,7 +293,7 @@ const PropertyList = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-accent">{formatPrice(property.price)}</span>
-                    <Link to={`/properties/${property.id}/view`}>
+                    <Link to={buildPropertyPath(property)}>
                       <Button size="sm">View Details</Button>
                     </Link>
                   </div>

@@ -61,6 +61,10 @@ export const router = createBrowserRouter([
             Component: PropertyList,
           },
           {
+            path: ":type",
+            Component: PropertyList,
+          },
+          {
             path: ":id/view",
             Component: PropertyDetail,
             errorElement: <div>Error loading property</div>,
