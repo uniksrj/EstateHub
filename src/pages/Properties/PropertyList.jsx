@@ -100,11 +100,16 @@ const PropertyList = () => {
     }).format(price)
   }
 
-  const contactSellerTrigger = useMemo(() => (
-    <Button variant="outline" size="sm" title="Contact Seller" onClick={() => setShowContactDialog(true)}>
+  const handleContactSeller = (property) => {
+    setSelectedProperty(property)
+    setShowContactDialog(true)
+  }
+
+  const contactSellerTrigger = (property) => (
+    <Button variant="outline" size="sm" title="Contact Seller" onClick={() => handleContactSeller(property)}>
       <MessageCircle className="h-4 w-4" />
     </Button>
-  ), []);
+  );
 
   const scheduleTourTrigger = useMemo(() => (
     <Button variant="outline" size="sm" onClick={() => setShowScheduleModal(true)} title="Schedule a Tour">
@@ -300,14 +305,7 @@ const PropertyList = () => {
                   </div>
                   <div className="flex space-x-2 mt-4">
                     <div className="flex items-center gap-3">
-                      {contactSellerTrigger}
-                      {showContactDialog && (
-                        <ContactSellerDialog
-                          property={properties}
-                          isOpen={showContactDialog}
-                          onClose={() => setShowContactDialog(false)}
-                        />
-                      )}
+                      {contactSellerTrigger(property)}
 
                       {scheduleTourTrigger}
                       {showScheduleModal && (
@@ -315,7 +313,7 @@ const PropertyList = () => {
                           mode="modal"
                           isOpen={showScheduleModal}
                           onClose={() => setShowScheduleModal(false)}
-                          property={properties}
+                          property={property}
                           onScheduleCreated={handleNewSchedule}
                         />
                       )}
@@ -353,6 +351,16 @@ const PropertyList = () => {
             </p>
             <Button onClick={clearFilters}>Clear All Filters</Button>
           </div>
+        )}
+        {showContactDialog && selectedProperty && (
+          <ContactSellerDialog
+            property={selectedProperty}
+            isOpen={showContactDialog}
+            onClose={() => {
+              setShowContactDialog(false)
+              setSelectedProperty(null)
+            }}
+          />
         )}
       </div>
     </div>

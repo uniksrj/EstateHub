@@ -15,11 +15,12 @@ import OfferCreationWizard from "@/pages/Dashboard/Buyer/OfferCreationWizard"
 import { buildPropertyPath, getImageUrl } from "@/utils/seo"
 
 
-export const PropertyCard = memo(function PropertyCard({
+export const PropertyCard = memo(function PropertyCard({    
     property,
     formatPrice,
     handleFavoriteChange
 }) {
+    console.log("Rendering PropertyCard for:", property);
     const { user } = useAuth()
     const { addNewOffer } = useOffers();
     const [isSaved, setIsSaved] = useState(
@@ -156,6 +157,7 @@ export const PropertyCard = memo(function PropertyCard({
                         {contactSellerTrigger}
                         {showContactDialog && (
                             <ContactSellerDialog
+                                id={property.id}
                                 property={property}
                                 isOpen={showContactDialog}
                                 onClose={() => setShowContactDialog(false)}

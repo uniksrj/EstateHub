@@ -20,8 +20,7 @@ import { PropertySidebar } from "./PropertySidebar"
 import { userAPI } from "@/services/api"
 
 const ContactSellerDialog = memo(({ property,  isOpen, onClose }) => {
-    console.log("this is project id details : ", property);
-    
+    console.log("this is project id details : ", property);    
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({

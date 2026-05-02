@@ -15,7 +15,7 @@ export const PropertySidebar = ({ propertyData }) => {
 
                         <div className="aspect-video rounded-lg overflow-hidden mb-4 shadow-md">
                             <img
-                                src={propertyData?.images[0]}
+                                src={propertyData?.images[0]?.thumbnail_url}
                                 alt={propertyData?.title}
                                 className="w-full h-full object-cover"
                             />
