@@ -37,6 +37,7 @@ const AddProperty = () => {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files)
+    console.log(files);
     const newImages = files.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
@@ -154,9 +155,11 @@ const AddProperty = () => {
         setLoading(false)
         return;
       }
-
+      console.log("images form the form submit", images);
       images.forEach((image, index) => {
-        formData.append(`images[${index}]`, image.file)
+        if (image.file instanceof File) {
+          formData.append(`images[${index}]`, image.file)
+        }
       })
 
       const checkboxes = ['has_pool', 'has_garden', 'has_garage', 'has_parking', 'has_security', 'has_air_conditioning', 'has_heating'];

@@ -17,6 +17,7 @@ import ContactSellerDialog from "@/components/buyer/ContactSellerDialog"
 import ScheduleManager from "@/components/common/schedule/ScheduleManager"
 import OfferCreationWizard from "../Dashboard/Buyer/OfferCreationWizard"
 import { buildPropertyPath, organizationSchema } from "@/utils/seo"
+import Seo from "@/components/common/Seo"
 
 const PropertyList = () => {
   const { type } = useParams()
@@ -39,7 +40,7 @@ const PropertyList = () => {
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const { offers, addNewOffer } = useOffers();
+  const { addNewOffer } = useOffers();
 
   useEffect(() => {
     fetchProperties()

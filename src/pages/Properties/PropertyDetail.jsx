@@ -40,9 +40,9 @@ const PropertyDetail = () => {
 
   useEffect(() => {
     fetchProperty()
-    toggleFavorite()
+    checkFavoriteStatus()
     trackPropertyView(id);
-  }, [id])
+  }, [id, user])
 
   console.log("This is user details :", user);
 
@@ -116,11 +116,31 @@ const PropertyDetail = () => {
   } : null
 
   const toggleFavorite = async () => {
+    if (!user) {
+      setIsFavorite(false);
+      return;
+    }
+
     try {
       const response = await userAPI.toggleFavorite({ property_id: id })
       setIsFavorite(response.data.is_favorite);
     } catch (error) {
-      console.error("Error fetching property:", error)
+      console.error("Error updating favorite:", error)
+      setIsFavorite(false);
+    }
+  }
+
+  const checkFavoriteStatus = async () => {
+    if (!user) {
+      setIsFavorite(false);
+      return;
+    }
+
+    try {
+      const response = await userAPI.checkFavorite(id)
+      setIsFavorite(response.data.is_favorite);
+    } catch (error) {
+      console.error("Error checking favorite:", error)
       setIsFavorite(false);
     }
   }

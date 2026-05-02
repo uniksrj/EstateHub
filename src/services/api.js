@@ -4,7 +4,6 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    "Content-Type": "application/json",
     Accept: "application/json",
   },
   withCredentials: true,
@@ -39,6 +38,10 @@ const ensureCsrfToken = async () => {
 
 api.interceptors.request.use(
   (config) => {
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"]
+    }
+
     // Only add CSRF token for state-changing requests
     if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase())) {
       const token = getCsrfTokenFromCookie()
@@ -129,6 +132,7 @@ export const userAPI = {
   }),
   getProperties: (propertyDetails) => api.post("/api/properties/get-user-properties", propertyDetails,),
   getFavorites: () => api.get("/api/properties/get-favorite-properties"),
+  checkFavorite: (propertyId) => api.get(`/api/properties/${propertyId}/favorite`),
   toggleFavorite: (details) => api.post(`/api/properties/toggle-favorite`, details),
   removeFromFavorites: (propertyId) => api.delete(`/user/favorites/${propertyId}`),
   getUser_metrics: (params) => api.get("/api/auth/user_metrics", { params }),
