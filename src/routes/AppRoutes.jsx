@@ -9,6 +9,7 @@ import ManageProperties from "../pages/Dashboard/ManageProperties"
 import ProtectedRoute from "../components/common/ProtectedRoute"
 import AdminLayout from "../components/layout/AdminLayout"
 import ContactPage from "@/pages/Contact/ContactPage"
+import BetaFeedbackPage from "@/pages/BetaFeedback/BetaFeedbackPage"
 import PrivacyPolicy from "@/pages/misc/PrivacyPolicy"
 import TermsOfService from "@/pages/misc/TermsOfService"
 import NotFound from "@/pages/misc/NotFound"
@@ -42,6 +43,7 @@ import HomePage from "@/pages/Home/HomePage"
 import Offers from "@/pages/Dashboard/offer/Offers"
 import PropertyByType from "@/pages/Dashboard/Buyer/PropertyByType"
 import ProfilePage from "@/pages/Profile/ProfilePage"
+import BetaFeedbackInbox from "@/pages/Dashboard/Admin/BetaFeedback/BetaFeedbackInbox"
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -90,6 +92,9 @@ export const router = createBrowserRouter([
       },
       {
         path: "contact", Component: ContactPage
+      },
+      {
+        path: "beta-feedback", Component: BetaFeedbackPage
       },
       {
         path: "privacy", Component: PrivacyPolicy
@@ -151,6 +156,14 @@ export const router = createBrowserRouter([
               </ProtectedRoute>
             )
           },
+          {
+            path: "beta-feedback",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
+                <BetaFeedbackInbox />
+              </ProtectedRoute>
+            )
+          },
         ],
       },
       //  Seller */
@@ -166,6 +179,7 @@ export const router = createBrowserRouter([
           { path: "add-property", Component: AddProperty },
           { path: "manage-properties", Component: ManageProperties },
           { path: "properties", Component: ListingPage },
+          { path: "offers", Component: Offers },
           { path: "properties/:id/edit", Component: AddProperty, errorElement: <div>Error loading property</div>, },
           { path: "inquiries", Component: SellerInquiryPage },
         ],

@@ -176,6 +176,19 @@ export const userAPI = {
   save_property_loan_details : (data) => api.post(`/api/buyer/save_property_loan_details`, data),
 }
 
+export const betaFeedbackAPI = {
+  submit: async (feedbackData) => {
+    await ensureCsrfToken()
+    return api.post("/api/beta-feedback", feedbackData, {
+      headers: feedbackData instanceof FormData ? {
+        "Content-Type": "multipart/form-data",
+      } : undefined,
+    })
+  },
+  getAll: (params) => api.get("/api/admin/beta-feedback", { params }),
+  updateStatus: (id, status) => api.patch(`/api/admin/beta-feedback/${id}/status`, { status }),
+}
+
 export const superAdminAPI = {
   // User Management
   getAllUsers: (params) => api.get("/api/admin/users", { params }),

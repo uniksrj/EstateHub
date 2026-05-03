@@ -2,6 +2,7 @@ import { formatPrice } from "@/utils/userHelpers"
 import { Badge, Bath, Bed, Clock, Mail, MapPin, Phone, Square } from "lucide-react"
 
 export const PropertySidebar = ({ propertyData }) => {
+    console.log("this is sidebar details", propertyData)
     return (
         <>
             {/* Property & Agent Info Sidebar */}
@@ -63,7 +64,7 @@ export const PropertySidebar = ({ propertyData }) => {
                         <div className="flex items-center space-x-4 mb-6">
                             <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary">
                                 <img
-                                    src={propertyData?.agent?.profile_image}
+                                    src={propertyData?.agent?.avatar}
                                     alt={propertyData?.agent?.name}
                                     className="w-full h-full object-cover"
                                 />

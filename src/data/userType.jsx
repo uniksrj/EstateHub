@@ -20,6 +20,7 @@ import {
   User,
   Activity,
   XCircle,
+  Bug,
 } from "lucide-react";
 
 export const sidebars = {
@@ -28,6 +29,7 @@ export const sidebars = {
     { label: "User Management", path: "/dashboard/users", icon: Users },
     { label: "Financial Reports", path: "/dashboard/finance", icon: DollarSign },
     { label: "System Settings", path: "/dashboard/system", icon: Settings },
+    { label: "Beta Feedback", path: "/dashboard/beta-feedback", icon: Bug },
     { label: "All Properties", path: "/dashboard/properties", icon: Home },
     { label: "Content Management", path: "/dashboard/content", icon: FileText },
   ],

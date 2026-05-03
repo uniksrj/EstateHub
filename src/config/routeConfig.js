@@ -24,6 +24,7 @@ export const ROUTE_PERMISSIONS = {
   '/dashboard/users': [USER_ROLES.SUPERADMIN],
   '/dashboard/system': [USER_ROLES.SUPERADMIN],
   '/dashboard/finance': [USER_ROLES.SUPERADMIN],
+  '/dashboard/beta-feedback': [USER_ROLES.SUPERADMIN],
   
   // Admin & Super Admin
   '/dashboard/analytics': [USER_ROLES.SUPERADMIN, USER_ROLES.ADMIN],
