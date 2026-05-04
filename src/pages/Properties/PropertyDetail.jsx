@@ -18,10 +18,6 @@ import {
   Heart,
   Share2,
   ArrowLeft,
-  Car,
-  Wifi,
-  Shield,
-  Zap,
 } from "lucide-react"
 import { propertiesAPI, userAPI } from "../../services/api"
 import InquiryForm from "@/components/common/InquiryForm"
@@ -43,8 +39,6 @@ const PropertyDetail = () => {
     checkFavoriteStatus()
     trackPropertyView(id);
   }, [id, user])
-
-  console.log("This is user details :", user);
 
   const trackPropertyView = async (propertyId, source = 'direct') => {
     try {
@@ -144,12 +138,9 @@ const PropertyDetail = () => {
       setIsFavorite(false);
     }
   }
-console.log("property list", property);
-
-
   if (loading) {
     return (
-      <div className="min-h-screen py-8">
+      <div className="min-h-screen bg-background py-8">
         <div className="container mx-auto px-4">
           <div className="animate-pulse">
             <div className="h-8 bg-muted rounded mb-4 w-1/4"></div>
@@ -176,8 +167,8 @@ console.log("property list", property);
     return (
       <div className="min-h-screen py-8">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-2xl font-bold mb-4">Property Not Found</h1>
-          <p className="text-muted-foreground mb-8">
+          <h1 className="mb-4 text-[24px] font-semibold">Property Not Found</h1>
+          <p className="mb-8 text-[14px] text-muted-foreground md:text-[15px]">
             The property you're looking for doesn't exist or has been removed.
           </p>
           <Link to="/properties">
@@ -192,7 +183,7 @@ console.log("property list", property);
   }
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen bg-background">
       <Seo
         title={`${property.title} in ${property.city}`}
         description={`${formatPrice(property.price)} ${property.property_type} in ${propertyLocation(property)}. ${property.bedrooms} beds, ${property.bathrooms} baths. ${property.description}`}
@@ -201,21 +192,21 @@ console.log("property list", property);
         type="product"
         schema={[propertySchema, breadcrumbSchema]}
       />
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 py-8">
         {/* Back Button */}
-        <Link to="/properties" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-6">
+        <Link to="/properties" className="mb-6 inline-flex items-center rounded-full border border-border bg-card px-4 py-2 text-[14px] font-medium text-muted-foreground shadow-sm transition hover:text-foreground">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Properties
         </Link>
 
         {/* Property Images */}
-        <div className="grid grid-cols-1 mb-8">
+        <div className="mb-8 overflow-hidden rounded-[2rem] border border-border bg-card p-2 shadow-2xl shadow-primary/10">
           <ImageCarousel
             image={property.images}
             altBase={property.title}
-            className="h-[60vh] max-h-[720px] min-h-[360px] bg-muted"
-            transformation="f_auto,q_auto,w_1600"
-            fit="contain"
+            className="h-[56vh] max-h-[720px] min-h-[320px] rounded-[1.5rem] bg-muted"
+            transformation="f_auto,q_auto,c_fill,w_1600,h_900"
+            fit="cover"
           />
         </div>
 
@@ -223,66 +214,66 @@ console.log("property list", property);
           {/* Property Details */}
           <div className="lg:col-span-2 space-y-6">
             {/* Header */}
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h1 className="text-3xl font-bold mb-2">{property.title}</h1>
-                  <div className="flex items-center text-muted-foreground mb-2">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    <span>{property.location}</span>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <Badge variant="secondary" className="capitalize">
+            <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm md:p-8">
+              <div className="mb-6 flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+                <div className="min-w-0">
+                  <div className="mb-3 flex flex-wrap items-center gap-3">
+                    <Badge variant="secondary" className="rounded-full px-3 py-1 capitalize">
                       {property.property_type}
                     </Badge>
-                    <div className="flex items-center">
-                      <Star className="h-4 w-4 text-yellow-500 fill-current mr-1" />
-                      <span className="text-sm">4.8 (24 reviews)</span>
+                    <div className="flex items-center rounded-full bg-muted px-3 py-1">
+                      <Star className="h-4 w-4 text-gold fill-current mr-1" />
+                      <span className="text-[12px] font-medium">4.8 (24 reviews)</span>
                     </div>
                   </div>
+                  <h1 className="text-[24px] font-semibold tracking-tight md:text-[28px]">{property.title}</h1>
+                  <div className="mt-4 flex items-start text-muted-foreground">
+                    <MapPin className="mr-2 mt-1 h-5 w-5 shrink-0" />
+                    <span className="text-[14px] leading-6 md:text-[15px]">{property.location}</span>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm" onClick={toggleFavorite} disabled={isFavorite === null}>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" className="rounded-full" onClick={toggleFavorite} disabled={isFavorite === null}>
                     <Heart className={`h-4 w-4 ${isFavorite ? "fill-current text-red-500" : ""}`} />
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="rounded-full">
                     <Share2 className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
-              <div className="text-3xl font-bold text-accent mb-4">{formatPrice(property.price)}</div>
+              <div className="text-[20px] font-bold text-foreground md:text-[24px]">{formatPrice(property.price)}</div>
             </div>
 
             {/* Property Stats */}
-            <Card>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="flex items-center space-x-2">
-                    <Bed className="h-5 w-5 text-muted-foreground" />
+            <Card className="rounded-[2rem] border-border shadow-sm">
+              <CardContent className="p-5 md:p-6">
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                  <div className="flex items-center gap-3 rounded-3xl bg-muted/60 p-4">
+                    <Bed className="h-5 w-5 text-foreground" />
                     <div>
-                      <div className="font-semibold">{property.bedrooms}</div>
-                      <div className="text-sm text-muted-foreground">Bedrooms</div>
+                      <div className="text-[18px] font-semibold">{property.bedrooms}</div>
+                      <div className="text-[12px] text-muted-foreground">Bedrooms</div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Bath className="h-5 w-5 text-muted-foreground" />
+                  <div className="flex items-center gap-3 rounded-3xl bg-muted/60 p-4">
+                    <Bath className="h-5 w-5 text-foreground" />
                     <div>
-                      <div className="font-semibold">{property.bathrooms}</div>
-                      <div className="text-sm text-muted-foreground">Bathrooms</div>
+                      <div className="text-[18px] font-semibold">{property.bathrooms}</div>
+                      <div className="text-[12px] text-muted-foreground">Bathrooms</div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Square className="h-5 w-5 text-muted-foreground" />
+                  <div className="flex items-center gap-3 rounded-3xl bg-muted/60 p-4">
+                    <Square className="h-5 w-5 text-foreground" />
                     <div>
-                      <div className="font-semibold">{property.sq_ft?.toLocaleString()}</div>
-                      <div className="text-sm text-muted-foreground">Sq Ft</div>
+                      <div className="text-[18px] font-semibold">{property.sq_ft?.toLocaleString()}</div>
+                      <div className="text-[12px] text-muted-foreground">Sq Ft</div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Calendar className="h-5 w-5 text-muted-foreground" />
+                  <div className="flex items-center gap-3 rounded-3xl bg-muted/60 p-4">
+                    <Calendar className="h-5 w-5 text-foreground" />
                     <div>
-                      <div className="font-semibold">{property.year_built}</div>
-                      <div className="text-sm text-muted-foreground">Year Built</div>
+                      <div className="text-[18px] font-semibold">{property.year_built}</div>
+                      <div className="text-[12px] text-muted-foreground">Year Built</div>
                     </div>
                   </div>
                 </div>
@@ -290,53 +281,53 @@ console.log("property list", property);
             </Card>
 
             {/* Description */}
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Description</h2>
-              <p className="text-muted-foreground leading-relaxed">{property.description}</p>
+            <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm md:p-8">
+              <h2 className="mb-4 text-[20px] font-semibold tracking-tight md:text-[22px]">Description</h2>
+              <p className="text-[14px] leading-7 text-muted-foreground md:text-[15px]">{property.description}</p>
             </div>
 
             {/* Features */}
 
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Features</h2>
-              <div className="grid md:grid-cols-2 gap-2">
+            <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm md:p-8">
+              <h2 className="mb-5 text-[20px] font-semibold tracking-tight md:text-[22px]">Features</h2>
+              <div className="grid gap-3 md:grid-cols-2">
                 {property?.features && property.features.trim() !== '' ? (
                   JSON.parse(property.features).map((feature, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-accent rounded-full"></div>
-                      <span className="text-sm">{feature.replace(/\[\]/g, "")}</span>
+                    <div key={index} className="flex items-center gap-3 rounded-2xl bg-muted/60 px-4 py-3">
+                      <div className="h-2 w-2 rounded-full bg-foreground"></div>
+                      <span className="text-[14px] font-medium md:text-[15px]">{feature.replace(/\[\]/g, "")}</span>
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm text-muted-foreground">No features listed.</p>
+                  <p className="text-[14px] text-muted-foreground">No features listed.</p>
                 )}
               </div>
             </div>
 
             {/* Amenities */}
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Amenities</h2>
-              <div className="grid md:grid-cols-2 gap-4">
+            <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm md:p-8">
+              <h2 className="mb-5 text-[20px] font-semibold tracking-tight md:text-[22px]">Amenities</h2>
+              <div className="grid gap-4 md:grid-cols-2">
                 <AmenityIcons property={property} />
               </div>
             </div>
           </div>
-          {user.role_id !== 6 || user.role_id !== 3 && (
+          {(user?.role_id !== 6 || user?.role_id !== 3) && (
             <div className="space-y-6">
-              <Card className="sticky top-8">
+              <Card className="sticky top-24 rounded-[2rem] border-border shadow-xl shadow-primary/10">
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">Contact Agent</h3>
+                  <h3 className="mb-4 text-[18px] font-semibold md:text-[20px]">Contact Agent</h3>
 
                   {/* Agent Info */}
-                  <div className="flex items-center space-x-3 mb-6">
+                  <div className="mb-6 flex items-center gap-3 rounded-3xl bg-muted/60 p-4">
                     <img
                       src={property.agent?.image || "/placeholder.svg?height=60&width=60&query=professional realtor"}
                       alt={property.agent?.name}
-                      className="w-12 h-12 rounded-full object-cover"
+                      className="h-14 w-14 rounded-full object-cover"
                     />
                     <div>
-                      <div className="font-semibold">{property.agent?.name}</div>
-                      <div className="text-sm text-muted-foreground">Licensed Agent</div>
+                      <div className="text-[16px] font-semibold">{property.agent?.name}</div>
+                      <div className="text-[12px] text-muted-foreground">Licensed Agent</div>
                     </div>
                   </div>
 
@@ -344,11 +335,11 @@ console.log("property list", property);
 
                   {/* Contact Buttons */}
                   <div className="space-y-3">
-                    <Button className="w-full">
+                    <Button className="w-full rounded-full font-bold">
                       <Phone className="mr-2 h-4 w-4" />
                       Call {property.agent?.phone}
                     </Button>
-                    <Button variant="outline" className="w-full bg-transparent">
+                    <Button variant="outline" className="w-full rounded-full bg-transparent font-bold">
                       <Mail className="mr-2 h-4 w-4" />
                       Send Email
                     </Button>

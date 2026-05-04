@@ -34,7 +34,7 @@ const VideoTourSection = ({ scrollY }) => {
                 "Live Q&A with agents"
               ].map((feature, index) => (
                 <li key={index} className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-accent mr-3" />
+                  <CheckCircle className="h-5 w-5 text-success mr-3" />
                   <span>{feature}</span>
                 </li>
               ))}

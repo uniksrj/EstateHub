@@ -2,11 +2,14 @@ import { Link, Outlet, useLocation } from "react-router"
 import { Building2, Menu, X } from "lucide-react"
 import { sidebars } from "@/data/userType"
 import { useAuth } from "@/hooks/useAuth"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { betaFeedbackAPI } from "@/services/api"
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [newFeedbackCount, setNewFeedbackCount] = useState(0)
 
   const getSidebarItems = (role_id) => {
     switch (role_id) {
@@ -33,6 +36,27 @@ const AdminLayout = () => {
   const { user } = useAuth();
 
   const sidebarItems = getSidebarItems(user.role_id);
+
+  useEffect(() => {
+    const loadNewFeedbackCount = async () => {
+      if (user?.role_id !== 1) {
+        setNewFeedbackCount(0)
+        return
+      }
+
+      try {
+        const response = await betaFeedbackAPI.getAll({ status: "new", per_page: 100 })
+        const list = Array.isArray(response.data?.data) ? response.data.data : []
+        setNewFeedbackCount(response.data?.total ?? list.length)
+      } catch (error) {
+        console.error("Error loading beta feedback count:", error)
+        setNewFeedbackCount(0)
+      }
+    }
+
+    loadNewFeedbackCount()
+  }, [user?.role_id])
+
   return (
     <div className="min-h-screen bg-background">
       <div className="border-b border-border px-4 py-3 lg:hidden">
@@ -79,6 +103,11 @@ const AdminLayout = () => {
                   >
                     <Icon className="h-4 w-4" />
                     <span className="text-sm font-medium">{item.label}</span>
+                    {user.role_id === 1 && item.path === "/dashboard/beta-feedback" && newFeedbackCount > 0 && (
+                      <Badge className="ml-auto bg-primary text-primary-foreground">
+                        {newFeedbackCount}
+                      </Badge>
+                    )}
                   </Link>
                 )
               })}

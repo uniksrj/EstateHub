@@ -93,6 +93,9 @@ export const router = createBrowserRouter([
       {
         path: "contact", Component: ContactPage
       },
+      // {
+      //   path: "find-agent", Component: ContactPage
+      // },
       {
         path: "beta-feedback", Component: BetaFeedbackPage
       },

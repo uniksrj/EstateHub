@@ -1,7 +1,7 @@
 // components/seller/PropertyRow.jsx
 "use client"
 
-import { use, useState } from "react"
+import { useState } from "react"
 import { Link, useLocation } from "react-router"
 import { TableCell, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
@@ -22,11 +22,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { MoreHorizontal, Edit, Eye, Trash2, MapPin, Home, Tag, TrendingUp, AlertCircle } from "lucide-react"
+import { MoreHorizontal, Edit, Eye, Trash2, MapPin, Home, Tag, TrendingUp, AlertCircle, Rocket } from "lucide-react"
 import { propertiesAPI } from "@/services/api"
+import BoostPropertyDialog from "@/components/common/property/BoostPropertyDialog"
 
 const PropertyRow = ({ property, onRefresh }) => {  
   const [deleteDialog, setDeleteDialog] = useState(false)
+  const [boostDialog, setBoostDialog] = useState(false)
   const location = useLocation();
  const userType = location.pathname.split('/')[1];
   const handleDelete = async () => {
@@ -85,20 +87,45 @@ const PropertyRow = ({ property, onRefresh }) => {
     return status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
   }
 
+  const getBoostSummary = () => {
+    if (!property?.is_boost_active) {
+      return null
+    }
+
+    const boostTypeLabel = property.boost_type
+      ? property.boost_type.replace(/\b\w/g, (char) => char.toUpperCase())
+      : "Boosted"
+
+    return `${boostTypeLabel} until ${new Date(property.boost_expires_at).toLocaleDateString()}`
+  }
+
+  const boostSummary = getBoostSummary()
+
   return (
     <>
-      <TableRow>
+      <TableRow className={property?.is_boost_active ? "bg-primary/5" : ""}>
         <TableCell>
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
               <Home className="h-6 w-6 text-muted-foreground" />
             </div>
             <div>
-              <div className="font-medium">{property.title || "Untitled"}</div>
+              <div className="flex flex-wrap items-center gap-2 font-medium">
+                <span>{property.title || "Untitled"}</span>
+                {property?.is_boost_active && (
+                  <Badge className="bg-gold text-accent-foreground">Featured</Badge>
+                )}
+              </div>
               <div className="flex items-center text-sm text-muted-foreground">
                 <MapPin className="h-3 w-3 mr-1" />
                 {[property.city, property.state].filter(Boolean).join(', ') || "No location"}
               </div>
+              {boostSummary && (
+                <div className="mt-1 flex items-center gap-1 text-xs text-primary">
+                  <Rocket className="h-3 w-3" />
+                  <span>{boostSummary}</span>
+                </div>
+              )}
             </div>
           </div>
         </TableCell>
@@ -153,11 +180,14 @@ const PropertyRow = ({ property, onRefresh }) => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                
                 <Link to={`/${userType}/properties/${property.id}/edit`}>
                   <Edit className="mr-2 h-4 w-4" />
                   Edit
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setBoostDialog(true)}>
+                <Rocket className="mr-2 h-4 w-4" />
+                Boost Property
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-destructive"
@@ -191,6 +221,13 @@ const PropertyRow = ({ property, onRefresh }) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <BoostPropertyDialog
+        open={boostDialog}
+        onOpenChange={setBoostDialog}
+        property={property}
+        onBoosted={onRefresh}
+      />
     </>
   )
 }

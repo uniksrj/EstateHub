@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Link, useNavigate, useLocation } from "react-router"
-import { Building2, Menu, X, User, LogOut, Home, Phone, Users, Info, ChevronDown } from "lucide-react"
+import { Building2, Menu, X, User, LogOut, Home, Phone, Users, Info, ChevronDown, Search } from "lucide-react"
 import { Button } from "../ui/button"
 import ThemeToggle from "../ThemeToggle"
 import { useAuth } from "../../hooks/useAuth"
@@ -72,22 +72,31 @@ const Header = () => {
   //   ]
 
   const supportHover = typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches
+  const navLinkClass = (active) =>
+    `inline-flex items-center rounded-full px-3 py-2 text-[14px] font-medium transition-colors hover:bg-muted hover:text-foreground ${
+      active ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" : "text-muted-foreground"
+    }`
+
   return (
-    <header ref={headerRef} className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header ref={headerRef} className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/90 shadow-sm backdrop-blur-xl supports-[backdrop-filter]:bg-background/75">
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-20 items-center justify-between gap-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <Building2 className="h-6 w-6 text-accent" />
-            <span className="font-bold text-xl">EstateHub</span>
+          <Link to="/" className="flex items-center gap-3">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/10">
+              <Building2 className="h-6 w-6" />
+            </span>
+            <span className="leading-tight">
+              <span className="block text-[20px] font-semibold tracking-tight">Estate Hub</span>
+              <span className="hidden text-[12px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:block">Premium Realty</span>
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+          <nav className="hidden items-center gap-1 rounded-full border border-border/80 bg-card/80 p-1.5 shadow-sm lg:flex">
             <Link
               to="/"
-              className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/") ? "text-accent" : "text-foreground"
-                }`}
+              className={navLinkClass(isActive("/"))}
             >
               <Home className="h-4 w-4 mr-1" />
               Home
@@ -107,8 +116,7 @@ const Header = () => {
                 }}
                 aria-expanded={openDropdown === "properties"}
                 aria-controls="properties-menu"
-                className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/properties") ? "text-accent" : "text-foreground"
-                  }`}
+                className={navLinkClass(location.pathname.startsWith("/properties"))}
               >
                 <Building2 className="h-4 w-4 mr-1" /> Properties
                 <ChevronDown className="h-3 w-3 ml-1" />
@@ -118,20 +126,19 @@ const Header = () => {
               <div
                 id="properties-menu"
                 role="menu"
-                className={`absolute left-0 top-full w-48 rounded-lg shadow-md ring-1 ring-black/6 border border-border z-50 transform transition duration-150 origin-top-left
+                className={`absolute left-0 top-[calc(100%+4px)] w-56 rounded-2xl border border-border bg-popover p-2 shadow-xl ring-1 ring-black/5 z-50 transform transition duration-150 origin-top-left
                   ${openDropdown === "properties" ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}`}
-                style={{ backgroundColor: "var(--popover)" }}
               >
-                <Link to="/properties?type=for-sale" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                <Link to="/properties?type=for-sale" className="block rounded-xl px-4 py-2.5 text-[14px] font-medium text-foreground hover:bg-muted" role="menuitem">
                   For Sale
                 </Link>
-                <Link to="/properties?type=for-rent" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                <Link to="/properties?type=for-rent" className="block rounded-xl px-4 py-2.5 text-[14px] font-medium text-foreground hover:bg-muted" role="menuitem">
                   For Rent
                 </Link>
-                <Link to="/properties?type=new" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                <Link to="/properties?type=new" className="block rounded-xl px-4 py-2.5 text-[14px] font-medium text-foreground hover:bg-muted" role="menuitem">
                   New Listings
                 </Link>
-                <Link to="/properties?type=luxury" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                <Link to="/properties?type=luxury" className="block rounded-xl px-4 py-2.5 text-[14px] font-medium text-foreground hover:bg-muted" role="menuitem">
                   Luxury Homes
                 </Link>
               </div>
@@ -150,11 +157,11 @@ const Header = () => {
             {user && (
               <>
                 {user.role_id === 1 || user.role === 2 ? (
-                  <Link to="/dashboard" className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith("/dashboard") ? "text-accent" : "text-foreground"}`}>
+                  <Link to="/dashboard" className={navLinkClass(location.pathname.startsWith("/dashboard"))}>
                     Admin
                   </Link>
                 ) : (
-                  <Link to="/dashboard" className={`text-sm font-medium transition-colors hover:text-accent ${location.pathname.startsWith(`/${user.role_id}`) ? "text-accent" : "text-foreground"}`}>
+                  <Link to="/dashboard" className={navLinkClass(location.pathname.startsWith("/dashboard"))}>
                     Dashboard
                   </Link>
                 )}
@@ -176,8 +183,7 @@ const Header = () => {
                   onClick={() => handleToggle("agents")}
                   aria-expanded={openDropdown === "agents"}
                   aria-controls="agents-menu"
-                  className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/agents") ? "text-accent" : "text-foreground"
-                    }`}
+                  className={navLinkClass(isActive("/agents"))}
                 >
                   <Users className="h-4 w-4 mr-1" /> Agents
                   <ChevronDown className="h-3 w-3 ml-1" />
@@ -186,28 +192,26 @@ const Header = () => {
                 <div
                   id="agents-menu"
                   role="menu"
-                  className={`absolute left-0 top-full w-48 rounded-lg shadow-md ring-1 ring-black/6 border border-border z-50 transform transition duration-150 origin-top-left
+                  className={`absolute left-0 top-[calc(100%+4px)] w-56 rounded-2xl border border-border bg-popover p-2 shadow-xl ring-1 ring-black/5 z-50 transform transition duration-150 origin-top-left
                   ${openDropdown === "agents" ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
-                  style={{ backgroundColor: "var(--popover)" }}
                 >
-                  <Link to="/agents" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                  <Link to="/agents" className="block rounded-xl px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted" role="menuitem">
                     Find an Agent
                   </Link>
-                  <Link to="/agents/top" className="block px-4 py-2 text-sm text-foreground hover:text-accent" role="menuitem">
+                  <Link to="/agents/top" className="block rounded-xl px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted" role="menuitem">
                     Top Rated Agents
                   </Link>
                 </div>
               </div>
             )
             }
-            <Link to="/about" className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/about") ? "text-accent" : "text-foreground"}`}>
+            <Link to="/about" className={navLinkClass(isActive("/about"))}>
               <Info className="h-4 w-4 mr-1" /> About
             </Link>
 
             <Link
               to="/contact"
-              className={`flex items-center space-x-1 text-sm font-medium transition-colors hover:text-accent ${isActive("/contact") ? "text-accent" : "text-foreground"
-                }`}
+              className={navLinkClass(isActive("/contact"))}
             >
               <Phone className="h-4 w-4 mr-1" />
               Contact
@@ -215,19 +219,19 @@ const Header = () => {
           </nav>
 
           {/* Desktop Auth Buttons */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center gap-3">
             <ThemeToggle />
             {user ? (
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2 text-sm">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center rounded-full border border-border bg-card px-3 py-2 text-[14px] shadow-sm">
                   {/* <User className="h-4 w-4" />
                   <span>{user.name}</span> */}
                   <Link to="/profile" className="flex items-center space-x-2 text-sm">
-                    <User className="h-4 w-4" />
-                    <span>{user.name}</span>
+                    <User className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium">{user.name}</span>
                   </Link>
                 </div>
-                <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <Button variant="ghost" size="sm" onClick={handleLogout} className="rounded-full">
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
                 </Button>
@@ -235,44 +239,45 @@ const Header = () => {
             ) : (
               <>
                 <Link to="/auth/login">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" className="rounded-full">
                     Login
                   </Button>
                 </Link>
                 <Link to="/auth/register">
-                  <Button size="sm">Sign Up</Button>
+                  <Button size="sm" className="rounded-full px-5 shadow-lg shadow-primary/10">
+                    <Search className="mr-2 h-4 w-4" />
+                    Sign Up
+                  </Button>
                 </Link>
               </>
             )}
           </div>
 
           {/* Mobile Menu Button */}
-          <button className="lg:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button className="rounded-full border border-border bg-card p-2 shadow-sm lg:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border max-h-[70vh] overflow-y-auto">
-            <nav className="flex flex-col space-y-4">
+          <div className="lg:hidden pb-5 pt-2">
+            <nav className="flex max-h-[72vh] flex-col gap-2 overflow-y-auto rounded-3xl border border-border bg-card p-4 shadow-xl">
               <Link
                 to="/"
-                className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/") ? "text-accent" : "text-foreground"
-                  }`}
+                className={`rounded-2xl px-3 py-2 text-sm font-semibold transition-colors hover:bg-muted ${isActive("/") ? "bg-primary text-primary-foreground" : "text-foreground"}`}
                 onClick={closeMenu}
               >
                 Home
               </Link>
               <Link
                 to="/properties"
-                className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/properties") ? "text-accent" : "text-foreground"
-                  }`}
+                className={`rounded-2xl px-3 py-2 text-sm font-semibold transition-colors hover:bg-muted ${isActive("/properties") ? "bg-primary text-primary-foreground" : "text-foreground"}`}
                 onClick={closeMenu}
               >
                 Properties
               </Link>
-              <div className="pl-3 border-l border-border space-y-2">
+              <div className="space-y-1 rounded-2xl bg-muted/50 p-3">
                 <Link to="/properties?type=for-sale" className="block text-sm text-muted-foreground hover:text-accent" onClick={closeMenu}>
                   For Sale
                 </Link>
@@ -331,7 +336,7 @@ const Header = () => {
               )}
 
               {/* Mobile Auth */}
-              <div className="pt-4 border-t border-border">
+              <div className="mt-2 border-t border-border pt-4">
                 <div className="mb-4">
                   <ThemeToggle />
                 </div>
@@ -360,12 +365,12 @@ const Header = () => {
                 ) : (
                   <div className="space-y-2">
                     <Link to="/auth/login" onClick={closeMenu}>
-                      <Button variant="ghost" size="sm" className="w-full justify-start cursor-pointer">
+                        <Button variant="ghost" size="sm" className="w-full justify-start rounded-2xl cursor-pointer">
                         Login
                       </Button>
                     </Link>
                     <Link to="/auth/register" onClick={closeMenu}>
-                      <Button size="sm" className="w-full cursor-pointer">
+                        <Button size="sm" className="w-full rounded-2xl cursor-pointer">
                         Sign Up
                       </Button>
                     </Link>

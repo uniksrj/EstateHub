@@ -45,7 +45,7 @@ const HowItWorksSection = () => {
               <CardContent className="pt-6">
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 relative">
                   <step.icon className="h-8 w-8 text-primary" />
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-accent text-accent-foreground text-xs rounded-full flex items-center justify-center font-bold">
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center font-bold">
                     {step.step}
                   </div>
                 </div>

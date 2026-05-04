@@ -120,6 +120,8 @@ export const propertiesAPI = {
   getFeatured: () => api.get("/properties/featured"),
   getPropertyListByUser: (searchData) => api.get("/api/propertiesList", { searchData }),
   getDashboardListByUser: (searchData) => api.get("/api/seller/dashboard", { searchData }),
+  boostProperty: (payload) => api.post("/api/boost-property", payload),
+  getBoostPlans: () => api.get("/api/boost-plans"),
 }
 
 // User API calls

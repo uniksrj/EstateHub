@@ -4,20 +4,20 @@ import { Button } from "@/components/ui/button"
 
 const CTASection = () => {
   return (
-    <section className="py-16 px-4 bg-primary text-primary-foreground">
-      <div className="container mx-auto text-center">
-        <h2 className="text-3xl font-bold mb-4">Ready to Find Your Dream Home?</h2>
-        <p className="text-xl mb-8 opacity-90">
+    <section className="bg-background px-4 py-20">
+      <div className="container mx-auto overflow-hidden rounded-[2rem] bg-primary px-6 py-14 text-center text-primary-foreground shadow-2xl shadow-primary/10 md:px-10">
+        <h2 className="mx-auto mb-4 max-w-3xl text-4xl font-black tracking-tight md:text-5xl">Ready to Find Your Dream Home?</h2>
+        <p className="mx-auto mb-8 max-w-2xl text-lg opacity-90 md:text-xl">
           Join thousands of satisfied customers who found their perfect property with EstateHub
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/register">
-            <Button size="lg" variant="secondary">
+          <Link to="/auth/register">
+            <Button size="lg" variant="secondary" className="rounded-full px-7 font-bold">
               Start Your Journey Today
             </Button>
           </Link>
           <Link to="/contact">
-            <Button size="lg" variant="outline" className="border-foreground bg-foreground text-primary-foreground hover:bg-primary-foreground/50">
+            <Button size="lg" variant="outline" className="rounded-full border-primary-foreground/30 bg-primary-foreground/10 px-7 font-bold text-primary-foreground hover:bg-primary-foreground hover:text-primary">
               <MessageCircle className="mr-2 h-5 w-5" />
               Get Free Consultation
             </Button>

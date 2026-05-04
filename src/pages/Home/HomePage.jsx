@@ -44,6 +44,8 @@ const mapPropertyToFeaturedCard = (property) => {
     price: formatPrice(property?.price),
     image: toImageUrl(imagePath),
     featured: Boolean(property?.featured),
+    isBoostActive: Boolean(property?.is_boost_active),
+    boostType: property?.boost_type || null,
   }
 }
 
@@ -55,10 +57,19 @@ const HomePage = () => {
   useEffect(() => {
     const fetchFeaturedProperties = async () => {
       try {
-        const response = await propertiesAPI.getAll({ featured: true, per_page: 6 })
+        const response = await propertiesAPI.getAll({ per_page: 12 })
         const properties = Array.isArray(response?.data?.data) ? response.data.data : []
+        const homepageBoosted = properties.filter(
+          (property) => property?.is_boost_active && property?.boost_type === "homepage"
+        )
         const featuredOnly = properties.filter((property) => property?.featured)
-        const selectedProperties = (featuredOnly.length > 0 ? featuredOnly : properties).slice(0, 6)
+        const selectedProperties = (
+          homepageBoosted.length > 0
+            ? homepageBoosted
+            : featuredOnly.length > 0
+              ? featuredOnly
+              : properties
+        ).slice(0, 6)
         setFeaturedProperties(
           selectedProperties.length > 0
             ? selectedProperties.map(mapPropertyToFeaturedCard)
