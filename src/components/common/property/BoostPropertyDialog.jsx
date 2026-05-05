@@ -58,14 +58,26 @@ const BoostPropertyDialog = ({ open, onOpenChange, property, onBoosted }) => {
         property_id: property.id,
         boost_type: selectedPlan,
       })
-      toast.success(response.data?.message || "Property boosted successfully.")
+      toast.success(response.data?.message || "Your property is now boosted.")
       onBoosted?.(response.data?.property)
       onOpenChange(false)
     } catch (error) {
-      toast.error(error.response?.data?.message || "Could not boost this property right now.")
+      toast.error(error.response?.data?.message || "Could not boost your property right now.")
     } finally {
       setSubmitting(false)
     }
+  }
+
+  const formatPlanPrice = (price, currency) => {
+    if (currency === "INR") {
+      return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 0,
+      }).format(Number(price || 0))
+    }
+
+    return `${price}`
   }
 
   return (
@@ -74,7 +86,7 @@ const BoostPropertyDialog = ({ open, onOpenChange, property, onBoosted }) => {
         <DialogHeader>
           <DialogTitle>Boost Property</DialogTitle>
           <DialogDescription>
-            Choose a visibility plan for {property?.title || "this property"}.
+            Choose a visibility plan to get more buyer enquiries for {property?.title || "your property"}.
           </DialogDescription>
         </DialogHeader>
 
@@ -112,13 +124,13 @@ const BoostPropertyDialog = ({ open, onOpenChange, property, onBoosted }) => {
                     </div>
 
                     <div className="space-y-1">
-                      <div className="text-2xl font-bold">${plan.price}</div>
+                      <div className="text-2xl font-bold">{formatPlanPrice(plan.price, plan.currency)}</div>
                       <div className="text-sm text-muted-foreground">{plan.duration_days} days</div>
                     </div>
 
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Rocket className="h-4 w-4 text-primary" />
-                      Boosted properties are shown first until expiry.
+                      Boosted listings stay on priority display until the plan expires.
                     </div>
                   </CardContent>
                 </Card>
@@ -132,7 +144,7 @@ const BoostPropertyDialog = ({ open, onOpenChange, property, onBoosted }) => {
             Cancel
           </Button>
           <Button onClick={handleBoost} disabled={!selectedPlan || submitting || loadingPlans}>
-            {submitting ? "Activating..." : "Boost Property"}
+            {submitting ? "Activating..." : "Boost Your Property"}
           </Button>
         </DialogFooter>
       </DialogContent>

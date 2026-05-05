@@ -24,8 +24,8 @@ const FeaturedPropertiesSection = ({ loading, featuredProperties, scrollY }) => 
       <div className="container mx-auto relative z-10">
         <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Featured listings</p>
-            <h2 className="text-[20px] font-semibold tracking-tight md:text-[22px]">Premium homes worth a closer look</h2>
+            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Featured Properties</p>
+            <h2 className="text-[20px] font-semibold tracking-tight md:text-[22px]">Homepage featured homes getting the most buyer attention</h2>
           </div>
           <Link to="/properties">
             <Button variant="outline" className="rounded-full px-6 text-[14px] font-semibold">

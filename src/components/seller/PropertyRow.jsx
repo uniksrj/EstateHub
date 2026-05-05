@@ -187,7 +187,7 @@ const PropertyRow = ({ property, onRefresh }) => {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setBoostDialog(true)}>
                 <Rocket className="mr-2 h-4 w-4" />
-                Boost Property
+                Boost Your Property
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-destructive"

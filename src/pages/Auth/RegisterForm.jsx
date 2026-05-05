@@ -1,12 +1,12 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router"
 import { Button } from "../../components/ui/button"
 import { Input } from "../../components/ui/input"
 import { Label } from "../../components/ui/label"
 import { Alert, AlertDescription } from "../../components/ui/alert"
-import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { CheckCircle2, Eye, EyeOff, Loader2, MailCheck } from "lucide-react"
 import { useAuth } from "../../hooks/useAuth"
 import {
     Select,
@@ -17,6 +17,9 @@ import {
 } from "../../components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
+import { authAPI } from "../../services/api"
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const RegisterForm = () => {
     const formRef = useRef();
@@ -25,9 +28,117 @@ const RegisterForm = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [selectedRole, setSelectedRole] = useState("");
+    const [email, setEmail] = useState("");
+    const [otp, setOtp] = useState("");
+    const [otpSent, setOtpSent] = useState(false);
+    const [otpVerified, setOtpVerified] = useState(false);
+    const [otpStatus, setOtpStatus] = useState({ type: "", message: "" });
+    const [lastOtpEmail, setLastOtpEmail] = useState("");
+    const [sendingOtp, setSendingOtp] = useState(false);
+    const [verifyingOtp, setVerifyingOtp] = useState(false);
 
     const { register } = useAuth()
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!email) {
+            setOtp("");
+            setOtpSent(false);
+            setOtpVerified(false);
+            setOtpStatus({ type: "", message: "" });
+            setLastOtpEmail("");
+            return;
+        }
+
+        if (email !== lastOtpEmail) {
+            setOtp("");
+            setOtpVerified(false);
+            setOtpStatus({ type: "", message: "" });
+        }
+    }, [email, lastOtpEmail]);
+
+    const isEmailValid = EMAIL_REGEX.test(email.trim());
+
+    const sendOtp = async (overrideEmail) => {
+        const nextEmail = (overrideEmail ?? email).trim().toLowerCase();
+
+        if (!EMAIL_REGEX.test(nextEmail)) {
+            return;
+        }
+
+        setSendingOtp(true);
+        setOtpStatus({ type: "", message: "" });
+        setError("");
+
+        try {
+            const response = await authAPI.sendEmailOtp({ email: nextEmail });
+            setOtpSent(true);
+            setOtpVerified(false);
+            setLastOtpEmail(nextEmail);
+            setOtpStatus({
+                type: "success",
+                message: response.data?.message || "Verification code sent to your email.",
+            });
+        } catch (err) {
+            setOtpSent(false);
+            const message = err.response?.data?.message || err.response?.data?.error || "We could not send the verification code right now.";
+            setOtpStatus({ type: "error", message });
+        } finally {
+            setSendingOtp(false);
+        }
+    };
+
+    const handleVerifyOtp = async () => {
+        const normalizedEmail = email.trim().toLowerCase();
+
+        if (!EMAIL_REGEX.test(normalizedEmail)) {
+            setOtpStatus({ type: "error", message: "Enter a valid email address to continue." });
+            return;
+        }
+
+        if (!otp.trim()) {
+            setOtpStatus({ type: "error", message: "Enter the 6-digit verification code." });
+            return;
+        }
+
+        setVerifyingOtp(true);
+        setOtpStatus({ type: "", message: "" });
+        setError("");
+
+        try {
+            const response = await authAPI.verifyEmailOtp({
+                email: normalizedEmail,
+                otp: otp.trim(),
+            });
+            setOtpVerified(true);
+            setLastOtpEmail(normalizedEmail);
+            setOtpStatus({
+                type: "success",
+                message: response.data?.message || "Email verified successfully.",
+            });
+        } catch (err) {
+            setOtpVerified(false);
+            const message = err.response?.data?.message || err.response?.data?.error || "We could not verify that code. Please try again.";
+            setOtpStatus({ type: "error", message });
+        } finally {
+            setVerifyingOtp(false);
+        }
+    };
+
+    const handleEmailBlur = async (e) => {
+        const nextEmail = e.target.value.trim().toLowerCase();
+        setEmail(nextEmail);
+
+        if (!EMAIL_REGEX.test(nextEmail)) {
+            return;
+        }
+
+        if (nextEmail === lastOtpEmail && otpSent) {
+            return;
+        }
+
+        await sendOtp(nextEmail);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -50,6 +161,13 @@ const RegisterForm = () => {
             setLoading(false);
             return;
         }
+
+        if (!otpVerified || data.email?.trim().toLowerCase() !== lastOtpEmail) {
+            setError("Please verify your email address with the OTP before creating your account.");
+            setLoading(false);
+            return;
+        }
+
         if (data.newsletter === 'on') {
             data.newsletter = true;
         } else {
@@ -130,12 +248,100 @@ const RegisterForm = () => {
                         name="email"
                         type="email"
                         placeholder="Enter your email"
-                        // value={formData.email}
-                        // onChange={handleChange}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        onBlur={handleEmailBlur}
                         required
-                        disabled={loading}
+                        disabled={loading || sendingOtp || verifyingOtp}
                     />
                 </div>
+
+                {email && (
+                    <div className="space-y-3 rounded-lg border border-border/70 bg-card/50 p-4">
+                        <div className="flex items-start justify-between gap-3">
+                            <div className="space-y-1">
+                                <div className="flex items-center gap-2 text-sm font-medium">
+                                    <MailCheck className="h-4 w-4 text-primary" />
+                                    Verify your email
+                                </div>
+                                <p className="text-sm text-muted-foreground">
+                                    Enter the 6-digit code sent to your email before creating your account.
+                                </p>
+                            </div>
+                            {otpVerified && (
+                                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                                    <CheckCircle2 className="h-3.5 w-3.5" />
+                                    Email verified
+                                </span>
+                            )}
+                        </div>
+
+                        {otpStatus.message && (
+                            <Alert variant={otpStatus.type === "error" ? "destructive" : "default"}>
+                                <AlertDescription>{otpStatus.message}</AlertDescription>
+                            </Alert>
+                        )}
+
+                        {otpSent && (
+                            <div className="space-y-2">
+                                <Label htmlFor="email_otp">Email OTP</Label>
+                                <div className="flex flex-col gap-3 sm:flex-row">
+                                    <Input
+                                        id="email_otp"
+                                        name="email_otp"
+                                        type="text"
+                                        inputMode="numeric"
+                                        maxLength={6}
+                                        placeholder="Enter 6-digit OTP"
+                                        value={otp}
+                                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                                        disabled={loading || verifyingOtp}
+                                        className="sm:flex-1"
+                                    />
+                                    <Button
+                                        type="button"
+                                        onClick={handleVerifyOtp}
+                                        disabled={loading || verifyingOtp || otp.trim().length !== 6 || otpVerified}
+                                    >
+                                        {verifyingOtp ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                Verifying...
+                                            </>
+                                        ) : otpVerified ? (
+                                            "Verified"
+                                        ) : (
+                                            "Verify OTP"
+                                        )}
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="flex flex-wrap items-center gap-3">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => sendOtp()}
+                                disabled={!isEmailValid || sendingOtp || loading}
+                            >
+                                {sendingOtp ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Sending...
+                                    </>
+                                ) : otpSent ? (
+                                    "Resend OTP"
+                                ) : (
+                                    "Send OTP"
+                                )}
+                            </Button>
+                            <span className="text-xs text-muted-foreground">
+                                Code expires in 10 minutes.
+                            </span>
+                        </div>
+                    </div>
+                )}
 
                 <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number *</Label>
@@ -500,14 +706,18 @@ const RegisterForm = () => {
                     </div>
                 </div>
 
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={loading || !otpVerified || email.trim().toLowerCase() !== lastOtpEmail}
+                >
                     {loading ? (
                         <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             Creating account...
                         </>
                     ) : (
-                        "Create Account"
+                        otpVerified ? "Create Account" : "Verify Email to Continue"
                     )}
                 </Button>
             </form>

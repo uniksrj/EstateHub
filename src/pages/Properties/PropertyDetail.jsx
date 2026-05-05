@@ -321,7 +321,7 @@ const PropertyDetail = () => {
                   {/* Agent Info */}
                   <div className="mb-6 flex items-center gap-3 rounded-3xl bg-muted/60 p-4">
                     <img
-                      src={property.agent?.image || "/placeholder.svg?height=60&width=60&query=professional realtor"}
+                      src={property.agent?.avatar || "/placeholder.svg?height=60&width=60&query=professional realtor"}
                       alt={property.agent?.name}
                       className="h-14 w-14 rounded-full object-cover"
                     />

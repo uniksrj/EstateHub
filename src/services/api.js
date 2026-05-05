@@ -94,6 +94,14 @@ export const authAPI = {
     await ensureCsrfToken()
     return await api.post("/api/auth/login", credentials)
   },
+  sendEmailOtp: async (payload) => {
+    await ensureCsrfToken()
+    return await api.post("/api/send-email-otp", payload, { withCredentials: true })
+  },
+  verifyEmailOtp: async (payload) => {
+    await ensureCsrfToken()
+    return await api.post("/api/verify-email-otp", payload, { withCredentials: true })
+  },
   register: async (userData) => {
     await ensureCsrfToken()
     return await api.post("/api/auth/register", userData, { withCredentials: true })
