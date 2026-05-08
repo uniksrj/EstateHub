@@ -36,6 +36,8 @@ const RegisterForm = () => {
     const [lastOtpEmail, setLastOtpEmail] = useState("");
     const [sendingOtp, setSendingOtp] = useState(false);
     const [verifyingOtp, setVerifyingOtp] = useState(false);
+    const [newsletterOptIn, setNewsletterOptIn] = useState(false);
+    const [termsAccepted, setTermsAccepted] = useState(false);
 
     const { register } = useAuth()
     const navigate = useNavigate()
@@ -147,6 +149,8 @@ const RegisterForm = () => {
 
         const formData = new FormData(formRef.current);
         const data = Object.fromEntries(formData.entries());
+        data.newsletter = newsletterOptIn;
+        data.terms = termsAccepted;
 
         // Password confirmation check
         if (data.password !== data.password_confirmation) {
@@ -166,18 +170,6 @@ const RegisterForm = () => {
             setError("Please verify your email address with the OTP before creating your account.");
             setLoading(false);
             return;
-        }
-
-        if (data.newsletter === 'on') {
-            data.newsletter = true;
-        } else {
-            data.newsletter = false;
-        }
-
-        if (data.terms === 'on') {
-            data.terms = true;
-        } else {
-            data.terms = false;
         }
 
         try {
@@ -578,10 +570,10 @@ const RegisterForm = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="brokerage">Brokerage/Company</Label>
+                            <Label htmlFor="agency_name">Brokerage/Company</Label>
                             <Input
-                                id="brokerage"
-                                name="brokerage"
+                                id="agency_name"
+                                name="agency_name"
                                 type="text"
                                 placeholder="Enter your brokerage name"
                                 disabled={loading}
@@ -613,8 +605,8 @@ const RegisterForm = () => {
                             <Checkbox
                                 id="newsletter"
                                 name="newsletter"
-                                // checked={formData.newsletter}
-                                // onCheckedChange={(checked) => handleChange({ target: { name: 'newsletter', value: checked } })}
+                                checked={newsletterOptIn}
+                                onCheckedChange={(checked) => setNewsletterOptIn(checked === true)}
                                 disabled={loading}
                             />
                             <span>Send me property recommendations and market updates</span>
@@ -628,8 +620,8 @@ const RegisterForm = () => {
                             <Checkbox
                                 id="terms"
                                 name="terms"
-                                // checked={formData.terms}
-                                // onCheckedChange={(checked) => handleChange({ target: { name: 'terms', value: checked } })}
+                                checked={termsAccepted}
+                                onCheckedChange={(checked) => setTermsAccepted(checked === true)}
                                 required
                                 disabled={loading}
                             />
