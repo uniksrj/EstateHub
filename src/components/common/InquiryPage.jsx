@@ -8,7 +8,7 @@ import { inquiryWebhookService } from '@/services/webhook';
 import { toast, Toaster } from 'sonner';
 import { demoInquiries } from '@/data/demoData';
 import { HeaderLine } from './inquiry/HeaderLine';
-import { FilterInquiryPage } from './inquiry/FilterInquiryPAge';
+import { FilterInquiryPage } from './inquiry/FilterInquiryPage';
 import { InquiryList } from './inquiry/InquiryList';
 import { SidebarHeaderText } from './inquiry/SidebarHeaderText';
 import { BuyerInfo } from './inquiry/BuyerInfo';
