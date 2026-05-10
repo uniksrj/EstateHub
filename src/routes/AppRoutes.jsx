@@ -44,6 +44,7 @@ import Offers from "@/pages/Dashboard/offer/Offers"
 import PropertyByType from "@/pages/Dashboard/Buyer/PropertyByType"
 import ProfilePage from "@/pages/Profile/ProfilePage"
 import BetaFeedbackInbox from "@/pages/Dashboard/Admin/BetaFeedback/BetaFeedbackInbox"
+import AboutPage from "@/pages/About/AboutPage"
 // Create the data router
 export const router = createBrowserRouter([
   {
@@ -92,6 +93,9 @@ export const router = createBrowserRouter([
       },
       {
         path: "contact", Component: ContactPage
+      },
+      {
+        path: "about", Component: AboutPage
       },
       // {
       //   path: "find-agent", Component: ContactPage
