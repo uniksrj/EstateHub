@@ -42,6 +42,11 @@ api.interceptors.request.use(
       delete config.headers["Content-Type"]
     }
 
+    const token = localStorage.getItem("chatToken")
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+
     // Only add CSRF token for state-changing requests
     if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase())) {
       const token = getCsrfTokenFromCookie()
@@ -91,25 +96,20 @@ api.interceptors.response.use(
 // Auth API calls
 export const authAPI = {
   login: async (credentials) => {
-    await ensureCsrfToken()
     return await api.post("/api/auth/login", credentials)
   },
   sendEmailOtp: async (payload) => {
-    await ensureCsrfToken()
     return await api.post("/api/send-email-otp", payload, { withCredentials: true })
   },
   verifyEmailOtp: async (payload) => {
-    await ensureCsrfToken()
     return await api.post("/api/verify-email-otp", payload, { withCredentials: true })
   },
   register: async (userData) => {
-    await ensureCsrfToken()
     return await api.post("/api/auth/register", userData, { withCredentials: true })
   },
   logout: () => api.post("/api/auth/logout"),
-  forgotPassword: (email) => api.post("/auth/forgot-password", { email }),
+  forgotPassword: (email) => api.post("/api/auth/forgot-password", { email }),
   resetPassword: async (data) => {
-    await ensureCsrfToken()
     await api.post("/api/reset-password", data)
   },
   getUser: () => api.get("/api/auth/user"),
@@ -124,8 +124,8 @@ export const propertiesAPI = {
   saveViewById: (id, details) => api.post(`/api/properties/${id}`, details),
   update: (id, propertyData) => api.put(`/api/properties/${id}`, propertyData),
   delete: (id) => api.delete(`/api/properties/${id}`),
-  search: (searchParams) => api.get("/properties/search", { params: searchParams }),
-  getFeatured: () => api.get("/properties/featured"),
+  search: (searchParams) => api.get("/api/properties/search", { params: searchParams }),
+  getFeatured: () => api.get("/api/properties/featured"),
   getPropertyListByUser: (searchData) => api.get("/api/propertiesList", { searchData }),
   getDashboardListByUser: (searchData) => api.get("/api/seller/dashboard", { searchData }),
   boostProperty: (payload) => api.post("/api/boost-property", payload),
@@ -144,7 +144,7 @@ export const userAPI = {
   getFavorites: () => api.get("/api/properties/get-favorite-properties"),
   checkFavorite: (propertyId) => api.get(`/api/properties/${propertyId}/favorite`),
   toggleFavorite: (details) => api.post(`/api/properties/toggle-favorite`, details),
-  removeFromFavorites: (propertyId) => api.delete(`/user/favorites/${propertyId}`),
+  removeFromFavorites: (propertyId) => api.delete(`/api/user/favorites/${propertyId}`),
   getUser_metrics: (params) => api.get("/api/auth/user_metrics", { params }),
   storeBuyerInquiry: (details) => api.post(`/api/user/store-inquiry`, details),
   get_deal_losses: (params) => api.get("/api/agent/deal-losses", { params }),
@@ -188,7 +188,6 @@ export const userAPI = {
 
 export const betaFeedbackAPI = {
   submit: async (feedbackData) => {
-    await ensureCsrfToken()
     return api.post("/api/beta-feedback", feedbackData, {
       headers: feedbackData instanceof FormData ? {
         "Content-Type": "multipart/form-data",
@@ -202,7 +201,7 @@ export const betaFeedbackAPI = {
 export const superAdminAPI = {
   // User Management
   getAllUsers: (params) => api.get("/api/admin/users", { params }),
-  getUserById: (id) => api.get(`/admin/users/${id}`),
+  getUserById: (id) => api.get(`/api/admin/users/${id}`),
   createUser: (userData) => api.post("/api/admin/users", userData),
   updateUser: (id, userData) => api.put(`/api/admin/users/${id}`, userData),
   deleteUser: (id) => api.delete(`/api/admin/users/${id}`),
