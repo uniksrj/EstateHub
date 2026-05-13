@@ -1,8 +1,9 @@
 import axios from "axios"
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+import { API_ORIGIN } from "@/config/env"
+
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_ORIGIN,
   headers: {
     Accept: "application/json",
   },
@@ -27,7 +28,7 @@ const ensureCsrfToken = async () => {
   let token = getCsrfTokenFromCookie()
   if (!token) {
     // If no token, get one from the server
-    await axios.get(`${API_URL}/sanctum/csrf-cookie`, {
+    await axios.get(`${API_ORIGIN}/sanctum/csrf-cookie`, {
       withCredentials: true,
     })
     token = getCsrfTokenFromCookie()

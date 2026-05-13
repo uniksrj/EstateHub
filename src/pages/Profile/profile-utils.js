@@ -1,6 +1,5 @@
 import { getNotificationGroups, getRoleSectionConfig } from "./profile-config"
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
+import { toBackendAssetUrl } from "@/config/env"
 
 function getSettings(user) {
   return user?.settings && typeof user.settings === "object" ? user.settings : {}
@@ -28,7 +27,7 @@ export function getAvatarUrl(avatar) {
   ) {
     return avatar
   }
-  return `${API_URL}/storage/${avatar}`
+  return toBackendAssetUrl(avatar)
 }
 
 export function getProfileFormState(user) {

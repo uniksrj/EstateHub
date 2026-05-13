@@ -11,9 +11,8 @@ import Seo from "@/components/common/Seo"
 import { organizationSchema } from "@/utils/seo"
 import { featuredPropertiesData } from "@/data/demoData"
 import { propertiesAPI } from "@/services/api"
+import { toBackendAssetUrl } from "@/config/env"
 import { useState, useEffect } from "react"
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
 
 const formatPrice = (price) =>
   new Intl.NumberFormat("en-US", {
@@ -25,9 +24,9 @@ const formatPrice = (price) =>
 const toImageUrl = (imagePath) => {
   if (!imagePath) return "/placeholder.svg"
   if (/^https?:\/\//i.test(imagePath)) return imagePath
-  if (imagePath.startsWith("/storage/")) return `${API_URL}${imagePath}`
+  if (imagePath.startsWith("/storage/")) return toBackendAssetUrl(imagePath)
   if (imagePath.startsWith("/")) return imagePath
-  return `${API_URL}/storage/${imagePath}`
+  return toBackendAssetUrl(imagePath)
 }
 
 const mapPropertyToFeaturedCard = (property) => {

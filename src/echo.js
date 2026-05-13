@@ -1,7 +1,7 @@
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
+import { API_ORIGIN } from "@/config/env"
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 window.Pusher = Pusher;
 
 const getAuthHeaders = () => {
@@ -14,7 +14,7 @@ const echo = new Echo({
   key: import.meta.env.VITE_PUSHER_APP_KEY,
   cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
   forceTLS: true,
-  authEndpoint: `${API_URL}/broadcasting/auth`,
+  authEndpoint: `${API_ORIGIN}/broadcasting/auth`,
   auth: {
     headers: getAuthHeaders(),
   },

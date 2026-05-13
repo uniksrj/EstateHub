@@ -3,6 +3,7 @@ import { LoaderCircle } from "lucide-react"
 import { toast } from "sonner"
 import { Card, CardContent } from "@/components/ui/card"
 import { useAuth } from "@/hooks/useAuth"
+import { toBackendAssetUrl } from "@/config/env"
 import { userAPI } from "@/services/api"
 import ProfileHeroCard from "./components/ProfileHeroCard"
 import {
@@ -134,9 +135,7 @@ export default function ProfilePage() {
       setProfileForm((currentState) => ({
         ...currentState,
         avatarFile: null,
-        avatarPreview: nextUser.avatar
-          ? `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/storage/${nextUser.avatar}`
-          : currentState.avatarPreview,
+        avatarPreview: nextUser.avatar ? toBackendAssetUrl(nextUser.avatar) : currentState.avatarPreview,
       }))
       toast.success("Profile updated successfully.")
     } catch (error) {

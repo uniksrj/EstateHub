@@ -1,50 +1,56 @@
+import { lazy } from "react"
 import { createBrowserRouter } from "react-router"
 import Layout from "../components/layout/Layout"
-import PropertyList from "../pages/Properties/PropertyList"
-import PropertyDetail from "../pages/Properties/PropertyDetail"
-import AuthPage from "../pages/Auth/AuthPage"
-import ForgotPassword from "../pages/Auth/ForgotPassword"
-import AddProperty from "../pages/Dashboard/AddProperty"
-import ManageProperties from "../pages/Dashboard/ManageProperties"
 import ProtectedRoute from "../components/common/ProtectedRoute"
 import AdminLayout from "../components/layout/AdminLayout"
-import ContactPage from "@/pages/Contact/ContactPage"
-import BetaFeedbackPage from "@/pages/BetaFeedback/BetaFeedbackPage"
-import PrivacyPolicy from "@/pages/misc/PrivacyPolicy"
-import TermsOfService from "@/pages/misc/TermsOfService"
-import NotFound from "@/pages/misc/NotFound"
-import AdminDashboard from "@/pages/Dashboard/Admin/Analytics/Dashboard"
-import Dashboard from "@/components/dashboard/Dashboard"
-import UserManagementPage from "@/pages/Dashboard/Admin/User/Users"
 import { USER_ROLES } from "@/config/routeConfig"
-import Unauthorized from "@/pages/misc/Unauthorized"
-import ResetPassword from "@/pages/Auth/ResetPassword"
-import Propertiespage from "@/pages/Dashboard/Admin/Properties/Propertiespage"
-import FinancialReport from "@/pages/Dashboard/Admin/Finance/FinancialReport"
-import Systemsetting from "@/pages/Dashboard/Admin/System/Systemsetting"
-import ListingPage from "@/pages/Dashboard/Seller/properties/ListingPage"
-import FindProperties from "@/pages/Dashboard/Buyer/FindProperties"
-import FavoritePage from "@/pages/Dashboard/Buyer/FavoritePage"
-import { SellerInquiryPage } from "@/pages/Dashboard/Seller/SellerInquiry"
-import { BuyerInquiryPage } from "@/pages/Dashboard/Buyer/BuyerInquiry"
-import AgentDashboard from "@/pages/Dashboard/Agent/Dashboard"
-import { AgentInquiry } from "@/pages/Dashboard/Agent/AgentInquiry"
-import AgentListing from "@/pages/Dashboard/Agent/AgentListing"
-import AgentPipeline from "@/pages/Dashboard/Agent/pipeline/AgentPipeline"
-import AgentDealLosses from "@/pages/Dashboard/Agent/deal-losses/AgentDealLosses"
-import AgentClients from "@/pages/Dashboard/Agent/AgentClients"
-import SchedulePage from "@/components/common/schedule/SchedulePage"
 import GuestRoute from "@/components/common/GuestRoute"
-import PreferencesAlerts from "@/pages/Dashboard/Buyer/PreferencesAlerts"
-import MortgageTools from "@/pages/Dashboard/Buyer/MortgageTools"
-import DocumentsPage from "@/pages/Dashboard/Buyer/DocumentsPage"
-import MarketInsights from "@/pages/Dashboard/Buyer/MarketInsights"
-import HomePage from "@/pages/Home/HomePage"
-import Offers from "@/pages/Dashboard/offer/Offers"
-import PropertyByType from "@/pages/Dashboard/Buyer/PropertyByType"
-import ProfilePage from "@/pages/Profile/ProfilePage"
-import BetaFeedbackInbox from "@/pages/Dashboard/Admin/BetaFeedback/BetaFeedbackInbox"
-import AboutPage from "@/pages/About/AboutPage"
+
+const PropertyList = lazy(() => import("../pages/Properties/PropertyList"))
+const PropertyDetail = lazy(() => import("../pages/Properties/PropertyDetail"))
+const AuthPage = lazy(() => import("../pages/Auth/AuthPage"))
+const ForgotPassword = lazy(() => import("../pages/Auth/ForgotPassword"))
+const AddProperty = lazy(() => import("../pages/Dashboard/AddProperty"))
+const ManageProperties = lazy(() => import("../pages/Dashboard/ManageProperties"))
+const ContactPage = lazy(() => import("@/pages/Contact/ContactPage"))
+const BetaFeedbackPage = lazy(() => import("@/pages/BetaFeedback/BetaFeedbackPage"))
+const PrivacyPolicy = lazy(() => import("@/pages/misc/PrivacyPolicy"))
+const TermsOfService = lazy(() => import("@/pages/misc/TermsOfService"))
+const NotFound = lazy(() => import("@/pages/misc/NotFound"))
+const Dashboard = lazy(() => import("@/components/dashboard/Dashboard"))
+const UserManagementPage = lazy(() => import("@/pages/Dashboard/Admin/User/Users"))
+const Unauthorized = lazy(() => import("@/pages/misc/Unauthorized"))
+const ResetPassword = lazy(() => import("@/pages/Auth/ResetPassword"))
+const Propertiespage = lazy(() => import("@/pages/Dashboard/Admin/Properties/Propertiespage"))
+const FinancialReport = lazy(() => import("@/pages/Dashboard/Admin/Finance/FinancialReport"))
+const Systemsetting = lazy(() => import("@/pages/Dashboard/Admin/System/Systemsetting"))
+const ListingPage = lazy(() => import("@/pages/Dashboard/Seller/properties/ListingPage"))
+const FindProperties = lazy(() => import("@/pages/Dashboard/Buyer/FindProperties"))
+const FavoritePage = lazy(() => import("@/pages/Dashboard/Buyer/FavoritePage"))
+const SellerInquiryPage = lazy(() =>
+  import("@/pages/Dashboard/Seller/SellerInquiry").then((module) => ({ default: module.SellerInquiryPage }))
+)
+const BuyerInquiryPage = lazy(() =>
+  import("@/pages/Dashboard/Buyer/BuyerInquiry").then((module) => ({ default: module.BuyerInquiryPage }))
+)
+const AgentDashboard = lazy(() => import("@/pages/Dashboard/Agent/Dashboard"))
+const AgentInquiry = lazy(() =>
+  import("@/pages/Dashboard/Agent/AgentInquiry").then((module) => ({ default: module.AgentInquiry }))
+)
+const AgentListing = lazy(() => import("@/pages/Dashboard/Agent/AgentListing"))
+const AgentPipeline = lazy(() => import("@/pages/Dashboard/Agent/pipeline/AgentPipeline"))
+const AgentDealLosses = lazy(() => import("@/pages/Dashboard/Agent/deal-losses/AgentDealLosses"))
+const AgentClients = lazy(() => import("@/pages/Dashboard/Agent/AgentClients"))
+const SchedulePage = lazy(() => import("@/components/common/schedule/SchedulePage"))
+const PreferencesAlerts = lazy(() => import("@/pages/Dashboard/Buyer/PreferencesAlerts"))
+const MortgageTools = lazy(() => import("@/pages/Dashboard/Buyer/MortgageTools"))
+const DocumentsPage = lazy(() => import("@/pages/Dashboard/Buyer/DocumentsPage"))
+const MarketInsights = lazy(() => import("@/pages/Dashboard/Buyer/MarketInsights"))
+const HomePage = lazy(() => import("@/pages/Home/HomePage"))
+const Offers = lazy(() => import("@/pages/Dashboard/offer/Offers"))
+const ProfilePage = lazy(() => import("@/pages/Profile/ProfilePage"))
+const BetaFeedbackInbox = lazy(() => import("@/pages/Dashboard/Admin/BetaFeedback/BetaFeedbackInbox"))
+const AboutPage = lazy(() => import("@/pages/About/AboutPage"))
 // Create the data router
 export const router = createBrowserRouter([
   {
