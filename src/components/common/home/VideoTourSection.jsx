@@ -1,23 +1,8 @@
+import { CheckCircle } from "lucide-react"
 
-import { Button } from "@/components/ui/button";
-import { Play, CheckCircle } from "lucide-react"
-
-const VideoTourSection = ({ scrollY }) => {
-  // Calculate safe parallax values that don't cause layout issues
-  const getSafeParallax = (base, multiplier = 0.5) => {
-    return base * multiplier;
-  };
-
+const VideoTourSection = () => {
   return (
-    <section className="relative py-20 px-4 bg-muted/30 overflow-hidden">
-      {/* Subtle background parallax */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1560448076-213180fe7d44?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470')`,
-          transform: `translateY(${getSafeParallax(scrollY, 0.15)}px)`,
-        }}
-      />
+    <section className="relative py-20 px-4 bg-muted/30 overflow-hidden [content-visibility:auto] [contain-intrinsic-size:760px]">
       <div className="container mx-auto relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
@@ -39,10 +24,6 @@ const VideoTourSection = ({ scrollY }) => {
                 </li>
               ))}
             </ul>
-            {/* <Button size="lg" className="bg-primary hover:bg-primary/90">
-              <Play className="mr-2 h-5 w-5" />
-              Watch Demo Tour
-            </Button> */}
           </div>
           <div className="relative">
             <div className="aspect-video bg-muted rounded-lg overflow-hidden shadow-2xl">
@@ -55,6 +36,13 @@ const VideoTourSection = ({ scrollY }) => {
                 <source
                   src="https://res.cloudinary.com/deuwelzrs/video/upload/v1777824608/7578112-uhd_3840_2160_30fps_fspwow.mp4"
                   type="video/mp4"
+                />
+                <track
+                  src="/captions/virtual-tour.vtt"
+                  kind="captions"
+                  srcLang="en"
+                  label="English captions"
+                  default
                 />
               </video>
             </div>

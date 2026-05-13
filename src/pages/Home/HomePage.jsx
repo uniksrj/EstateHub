@@ -51,7 +51,6 @@ const mapPropertyToFeaturedCard = (property) => {
 const HomePage = () => {
   const [featuredProperties, setFeaturedProperties] = useState([])
   const [loading, setLoading] = useState(true)
-  const [scrollY, setScrollY] = useState(0);
   
   useEffect(() => {
     const fetchFeaturedProperties = async () => {
@@ -85,15 +84,6 @@ const HomePage = () => {
     fetchFeaturedProperties();
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Seo
@@ -103,10 +93,10 @@ const HomePage = () => {
         schema={organizationSchema}
       />
       <HeroSection />
-      <StatisticsSection scrollY={scrollY} />
-      <FeaturedPropertiesSection loading={loading} featuredProperties={featuredProperties} scrollY={scrollY} />
+      <StatisticsSection />
+      <FeaturedPropertiesSection loading={loading} featuredProperties={featuredProperties} />
       <HowItWorksSection />
-      <VideoTourSection scrollY={scrollY} />
+      <VideoTourSection />
       <FeaturesSection />
       <CTASection />
     </div>

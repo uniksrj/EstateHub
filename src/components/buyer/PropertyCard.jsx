@@ -1,5 +1,5 @@
 // import { getStatusColor, getStatusText } from "@/utils/userHelpers"
-import { memo } from "react"
+import { lazy, memo, Suspense } from "react"
 import { useMemo, useState } from "react"
 import { Card, CardContent } from "../ui/card"
 import { Link } from "react-router"
@@ -7,14 +7,14 @@ import { Bath, Bed, Calendar, CalendarPlus, Eye, Handshake, Heart, MapPin, Messa
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
 import { userAPI } from "@/services/api"
-import ContactSellerDialog from "./ContactSellerDialog"
 import { useAuth } from "@/hooks/useAuth"
 import { toast } from "sonner"
-import ScheduleManager from "../common/schedule/ScheduleManager"
 import { useOffers } from "@/hooks/useOffers"
-import OfferCreationWizard from "@/pages/Dashboard/Buyer/OfferCreationWizard"
 import { buildPropertyPath, getImageUrl } from "@/utils/seo"
 
+const ContactSellerDialog = lazy(() => import("./ContactSellerDialog"))
+const ScheduleManager = lazy(() => import("../common/schedule/ScheduleManager"))
+const OfferCreationWizard = lazy(() => import("@/pages/Dashboard/Buyer/OfferCreationWizard"))
 
 export const PropertyCard = memo(function PropertyCard({    
     property,
@@ -163,24 +163,28 @@ export const PropertyCard = memo(function PropertyCard({
                     <div className="flex items-center gap-2">
                         {contactSellerTrigger}
                         {showContactDialog && (
-                            <ContactSellerDialog
-                                id={property.id}
-                                property={property}
-                                isOpen={showContactDialog}
-                                onClose={() => setShowContactDialog(false)}
-                            />
+                            <Suspense fallback={null}>
+                                <ContactSellerDialog
+                                    id={property.id}
+                                    property={property}
+                                    isOpen={showContactDialog}
+                                    onClose={() => setShowContactDialog(false)}
+                                />
+                            </Suspense>
                         )}
 
                         {scheduleTourTrigger}
                         {showScheduleModal && (
-                        <ScheduleManager
-                            mode="modal"
-                            isOpen={showScheduleModal}
-                            onClose={() => setShowScheduleModal(false)}
-                            property={property}
-                            onScheduleCreated={handleNewSchedule}
-                        />
-                    )}
+                            <Suspense fallback={null}>
+                                <ScheduleManager
+                                    mode="modal"
+                                    isOpen={showScheduleModal}
+                                    onClose={() => setShowScheduleModal(false)}
+                                    property={property}
+                                    onScheduleCreated={handleNewSchedule}
+                                />
+                            </Suspense>
+                        )}
                     
                         {makeOfferTrigger}
                     </div>
@@ -196,14 +200,16 @@ export const PropertyCard = memo(function PropertyCard({
 
                     {/* Offer Wizard */}
                     {showOfferWizard && selectedProperty && (
-                        <OfferCreationWizard
-                            property={selectedProperty}
-                            onClose={() => {
-                                setShowOfferWizard(false);
-                                setSelectedProperty(null);
-                            }}
-                            onOfferSubmit={handleNewOfferSubmit}
-                        />
+                        <Suspense fallback={null}>
+                            <OfferCreationWizard
+                                property={selectedProperty}
+                                onClose={() => {
+                                    setShowOfferWizard(false);
+                                    setSelectedProperty(null);
+                                }}
+                                onOfferSubmit={handleNewOfferSubmit}
+                            />
+                        </Suspense>
                     )}
                 </div>
             </CardContent>

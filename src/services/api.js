@@ -23,20 +23,6 @@ const getCsrfTokenFromCookie = () => {
   return null
 }
 
-// Function to ensure CSRF token is available
-const ensureCsrfToken = async () => {
-  let token = getCsrfTokenFromCookie()
-  if (!token) {
-    // If no token, get one from the server
-    await axios.get(`${API_ORIGIN}/sanctum/csrf-cookie`, {
-      withCredentials: true,
-    })
-    token = getCsrfTokenFromCookie()
-  }
-
-  return token
-}
-
 api.interceptors.request.use(
   (config) => {
     if (config.data instanceof FormData) {

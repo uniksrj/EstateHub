@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Link } from "react-router"
 import {
     Award,
@@ -18,6 +18,11 @@ import { Badge } from "@/components/ui/badge"
 
 const HeroSection = () => {
     const [activeText, setActiveText] = useState(0)
+    const activeContent = heroContent[activeText]
+    const heroImage = useMemo(() => {
+        const separator = activeContent.image.includes("?") ? "&" : "?"
+        return `${activeContent.image}${separator}fm=webp&q=65&w=1280`
+    }, [activeContent.image])
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -38,14 +43,14 @@ const HeroSection = () => {
     return (
         <section className="relative flex min-h-[calc(100vh-5rem)] items-end overflow-hidden bg-background pt-24 text-primary-foreground">
             <div className="absolute inset-0">
-                {heroContent.map((content, index) => (
-                    <img
-                        key={index}
-                        src={content.image}
-                        alt={content.highlight}
-                        className={`absolute inset-0 h-full w-full object-cover transition-all duration-1000 ease-out ${index === activeText ? "scale-100 opacity-100" : "scale-105 opacity-0"}`}
-                    />
-                ))}
+                <img
+                    key={activeContent.image}
+                    src={heroImage}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover"
+                    fetchPriority="high"
+                    decoding="async"
+                />
                 <div className="absolute inset-0 bg-black/45" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/25" />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
@@ -54,26 +59,21 @@ const HeroSection = () => {
             <div className="container relative z-10 mx-auto px-4 pb-10 sm:px-6 lg:px-8 lg:pb-16">
                 <div className="max-w-4xl">
                     <Badge className="mb-5 border-white/20 bg-black/25 px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-md">
-                        {heroContent[activeText].badge}
+                        {activeContent.badge}
                     </Badge>
                     <h1 className="max-w-3xl text-[28px] font-semibold leading-tight tracking-tight text-white sm:text-[28px] lg:text-[28px]">
                         Estate Hub
                     </h1>
 
                     <div className="relative mt-5 min-h-[150px] max-w-3xl sm:min-h-[126px]">
-                        {heroContent.map((content, index) => (
-                            <div
-                                key={index}
-                                className={`absolute inset-0 transition-all duration-700 ease-out ${index === activeText ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
-                            >
-                                <p className="text-[20px] font-semibold leading-snug text-white sm:text-[22px]">
-                                    {content.title} {content.highlight}
-                                </p>
-                                <p className="mt-4 max-w-2xl text-[15px] leading-6 text-slate-200 sm:text-[16px]">
-                                    {content.description}
-                                </p>
-                            </div>
-                        ))}
+                        <div className="absolute inset-0">
+                            <p className="text-[20px] font-semibold leading-snug text-white sm:text-[22px]">
+                                {activeContent.title} {activeContent.highlight}
+                            </p>
+                            <p className="mt-4 max-w-2xl text-[15px] leading-6 text-slate-200 sm:text-[16px]">
+                                {activeContent.description}
+                            </p>
+                        </div>
                     </div>
 
                     <div className="mt-8 max-w-4xl rounded-[2rem] border border-white/15 bg-white/12 p-3 shadow-2xl shadow-black/30 backdrop-blur-xl">
@@ -142,7 +142,7 @@ const HeroSection = () => {
                             <button
                                 key={index}
                                 onClick={() => setActiveText(index)}
-                                className={`h-2.5 rounded-full transition-all duration-300 ${index === activeText ? "w-9 bg-primary" : "w-2.5 bg-white/45 hover:bg-white/75"}`}
+                                className={`min-h-11 min-w-11 rounded-full transition-colors duration-200 ${index === activeText ? "bg-primary" : "bg-white/45 hover:bg-white/75"}`}
                                 aria-label={`Show hero slide ${index + 1}`}
                             />
                         ))}
@@ -169,7 +169,7 @@ const HeroSection = () => {
                 <div className="mt-8 hidden md:flex">
                     <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-slate-300">
                         Explore more
-                        <ChevronDown className="h-4 w-4 animate-bounce" />
+                        <ChevronDown className="h-4 w-4" />
                     </div>
                 </div>
             </div>

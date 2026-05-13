@@ -1,15 +1,25 @@
-import { useState, useEffect } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import { Loading } from '@/pages/misc/Loading';
 import { useOffers } from '@/hooks/useOffers';
 import { toast } from 'sonner';
-import ContactSellerDialog from '@/components/buyer/ContactSellerDialog';
-import { OfferDetailsModal } from '@/components/buyer/offer/OfferDetailsModal';
-import { ConfirmationModal } from '@/components/common/ConfirmationModal';
 import { useAuth } from '@/hooks/useAuth';
-import { BuyerOffers } from '@/components/buyer/offer/BuyerOffers';
-import { AgentOffers } from '@/components/agent/offers/AgentOffers';
-import { CounterOfferModal } from '@/components/common/offers/CounterOfferModal';
 
+const BuyerOffers = lazy(() =>
+  import('@/components/buyer/offer/BuyerOffers').then((module) => ({ default: module.BuyerOffers }))
+);
+const AgentOffers = lazy(() =>
+  import('@/components/agent/offers/AgentOffers').then((module) => ({ default: module.AgentOffers }))
+);
+const ContactSellerDialog = lazy(() => import('@/components/buyer/ContactSellerDialog'));
+const OfferDetailsModal = lazy(() =>
+  import('@/components/buyer/offer/OfferDetailsModal').then((module) => ({ default: module.OfferDetailsModal }))
+);
+const ConfirmationModal = lazy(() =>
+  import('@/components/common/ConfirmationModal').then((module) => ({ default: module.ConfirmationModal }))
+);
+const CounterOfferModal = lazy(() =>
+  import('@/components/common/offers/CounterOfferModal').then((module) => ({ default: module.CounterOfferModal }))
+);
 
 const Offers = () => {
 
@@ -370,35 +380,41 @@ const Offers = () => {
 
   return (
     <>
-      <RoleSpecificComponent
-        offers={offers}
-        filteredOffers={filteredOffers}
-        loading={loading}
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        onAction={handleAction}
-        user={user}
-      />
+      <Suspense fallback={<Loading loading={true} isLineLoader={true} />}>
+        <RoleSpecificComponent
+          offers={offers}
+          filteredOffers={filteredOffers}
+          loading={loading}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onAction={handleAction}
+          user={user}
+        />
+      </Suspense>
 
-      <ConfirmationModal
-        isOpen={confirmModal.isOpen}
-        onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
-        onConfirm={handleConfirm}
-        title={confirmModal.data?.title}
-        description={confirmModal.data?.description}
-        confirmText={confirmModal.data?.confirmText}
-        variant={confirmModal.data?.variant}
-      />
+      <Suspense fallback={null}>
+        {confirmModal.isOpen && (
+          <ConfirmationModal
+            isOpen={confirmModal.isOpen}
+            onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+            onConfirm={handleConfirm}
+            title={confirmModal.data?.title}
+            description={confirmModal.data?.description}
+            confirmText={confirmModal.data?.confirmText}
+            variant={confirmModal.data?.variant}
+          />
+        )}
 
-      <CounterOfferModal
-        isOpen={counterModal.isOpen}
-        onClose={() => setCounterModal({ isOpen: false, offer: null })}
-        onConfirm={handleCounterConfirm}
-        offer={counterModal.offer}
-      />
+        {counterModal.isOpen && (
+          <CounterOfferModal
+            isOpen={counterModal.isOpen}
+            onClose={() => setCounterModal({ isOpen: false, offer: null })}
+            onConfirm={handleCounterConfirm}
+            offer={counterModal.offer}
+          />
+        )}
 
-      {
-        selectedOffer && (
+        {selectedOffer && showModal && (
           <OfferDetailsModal
             offer={selectedOffer}
             isOpen={showModal}
@@ -407,18 +423,16 @@ const Offers = () => {
               setSelectedOffer(null)
             }}
           />
-        )
-      }
+        )}
 
-      {
-        showContactDialog && selectedOffer && (
+        {showContactDialog && selectedOffer && (
           <ContactSellerDialog
             property={selectedOffer?.property}
             isOpen={showContactDialog}
             onClose={() => setShowContactDialog(false)}
           />
-        )
-      }
+        )}
+      </Suspense>
     </>
   );
 };

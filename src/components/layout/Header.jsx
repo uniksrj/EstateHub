@@ -254,7 +254,13 @@ const Header = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button className="rounded-full border border-border bg-card p-2 shadow-sm lg:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button
+            className="rounded-full border border-border bg-card p-2 shadow-sm lg:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-navigation"
+          >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
@@ -262,7 +268,7 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="lg:hidden pb-5 pt-2">
-            <nav className="flex max-h-[72vh] flex-col gap-2 overflow-y-auto rounded-3xl border border-border bg-card p-4 shadow-xl">
+            <nav id="mobile-navigation" className="flex max-h-[72vh] flex-col gap-2 overflow-y-auto rounded-3xl border border-border bg-card p-4 shadow-xl">
               <Link
                 to="/"
                 className={`rounded-2xl px-3 py-2 text-sm font-semibold transition-colors hover:bg-muted ${isActive("/") ? "bg-primary text-primary-foreground" : "text-foreground"}`}

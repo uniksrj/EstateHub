@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { lazy, Suspense, useState, useEffect } from "react"
 import { Link, useParams, useSearchParams } from "react-router"
 import { Button } from "../../components/ui/button"
 import { Card, CardContent } from "../../components/ui/card"
@@ -13,11 +13,12 @@ import ImageCarousel from "@/components/common/ImageCarousel"
 import { Paginationlink } from "@/components/common/Pagination"
 import { useOffers } from "@/hooks/useOffers"
 import { toast } from "sonner"
-import ContactSellerDialog from "@/components/buyer/ContactSellerDialog"
-import ScheduleManager from "@/components/common/schedule/ScheduleManager"
-import OfferCreationWizard from "../Dashboard/Buyer/OfferCreationWizard"
 import { buildPropertyPath, organizationSchema } from "@/utils/seo"
 import Seo from "@/components/common/Seo"
+
+const ContactSellerDialog = lazy(() => import("@/components/buyer/ContactSellerDialog"))
+const ScheduleManager = lazy(() => import("@/components/common/schedule/ScheduleManager"))
+const OfferCreationWizard = lazy(() => import("../Dashboard/Buyer/OfferCreationWizard"))
 
 const PropertyList = () => {
   const { type } = useParams()
@@ -111,11 +112,10 @@ const PropertyList = () => {
     </Button>
   );
 
-  const scheduleTourTrigger = useMemo(() => (
-    <Button variant="outline" size="sm" onClick={() => setShowScheduleModal(true)} title="Schedule a Tour">
-      <CalendarPlus className="h-4 w-4" />
-    </Button>
-  ), []);
+  const handleScheduleTour = (property) => {
+    setSelectedProperty(property)
+    setShowScheduleModal(true)
+  }
 
   const handleNewOfferSubmit = (property, offerData) => {
     addNewOffer(property, offerData);
@@ -323,33 +323,14 @@ const PropertyList = () => {
                     <div className="flex items-center gap-2">
                       {contactSellerTrigger(property)}
 
-                      {scheduleTourTrigger}
-                      {showScheduleModal && (
-                        <ScheduleManager
-                          mode="modal"
-                          isOpen={showScheduleModal}
-                          onClose={() => setShowScheduleModal(false)}
-                          property={property}
-                          onScheduleCreated={handleNewSchedule}
-                        />
-                      )}
+                      <Button variant="outline" size="sm" onClick={() => handleScheduleTour(property)} title="Schedule a Tour">
+                        <CalendarPlus className="h-4 w-4" />
+                      </Button>
 
                       <Button variant="outline" size="sm" className="rounded-full" onClick={() => handleMakeOffer(property)} title="Make Offer">
                         <Handshake className="w-4 h-4" />
                       </Button>
                     </div>
-
-                    {/* Offer Wizard */}
-                    {showOfferWizard && selectedProperty && (
-                      <OfferCreationWizard
-                        property={selectedProperty}
-                        onClose={() => {
-                          setShowOfferWizard(false);
-                          setSelectedProperty(null);
-                        }}
-                        onOfferSubmit={handleNewOfferSubmit}
-                      />
-                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -370,16 +351,40 @@ const PropertyList = () => {
             <Button className="rounded-full px-6 text-[14px] font-semibold" onClick={clearFilters}>Clear All Filters</Button>
           </div>
         )}
-        {showContactDialog && selectedProperty && (
-          <ContactSellerDialog
-            property={selectedProperty}
-            isOpen={showContactDialog}
-            onClose={() => {
-              setShowContactDialog(false)
-              setSelectedProperty(null)
-            }}
-          />
-        )}
+        <Suspense fallback={null}>
+          {showContactDialog && selectedProperty && (
+            <ContactSellerDialog
+              property={selectedProperty}
+              isOpen={showContactDialog}
+              onClose={() => {
+                setShowContactDialog(false)
+                setSelectedProperty(null)
+              }}
+            />
+          )}
+          {showScheduleModal && selectedProperty && (
+            <ScheduleManager
+              mode="modal"
+              isOpen={showScheduleModal}
+              onClose={() => {
+                setShowScheduleModal(false)
+                setSelectedProperty(null)
+              }}
+              property={selectedProperty}
+              onScheduleCreated={handleNewSchedule}
+            />
+          )}
+          {showOfferWizard && selectedProperty && (
+            <OfferCreationWizard
+              property={selectedProperty}
+              onClose={() => {
+                setShowOfferWizard(false)
+                setSelectedProperty(null)
+              }}
+              onOfferSubmit={handleNewOfferSubmit}
+            />
+          )}
+        </Suspense>
       </div>
     </div>
   )

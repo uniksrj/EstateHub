@@ -4,23 +4,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-const FeaturedPropertiesSection = ({ loading, featuredProperties, scrollY }) => {
-  // Calculate safe parallax values that don't cause layout issues
-  const getSafeParallax = (base, multiplier = 0.5) => {
-    return base * multiplier;
-  };
-
+const FeaturedPropertiesSection = ({ loading, featuredProperties }) => {
   return (
-    <section className="relative overflow-hidden bg-background px-4 py-20">
-      {/* Background pattern with very subtle parallax */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-5"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470')`,
-          transform: `translateY(${getSafeParallax(scrollY, 0.1)}px)`,
-        }}
-      />
-
+    <section className="relative overflow-hidden bg-background px-4 py-20 [content-visibility:auto] [contain-intrinsic-size:900px]">
       <div className="container mx-auto relative z-10">
         <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
@@ -66,8 +52,9 @@ const FeaturedPropertiesSection = ({ loading, featuredProperties, scrollY }) => 
                   <img
                     src={property.image}
                     alt={property.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover"
                     loading="lazy"
+                    decoding="async"
                   />
                   {(property.featured || property.isBoostActive) && (
                     <Badge className="absolute left-4 top-4 rounded-full bg-gold px-3 py-1 text-[12px] font-semibold text-accent-foreground shadow-lg">
@@ -75,10 +62,10 @@ const FeaturedPropertiesSection = ({ loading, featuredProperties, scrollY }) => 
                     </Badge>
                   )}
                   <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Button size="sm" className="h-9 w-9 rounded-full bg-card/95 p-0 text-foreground hover:bg-card">
+                    <Button size="sm" className="h-11 w-11 rounded-full bg-card/95 p-0 text-foreground hover:bg-card" aria-label={`Save ${property.title}`}>
                       <Heart className="h-4 w-4" />
                     </Button>
-                    <Button size="sm" className="h-9 w-9 rounded-full bg-card/95 p-0 text-foreground hover:bg-card">
+                    <Button size="sm" className="h-11 w-11 rounded-full bg-card/95 p-0 text-foreground hover:bg-card" aria-label={`Preview ${property.title}`}>
                       <Eye className="h-4 w-4" />
                     </Button>
                   </div>
