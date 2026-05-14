@@ -20,23 +20,20 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     return <Navigate to="/auth/login" state={{ from: location }} replace />
   }
 
-  if(allowedRoles.length === 0){
-    return children
-  }
-  const usertype = user.role_id || user.userType_id;
-  // Check if this is an admin panel route and user has access
-
-  if (location.pathname.startsWith('/dashboard')){
-    const adminAccessRoles = ADMIN_PANEL_ACCESS.includes(usertype);
-    if (!adminAccessRoles) {
-      return <Navigate to="/" replace />;
-    }
-  }
+  const usertype = Number(user.role_id || user.userType_id)
 
   // Check route-specific permissions
   const routeAllowedRoles = ROUTE_PERMISSIONS[location.pathname];
   if (routeAllowedRoles && !routeAllowedRoles.includes(usertype)) {
     return <Navigate to="/unauthorized" replace />
+  }
+
+  // Dashboard routes default to admin-only unless a route-specific rule allows more roles.
+  if (location.pathname.startsWith('/dashboard') && !routeAllowedRoles) {
+    const adminAccessRoles = ADMIN_PANEL_ACCESS.includes(usertype)
+    if (!adminAccessRoles) {
+      return <Navigate to="/unauthorized" replace />
+    }
   }
 
   // Check component-specific allowed roles
