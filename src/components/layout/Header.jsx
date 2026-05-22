@@ -155,17 +155,26 @@ const Header = () => {
             )} */}
 
             {user && (
-              <>
-                {user.role_id === 1 || user.role === 2 ? (
-                  <Link to="/dashboard" className={navLinkClass(location.pathname.startsWith("/dashboard"))}>
+              (() => {
+                const roleId = Number(user.role_id || user.userType_id)
+                const dashboardPath =
+                  roleId === 3 ? "/agent" :
+                  roleId === 5 ? "/buyer" :
+                  roleId === 6 ? "/seller" :
+                  "/dashboard"
+                const isDashboardActive =
+                  location.pathname === dashboardPath || location.pathname.startsWith(`${dashboardPath}/`)
+
+                return roleId === 1 || roleId === 2 ? (
+                  <Link to={dashboardPath} className={navLinkClass(isDashboardActive)}>
                     Admin
                   </Link>
                 ) : (
-                  <Link to="/dashboard" className={navLinkClass(location.pathname.startsWith("/dashboard"))}>
+                  <Link to={dashboardPath} className={navLinkClass(isDashboardActive)}>
                     Dashboard
                   </Link>
-                )}
-              </>
+                )
+              })()
             )}
             {(user?.role_id === 5 || !user) && (
 
