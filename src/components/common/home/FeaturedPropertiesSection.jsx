@@ -1,103 +1,138 @@
 import { Link } from "react-router"
-import { Bath, Bed, Eye, Heart, MapPin, Ruler, Star } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card";
+import { Bath, Bed, MapPin, Ruler } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 const FeaturedPropertiesSection = ({ loading, featuredProperties }) => {
+  const properties = featuredProperties.slice(0, 3)
+  const leadProperty = properties[0]
+  const secondaryProperties = properties.slice(1)
+
   return (
-    <section className="relative overflow-hidden bg-background px-4 py-20 [content-visibility:auto] [contain-intrinsic-size:900px]">
+    <section className="relative overflow-hidden border-b border-border bg-background px-4 py-20 [content-visibility:auto] [contain-intrinsic-size:900px]">
       <div className="container mx-auto relative z-10">
-        <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
+        <div className="mb-12 grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div className="max-w-2xl">
             <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Featured Properties</p>
-            <h2 className="text-[20px] font-semibold tracking-tight md:text-[22px]">Homepage featured homes getting the most buyer attention</h2>
+            <h2 className="text-[24px] font-semibold leading-tight tracking-tight md:text-[30px]">Homes worth a closer look this week.</h2>
+            <p className="mt-4 text-[15px] leading-6 text-muted-foreground">
+              A short list of active listings selected for visibility, location quality, and buyer interest.
+            </p>
           </div>
           <Link to="/properties">
-            <Button variant="outline" className="rounded-full px-6 text-[14px] font-semibold">
+            <Button variant="outline" className="rounded-none px-6 text-[14px] font-semibold">
               View all properties
             </Button>
           </Link>
         </div>
 
         {loading ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="overflow-hidden rounded-[1.75rem] border-border shadow-sm animate-pulse">
-                <div className="aspect-[4/3] bg-muted"></div>
-                <CardContent className="p-6">
-                  <div className="mb-2 h-5 rounded bg-muted"></div>
-                  <div className="mb-3 h-4 w-2/3 rounded bg-muted"></div>
-                  <div className="mb-4 h-4 w-1/2 rounded bg-muted"></div>
-                  <div className="flex justify-between gap-4">
-                    <div className="h-7 w-1/3 rounded bg-muted"></div>
-                    <div className="h-10 w-1/3 rounded bg-muted"></div>
+          <div className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr]">
+            <div className="animate-pulse">
+              <div className="aspect-[16/10] bg-muted" />
+              <div className="mt-5 h-6 w-2/3 bg-muted" />
+              <div className="mt-3 h-4 w-1/2 bg-muted" />
+            </div>
+            <div className="space-y-6">
+              {[1, 2].map((i) => (
+                <div key={i} className="grid animate-pulse grid-cols-[7rem_1fr] gap-4 border-b border-border pb-6">
+                  <div className="aspect-square bg-muted" />
+                  <div>
+                    <div className="h-5 w-3/4 bg-muted" />
+                    <div className="mt-3 h-4 w-1/2 bg-muted" />
+                    <div className="mt-5 h-5 w-1/3 bg-muted" />
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+              ))}
+            </div>
           </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredProperties.slice(0, 3).map((property) => (
-              <Card
-                key={property.id}
-                className={`group overflow-hidden rounded-[1.75rem] bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
-                  property.isBoostActive
-                    ? "border-gold/70 shadow-lg shadow-gold/10 hover:shadow-gold/20"
-                    : "border-border shadow-sm hover:shadow-primary/10"
-                }`}
-              >
-                <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+        ) : leadProperty ? (
+          <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:items-start">
+            <article className="group">
+              <Link to={`/properties/${leadProperty.id}/view`} className="block">
+                <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                   <img
-                    src={property.image}
-                    alt={property.title}
-                    className="w-full h-full object-cover"
+                    src={leadProperty.image}
+                    alt={leadProperty.title}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                     loading="lazy"
                     decoding="async"
                   />
-                  {(property.featured || property.isBoostActive) && (
-                    <Badge className="absolute left-4 top-4 rounded-full bg-gold px-3 py-1 text-[12px] font-semibold text-accent-foreground shadow-lg">
-                      {property.boostType === "homepage" ? "Homepage Featured" : "Featured"}
+                  {(leadProperty.featured || leadProperty.isBoostActive) && (
+                    <Badge className="absolute left-4 top-4 rounded-none bg-background px-3 py-1 text-[12px] font-semibold text-foreground shadow-sm">
+                      {leadProperty.boostType === "homepage" ? "Homepage Featured" : "Featured"}
                     </Badge>
                   )}
-                  <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Button size="sm" className="h-11 w-11 rounded-full bg-card/95 p-0 text-foreground hover:bg-card" aria-label={`Save ${property.title}`}>
-                      <Heart className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" className="h-11 w-11 rounded-full bg-card/95 p-0 text-foreground hover:bg-card" aria-label={`Preview ${property.title}`}>
-                      <Eye className="h-4 w-4" />
-                    </Button>
+                </div>
+              </Link>
+
+              <div className="mt-6 grid gap-5 md:grid-cols-[1fr_auto] md:items-end">
+                <div>
+                  <Link to={`/properties/${leadProperty.id}/view`}>
+                    <h3 className="text-[24px] font-semibold leading-tight tracking-tight transition hover:text-accent md:text-[28px]">
+                      {leadProperty.title}
+                    </h3>
+                  </Link>
+                  <div className="mt-3 flex items-start gap-2 text-[14px] text-muted-foreground">
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>{leadProperty.location}</span>
+                  </div>
+                  <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[13px] font-medium text-muted-foreground">
+                    <span className="inline-flex items-center gap-1.5"><Bed className="h-4 w-4" />{leadProperty.beds} beds</span>
+                    <span className="inline-flex items-center gap-1.5"><Bath className="h-4 w-4" />{leadProperty.baths} baths</span>
+                    <span className="inline-flex items-center gap-1.5"><Ruler className="h-4 w-4" />{leadProperty.sqft} sqft</span>
                   </div>
                 </div>
-                <CardContent className="p-6">
-                  <div className="mb-3 flex items-start justify-between gap-3">
-                    <h3 className="line-clamp-2 text-[18px] font-semibold leading-snug md:text-[20px]">{property.title}</h3>
-                    <div className="flex shrink-0 items-center rounded-full bg-muted px-2.5 py-1">
-                      <Star className="h-4 w-4 text-gold fill-current" />
-                      <span className="ml-1 text-[12px] text-muted-foreground">4.8</span>
-                    </div>
-                  </div>
-                  <div className="mb-4 flex items-center text-muted-foreground">
-                    <MapPin className="mr-1.5 h-4 w-4" />
-                    <span className="text-[14px]">{property.location}</span>
-                  </div>
-                  <div className="mb-5 grid grid-cols-3 gap-2 text-[12px] text-muted-foreground md:text-[13px]">
-                    <span className="flex items-center gap-1.5 rounded-2xl bg-muted/70 px-3 py-2"><Bed className="h-4 w-4" />{property.beds}</span>
-                    <span className="flex items-center gap-1.5 rounded-2xl bg-muted/70 px-3 py-2"><Bath className="h-4 w-4" />{property.baths}</span>
-                    <span className="flex items-center gap-1.5 rounded-2xl bg-muted/70 px-3 py-2"><Ruler className="h-4 w-4" />{property.sqft}</span>
-                  </div>
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <span className="text-[20px] font-bold text-foreground md:text-[24px]">{property.price}</span>
+                <div className="md:text-right">
+                  <div className="text-[24px] font-semibold tracking-tight text-foreground">{leadProperty.price}</div>
+                  <Link to={`/properties/${leadProperty.id}/view`} className="mt-3 inline-block text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
+                    View Details
+                  </Link>
+                </div>
+              </div>
+            </article>
+
+            <div className="space-y-6 border-t border-border pt-6 lg:border-t-0 lg:pt-0">
+              {secondaryProperties.map((property) => (
+                <article key={property.id} className="group grid grid-cols-[7.5rem_1fr] gap-4 border-b border-border pb-6 last:border-b-0">
+                  <Link to={`/properties/${property.id}/view`} className="block overflow-hidden bg-muted">
+                    <img
+                      src={property.image}
+                      alt={property.title}
+                      className="aspect-square h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </Link>
+                  <div className="min-w-0">
+                    {(property.featured || property.isBoostActive) && (
+                      <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                        {property.boostType === "homepage" ? "Homepage Featured" : "Featured"}
+                      </div>
+                    )}
                     <Link to={`/properties/${property.id}/view`}>
-                      <Button size="sm" className="rounded-full px-5 text-[14px] font-semibold">
-                        View Details
-                      </Button>
+                      <h3 className="line-clamp-2 text-[17px] font-semibold leading-snug transition hover:text-accent">
+                        {property.title}
+                      </h3>
                     </Link>
+                    <div className="mt-2 flex items-start gap-1.5 text-[13px] text-muted-foreground">
+                      <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                      <span className="line-clamp-1">{property.location}</span>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px] text-muted-foreground">
+                      <span>{property.beds} bd</span>
+                      <span>{property.baths} ba</span>
+                      <span>{property.sqft} sqft</span>
+                    </div>
+                    <div className="mt-3 text-[18px] font-semibold tracking-tight">{property.price}</div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                </article>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="border-y border-border py-10 text-[15px] text-muted-foreground">
+            No featured properties are available right now.
           </div>
         )}
       </div>

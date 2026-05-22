@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import {
     Award,
     ChevronDown,
@@ -15,10 +15,24 @@ import {
 import { heroContent } from "@/data/demoData"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+
+const propertyTypeOptions = [
+    { value: "all", label: "All property types" },
+    { value: "house", label: "House" },
+    { value: "apartment", label: "Apartment" },
+    { value: "condo", label: "Condo" },
+    { value: "commercial", label: "Commercial" },
+]
 
 const HeroSection = () => {
     const [activeText, setActiveText] = useState(0)
+    const [location, setLocation] = useState("")
+    const [propertyType, setPropertyType] = useState("all")
+    const [propertyTypeOpen, setPropertyTypeOpen] = useState(false)
+    const navigate = useNavigate()
     const activeContent = heroContent[activeText]
+    const selectedPropertyType = propertyTypeOptions.find((option) => option.value === propertyType) || propertyTypeOptions[0]
     const heroImage = useMemo(() => {
         const separator = activeContent.image.includes("?") ? "&" : "?"
         return `${activeContent.image}${separator}fm=webp&q=65&w=1280`
@@ -38,6 +52,18 @@ const HeroSection = () => {
 
     const prevSlide = () => {
         setActiveText((prev) => (prev - 1 + heroContent.length) % heroContent.length)
+    }
+
+    const handleSearch = (event) => {
+        event.preventDefault()
+
+        const params = new URLSearchParams()
+        const trimmedLocation = location.trim()
+
+        if (trimmedLocation) params.set("location", trimmedLocation)
+        if (propertyType && propertyType !== "all") params.set("property_type", propertyType)
+
+        navigate(`/properties${params.toString() ? `?${params.toString()}` : ""}`)
     }
 
     return (
@@ -76,34 +102,63 @@ const HeroSection = () => {
                         </div>
                     </div>
 
-                    <div className="mt-8 max-w-4xl rounded-[2rem] border border-white/15 bg-white/12 p-3 shadow-2xl shadow-black/30 backdrop-blur-xl">
-                        <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
-                            <Link to="/properties" className="flex items-center gap-3 rounded-3xl bg-background p-4 text-foreground transition hover:bg-muted">
-                                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-card">
-                                    <MapPin className="h-5 w-5" />
+                    <form onSubmit={handleSearch} className="mt-8 max-w-6xl bg-black/35 backdrop-blur-md">
+                        <div className="grid gap-0 md:grid-cols-[1.2fr_0.9fr_auto]">
+                            <label className="flex items-center gap-3 border-b border-white/20 px-0 py-4 md:border-b-0 md:border-r md:px-5">
+                                <MapPin className="h-5 w-5 shrink-0 text-white" />
+                                <span className="min-w-0 flex-1">
+                                    <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-200">Location</span>
+                                    <Input
+                                        value={location}
+                                        onChange={(event) => setLocation(event.target.value)}
+                                        placeholder="City, area, or neighborhood"
+                                        className="h-auto border-0 bg-transparent p-0 text-[15px] font-semibold text-white shadow-none placeholder:text-slate-300 focus-visible:ring-0"
+                                    />
                                 </span>
-                                <span>
-                                    <span className="block text-[12px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Location</span>
-                                    <span className="block text-[14px] font-semibold text-foreground">Browse top neighborhoods</span>
+                            </label>
+
+                            <label className="flex items-center gap-3 border-b border-white/20 px-0 py-4 md:border-b-0 md:border-r md:px-5">
+                                <Home className="h-5 w-5 shrink-0 text-white" />
+                                <span className="relative min-w-0 flex-1">
+                                    <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-200">Property Type</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => setPropertyTypeOpen((open) => !open)}
+                                        onBlur={() => window.setTimeout(() => setPropertyTypeOpen(false), 120)}
+                                        className="flex w-full items-center justify-between gap-3 text-left text-[15px] font-semibold text-white outline-none"
+                                    >
+                                        {selectedPropertyType.label}
+                                        <ChevronDown className={`h-4 w-4 shrink-0 transition ${propertyTypeOpen ? "rotate-180" : ""}`} />
+                                    </button>
+                                    {propertyTypeOpen && (
+                                        <div className="absolute left-0 top-[calc(100%+1rem)] z-50 w-full min-w-48 border border-white/20 bg-black/70 py-1 text-white shadow-2xl shadow-black/30 backdrop-blur-xl">
+                                            {propertyTypeOptions.map((option) => (
+                                                <button
+                                                    key={option.value}
+                                                    type="button"
+                                                    onMouseDown={(event) => event.preventDefault()}
+                                                    onClick={() => {
+                                                        setPropertyType(option.value)
+                                                        setPropertyTypeOpen(false)
+                                                    }}
+                                                    className={`block w-full px-3 py-2 text-left text-[14px] transition hover:bg-white/15 ${
+                                                        option.value === propertyType ? "bg-white/10 font-semibold" : ""
+                                                    }`}
+                                                >
+                                                    {option.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
                                 </span>
-                            </Link>
-                            <Link to="/properties" className="flex items-center gap-3 rounded-3xl bg-background p-4 text-foreground transition hover:bg-muted">
-                                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-card">
-                                    <Home className="h-5 w-5" />
-                                </span>
-                                <span>
-                                    <span className="block text-[12px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Property</span>
-                                    <span className="block text-[14px] font-semibold text-foreground">Homes, rentals, and luxury listings</span>
-                                </span>
-                            </Link>
-                            <Link to="/properties" className="md:min-w-44">
-                                <Button size="lg" className="h-full w-full rounded-3xl px-6 text-[15px] font-semibold shadow-xl">
-                                    <Search className="mr-2 h-5 w-5" />
-                                    Search
-                                </Button>
-                            </Link>
+                            </label>
+
+                            <Button type="submit" size="lg" className="h-full min-h-16 rounded-none px-7 text-[15px] font-semibold shadow-none">
+                                <Search className="mr-2 h-5 w-5" />
+                                Search
+                            </Button>
                         </div>
-                    </div>
+                    </form>
 
                     <div className="mt-8 flex flex-wrap gap-3">
                         <Link to="/properties">
