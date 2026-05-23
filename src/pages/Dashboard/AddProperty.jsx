@@ -8,10 +8,12 @@ import { Input } from "../../components/ui/input"
 import { Label } from "../../components/ui/label"
 import { Textarea } from "../../components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
-import { ArrowLeft, Upload, X, Loader2 } from "lucide-react"
+import { ArrowLeft, Upload, X, Loader2, ImagePlus } from "lucide-react"
 import { propertiesAPI } from "../../services/api"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast, Toaster } from "sonner"
+import { useAuth } from "@/hooks/useAuth"
+import { formatFeaturesForInput, getImageName } from "@/lib/utils"
 
 const AddProperty = () => {
 
@@ -19,7 +21,7 @@ const AddProperty = () => {
   const location = useLocation();
   const { id } = useParams()
   const isEdit = location.pathname.includes('/edit');
-  console.log(isEdit);
+  const { user } = useAuth()
 
   const formRef = useRef();
   const [loading, setLoading] = useState(false)
@@ -41,13 +43,16 @@ const AddProperty = () => {
     const newImages = files.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
+      name: file.name,
     }))
     setImages([...images, ...newImages])
   }
 
   const removeImage = (index) => {
     const newImages = [...images]
-    URL.revokeObjectURL(newImages[index].preview)
+    if (newImages[index].preview) {
+      URL.revokeObjectURL(newImages[index].preview)
+    }
     newImages.splice(index, 1)
     setImages(newImages)
   }
@@ -59,6 +64,7 @@ const AddProperty = () => {
         try {
           const response = await propertiesAPI.getById(id);
           const property = response.data;
+          setImages(Array.isArray(property.images) ? property.images : []);
           setAmenities({
             has_pool: property.has_pool === true,
             has_garden: property.has_garden === true,
@@ -71,14 +77,24 @@ const AddProperty = () => {
           for (const [key, value] of Object.entries(property)) {
             // Skip amenities since we're handling them in state
             if (key.startsWith('has_')) continue;
+            if (key === 'images') continue;
 
             const input = formRef.current.querySelector(`[name="${key}"]`);
             if (!input) continue;
 
+            const inputValue = key === "features" ? formatFeaturesForInput(value) : value;
+
             if (input.type === 'checkbox') {
-              input.checked = Boolean(value);
+              input.checked = Boolean(inputValue);
             } else {
-              input.value = value ?? "";
+              input.value = inputValue ?? "";
+            }
+            if (input.tagName === 'INPUT' || input.tagName === 'TEXTAREA') {
+              const event = new Event('input', { bubbles: true });
+              input.dispatchEvent(event);
+            } else {
+              const event = new Event('change', { bubbles: true });
+              input.dispatchEvent(event);
             }
             if (input.tagName === 'SELECT') {
               const event = new Event('change', { bubbles: true });
@@ -156,9 +172,11 @@ const AddProperty = () => {
         return;
       }
       console.log("images form the form submit", images);
-      images.forEach((image, index) => {
+      let imageUploadIndex = 0;
+      images.forEach((image) => {
         if (image.file instanceof File) {
-          formData.append(`images[${index}]`, image.file)
+          formData.append(`images[${imageUploadIndex}]`, image.file)
+          imageUploadIndex += 1;
         }
       })
 
@@ -182,7 +200,13 @@ const AddProperty = () => {
       toast.success("Success!", {
         description: `Property ${btnTxt} successfully!`,
       });
-      navigate("/dashboard", {
+      const roleId = Number(user.role_id || user.userType_id)
+      const userPath =
+        roleId === 3 ? "/agent" :
+          roleId === 5 ? "/buyer" :
+            roleId === 6 ? "/seller" :
+              "/dashboard"
+      navigate(userPath, {
         state: { message: "Property added successfully!" },
       })
     } catch (err) {
@@ -206,10 +230,23 @@ const AddProperty = () => {
         <Toaster position="top-right" />
         {/* Header */}
         <div className="flex items-center mb-8">
-          <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mr-4">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
+          {user && (
+            (() => {
+              const roleId = Number(user.role_id || user.userType_id)
+              const dashboardPath =
+                roleId === 3 ? "/agent" :
+                  roleId === 5 ? "/buyer" :
+                    roleId === 6 ? "/seller" :
+                      "/dashboard"
+
+              return (
+                <Button variant="ghost" onClick={() => navigate(dashboardPath)} className="mr-4">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Dashboard
+                </Button>
+              )
+            })()
+          )}
           <div>
             {
               isEdit ? (
@@ -281,7 +318,7 @@ const AddProperty = () => {
                   <Input
                     id="city"
                     name="city"
-                    placeholder="e.g., Bengaluru"
+                    placeholder="e.g., Ludhiana"
                     // value={formData.title}
                     // onChange={handleChange}
                     // required
@@ -293,7 +330,7 @@ const AddProperty = () => {
                   <Input
                     id="state"
                     name="state"
-                    placeholder="e.g., Karnataka"
+                    placeholder="e.g., Punjab"
                     // value={formData.price}
                     // onChange={handleChange}
                     // required
@@ -568,53 +605,92 @@ const AddProperty = () => {
           </Card>
 
           {/* Images */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Property Images</CardTitle>
-              <CardDescription>Upload high-quality images of your property</CardDescription>
+          <Card className="overflow-hidden rounded-xl border border-border shadow-none">
+            <CardHeader className="border-b border-border bg-background px-6 py-5">
+              <CardTitle className="text-base font-semibold tracking-tight">Property Images</CardTitle>
+              <CardDescription>Add clear photos that show the best parts of the property</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-                <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <div className="space-y-2">
-                  <Label htmlFor="images" className="cursor-pointer">
-                    <span className="text-accent hover:underline">Click to upload images</span>
-                    <span className="text-muted-foreground"> or drag and drop</span>
-                  </Label>
-                  <Input
-                    id="images"
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    disabled={loading}
-                    className="hidden"
-                  />
-                  <p className="text-sm text-muted-foreground">PNG, JPG, GIF up to 10MB each</p>
-                </div>
-              </div>
 
+            <CardContent className="space-y-5 px-6 py-6">
+              {/* Drop Zone */}
+              <Label
+                htmlFor="images"
+                className={`group flex cursor-pointer flex-col items-center gap-4 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 px-6 py-10 text-center transition-colors hover:border-primary hover:bg-primary/10 ${loading ? "pointer-events-none opacity-60" : ""}`}
+              >
+                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-primary/20 bg-white text-primary shadow-sm">
+                  <ImagePlus className="h-6 w-6" />
+                </div>
+
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold text-foreground">
+                    <span className="text-primary">Choose property photos</span>
+                    {" "}or drop them here
+                  </p>
+                  <p className="text-xs text-muted-foreground">PNG, JPG, or GIF · Up to 10MB each</p>
+                </div>
+
+                <div className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors group-hover:bg-primary/90">
+                  <Upload className="h-4 w-4" />
+                  Browse images
+                </div>
+              </Label>
+
+              <Input
+                id="images"
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={loading}
+                className="hidden"
+              />
+
+              {/* Image List */}
               {images.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {images.map((image, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={image.preview || "/placeholder.svg"}
-                        alt={`Property ${index + 1}`}
-                        className="w-full h-24 object-cover rounded-lg"
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
-                        onClick={() => removeImage(index)}
-                        disabled={loading}
+                <div>
+                  <div className="mb-1 flex items-center justify-between border-b border-border pb-3">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-foreground">
+                      Selected photos
+                    </p>
+                    <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-0.5 text-xs font-medium text-primary">
+                      {images.length} {images.length === 1 ? "image" : "images"} ready
+                    </span>
+                  </div>
+
+                  <div>
+                    {images.map((image, index) => (
+                      <div
+                        key={image.id || image.preview || index}
+                        className="flex items-center justify-between gap-3 border-b border-border py-3 last:border-0"
                       >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ))}
+                        <div className="flex min-w-0 items-center gap-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-primary/20 bg-primary/5 text-primary">
+                            <ImagePlus className="h-4 w-4" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-medium text-foreground">
+                              {getImageName(image, index)}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {image.file ? "New upload" : "Existing property image"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          aria-label={`Remove property image ${index + 1}`}
+                          className="h-8 w-8 shrink-0 rounded-md p-0 text-muted-foreground hover:border-destructive hover:bg-destructive/10 hover:text-destructive"
+                          onClick={() => removeImage(index)}
+                          disabled={loading}
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </CardContent>
