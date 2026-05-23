@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer className="border-t border-border bg-card">
       <div className="container mx-auto px-4 py-14">
-        <div className="mb-12 overflow-hidden rounded-[2rem] border border-border bg-primary p-8 text-primary-foreground shadow-2xl shadow-primary/10 md:p-10">
+        <div className="mb-12 overflow-hidden border border-border bg-primary p-8 text-primary-foreground shadow-2xl shadow-primary/10 md:p-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="max-w-2xl">
               <p className="mb-3 text-[12px] font-medium uppercase tracking-[0.16em] text-primary-foreground/70">EstateHub India Advisory</p>
