@@ -31,15 +31,15 @@ export const sidebars = {
     { label: "System Settings", path: "/dashboard/system", icon: Settings },
     { label: "Beta Feedback", path: "/dashboard/beta-feedback", icon: Bug },
     { label: "All Properties", path: "/dashboard/properties", icon: Home },
-    { label: "Content Management", path: "/dashboard/content", icon: FileText },
+    { label: "Content Management", path: "/dashboard/content", icon: FileText, disabled: true },
   ],
 
   admin: [
-    { label: "Dashboard", path: "/admin", icon: LayoutDashboard },
-    { label: "Properties", path: "/admin/properties", icon: Home },
-    { label: "User Management", path: "/admin/users", icon: Users },
-    { label: "Inquiries", path: "/admin/inquiries", icon: MessageSquare },
-    { label: "Reports", path: "/admin/reports", icon: BarChart3 },
+    { label: "Dashboard", path: "/admin", icon: LayoutDashboard, disabled: true },
+    { label: "Properties", path: "/admin/properties", icon: Home, disabled: true },
+    { label: "User Management", path: "/admin/users", icon: Users, disabled: true },
+    { label: "Inquiries", path: "/admin/inquiries", icon: MessageSquare, disabled: true },
+    { label: "Reports", path: "/admin/reports", icon: BarChart3, disabled: true },
   ],
 
   agent: [
@@ -51,7 +51,7 @@ export const sidebars = {
     { label: "Inquiries", path: "/agent/inquiries", icon: MessageSquare },
     { label: "Schedule", path: "/agent/schedule", icon: Calendar },
     { label: "Pipeline", path: "/agent/pipeline", icon: Activity },
-    { label: "Performance", path: "/agent/analytics", icon: BarChart3 },
+    { label: "Performance", path: "/agent/analytics", icon: BarChart3, disabled: true },
     // { label: "Profile", path: "/agent/profile", icon: User },
   ],
 
@@ -74,23 +74,23 @@ export const sidebars = {
     { label: "Add Property", path: "/seller/add-property", icon: Plus },
     { label: "Offers", path: "/seller/offers", icon: Tag },
     { label: "Inquiries", path: "/seller/inquiries", icon: MessageSquare },
-    { label: "Schedule", path: "/seller/schedule", icon: Calendar },
+    { label: "Schedule", path: "/seller/schedule", icon: Calendar, disabled: true },
     // { label: "Profile", path: "/seller/profile", icon: User },
   ],
 
   investor: [
-    { label: "Investment Finder", path: "/investor/search", icon: Search },
-    { label: "My Portfolio", path: "/investor/portfolio", icon: Briefcase },
-    { label: "ROI Calculator", path: "/investor/calculator", icon: Calculator },
-    { label: "Market Trends", path: "/investor/trends", icon: TrendingUp },
-    { label: "Deal Alerts", path: "/investor/alerts", icon: Bell },
+    { label: "Investment Finder", path: "/investor/search", icon: Search, disabled: true },
+    { label: "My Portfolio", path: "/investor/portfolio", icon: Briefcase, disabled: true },
+    { label: "ROI Calculator", path: "/investor/calculator", icon: Calculator, disabled: true },
+    { label: "Market Trends", path: "/investor/trends", icon: TrendingUp, disabled: true },
+    { label: "Deal Alerts", path: "/investor/alerts", icon: Bell, disabled: true },
   ],
   renter: [
-    { label: "Dashboard", path: "/renter/dashboard", icon: LayoutDashboard },
-    { label: "Browse Properties", path: "/renter/properties", icon: Home },
-    { label: "Saved Listings", path: "/renter/saved", icon: Heart },
-    { label: "Rental Applications", path: "/renter/applications", icon: FileText },
-    { label: "Messages", path: "/renter/messages", icon: MessageSquare },
+    { label: "Dashboard", path: "/renter/dashboard", icon: LayoutDashboard, disabled: true },
+    { label: "Browse Properties", path: "/renter/properties", icon: Home, disabled: true },
+    { label: "Saved Listings", path: "/renter/saved", icon: Heart, disabled: true },
+    { label: "Rental Applications", path: "/renter/applications", icon: FileText, disabled: true },
+    { label: "Messages", path: "/renter/messages", icon: MessageSquare, disabled: true },
   ],
 };
 

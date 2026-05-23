@@ -107,7 +107,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
                     />
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
-                    List price: {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(property?.price || 0)}
+                    List price: {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(property?.price || 0)}
                   </p>
                 </div>
 
@@ -311,7 +311,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
               <div className="bg-muted/30 rounded-lg p-4">
                 <h4 className="font-medium text-card-foreground mb-2">Estimated Monthly Payment</h4>
                 <div className="text-2xl font-bold text-primary">
-                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+                  {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(
                     (offerData.offerAmount * (1 - offerData.financing.downPayment / 100) * 0.06) / 12
                   )}
                 </div>
@@ -334,11 +334,11 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Offer Amount:</span>
-                        <span className="font-semibold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(offerData.offerAmount)}</span>
+                        <span className="font-semibold">{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(offerData.offerAmount)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Earnest Money:</span>
-                        <span className="font-semibold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(offerData.earnestMoney)}</span>
+                        <span className="font-semibold">{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(offerData.earnestMoney)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Closing Date:</span>

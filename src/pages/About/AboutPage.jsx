@@ -43,7 +43,7 @@ const platformHighlights = [
     icon: BarChart3,
     title: "Smarter property decisions",
     description:
-      "Estate Hub combines listings with market insight, property activity, mortgage tools, and clear comparison flows so every next step is easier to judge.",
+      "EstateHub India combines listings with market insight, property activity, mortgage tools, and clear comparison flows so every next step is easier to judge.",
   },
   {
     icon: MessageSquareText,
@@ -77,12 +77,12 @@ const AboutPage = () => {
     <main className="min-h-screen bg-background text-foreground">
       <Seo
         title="About Us"
-        description="Learn how Estate Hub helps buyers, renters, sellers, agents, and investors move through real estate search, offers, loans, tours, and deals with confidence."
+        description="Learn how EstateHub India helps buyers, renters, sellers, agents, and investors move through real estate search, offers, loans, tours, and deals with confidence."
         canonicalPath="/about"
         schema={{
           ...organizationSchema,
           description:
-            "Estate Hub is a real estate platform for property discovery, listing management, buyer and seller communication, offers, mortgage tools, scheduling, and deal workflows.",
+            "EstateHub India is a real estate platform for property discovery, listing management, buyer and seller communication, offers, mortgage tools, scheduling, and deal workflows.",
         }}
       />
 
@@ -91,13 +91,13 @@ const AboutPage = () => {
           <div>
             <p className="mb-4 inline-flex items-center rounded-full border border-border bg-background px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               <Sparkles className="mr-2 h-4 w-4 text-primary" />
-              About Estate Hub
+              About EstateHub India
             </p>
             <h1 className="max-w-4xl text-4xl font-black tracking-tight md:text-5xl lg:text-6xl">
               A clearer way to search, list, and close real estate.
             </h1>
             <p className="mt-6 max-w-2xl text-[17px] leading-8 text-muted-foreground md:text-lg">
-              Estate Hub brings buyers, renters, sellers, agents, and investors into one connected platform. From discovering the right property to managing inquiries, offers, tours, loans, and documents, we help every user move with more confidence and less guesswork.
+              EstateHub India brings buyers, renters, sellers, agents, and investors into one connected platform. From discovering the right property to managing inquiries, offers, tours, loans, and documents, we help every user move with more confidence and less guesswork.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link to="/properties">
@@ -146,7 +146,7 @@ const AboutPage = () => {
           <div className="mx-auto mb-10 max-w-3xl text-center">
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Built around the people in every transaction</h2>
             <p className="mt-4 text-muted-foreground">
-              Estate Hub is not only a listing website. It is a shared workspace for the real tasks that happen before, during, and after a property decision.
+              EstateHub India is not only a listing website. It is a shared workspace for the real tasks that happen before, during, and after a property decision.
             </p>
           </div>
 
@@ -173,7 +173,7 @@ const AboutPage = () => {
             <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-primary">What we focus on</p>
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Real estate tools that stay useful after the search begins.</h2>
             <p className="mt-4 leading-7 text-muted-foreground">
-              A good property platform should support the whole journey: search, shortlisting, communication, financing, scheduling, offers, and closing work. Estate Hub keeps those pieces close together so users can move from interest to action.
+              A good property platform should support the whole journey: search, shortlisting, communication, financing, scheduling, offers, and closing work. EstateHub India keeps those pieces close together so users can move from interest to action.
             </p>
           </div>
 
@@ -198,7 +198,7 @@ const AboutPage = () => {
             <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <Heart className="h-6 w-6" />
             </div>
-            <h2 className="text-3xl font-bold tracking-tight">Why people choose Estate Hub</h2>
+            <h2 className="text-3xl font-bold tracking-tight">Why people choose EstateHub India</h2>
             <p className="mt-4 leading-7 text-muted-foreground">
               We care about making the real estate process feel less fragmented. The platform is designed to help users compare options, protect important information, and stay aligned with the people helping them move forward.
             </p>
@@ -223,7 +223,7 @@ const AboutPage = () => {
             Ready to make your next property move?
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-primary-foreground/85">
-            Browse listings, create your account, or connect with the Estate Hub team for guidance tailored to your goals.
+            Browse listings, create your account, or connect with the EstateHub India team for guidance tailored to your goals.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
             <Link to="/auth/register">
@@ -233,7 +233,7 @@ const AboutPage = () => {
             </Link>
             <Link to="/contact">
               <Button size="lg" variant="outline" className="rounded-full border-primary-foreground/30 bg-primary-foreground/10 px-7 font-bold text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                Contact Estate Hub
+                Contact EstateHub India
               </Button>
             </Link>
           </div>

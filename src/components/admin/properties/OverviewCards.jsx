@@ -5,15 +5,15 @@ import { Building, Home, TrendingUp, DollarSign } from 'lucide-react';
 const OverviewCards = ({ data = {} }) => {
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
       minimumFractionDigits: 0,
     }).format(value);
   };
 
   const formatNumber = (value) => {
-    return new Intl.NumberFormat('en-US').format(value);
+    return new Intl.NumberFormat('en-IN').format(value);
   };
 
   const formatGrowth = (growth)=>{

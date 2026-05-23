@@ -15,7 +15,7 @@ export function deleteP(id){
 }
 
 export const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString('en-IN', {
       month: 'short',
       day: 'numeric',
       year: 'numeric'
@@ -23,7 +23,7 @@ export const formatDate = (dateString) => {
   };
 
   export const formatDateTime = (dateString) => {
-    return new Date(dateString).toLocaleString('en-US', {
+    return new Date(dateString).toLocaleString('en-IN', {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',

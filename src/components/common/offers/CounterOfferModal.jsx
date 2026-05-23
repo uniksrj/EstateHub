@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { DollarSign, MessageSquare, Calculator } from "lucide-react"
 import { toast } from "sonner"
+import { formatCurrency } from "@/utils/userHelpers"
 
 export function CounterOfferModal({
     isOpen,
@@ -43,7 +44,7 @@ export function CounterOfferModal({
         const difference = ((counterAmount - originalAmount) / originalAmount * 100).toFixed(1);
         const direction = difference > 0 ? 'increase' : 'decrease';
 
-        return `I'd like to counter your offer of $${originalAmount?.toLocaleString()} with $${counterAmount?.toLocaleString()} (a ${Math.abs(difference)}% ${direction}). I believe this reflects the current market value and property conditions.`;
+        return `I'd like to counter your offer of ${formatCurrency(originalAmount || 0)} with ${formatCurrency(counterAmount || 0)} (a ${Math.abs(difference)}% ${direction}). I believe this reflects the current market value and property conditions.`;
     }
 
     const handleCounterAmountChange = (value) => {
@@ -108,7 +109,7 @@ export function CounterOfferModal({
                         <div className="bg-muted/30 rounded-lg p-3">
                             <Label className="text-sm font-medium">Original Offer</Label>
                             <div className="text-lg font-bold text-foreground">
-                                ${offer.offer_amount?.toLocaleString()}
+                                {formatCurrency(offer.offer_amount)}
                             </div>
                             <div className="text-xs text-muted-foreground">
                                 from {offer.buyer?.name}
@@ -173,7 +174,7 @@ export function CounterOfferModal({
                                         handleCounterAmountChange(newAmount)
                                     }}
                                 >
-                                    +${amount.toLocaleString()}
+                                    +{formatCurrency(amount)}
                                 </Button>
                             ))}
                             {[5000, 10000, 25000].map((amount) => (
@@ -187,7 +188,7 @@ export function CounterOfferModal({
                                         handleCounterAmountChange(newAmount)
                                     }}
                                 >
-                                    -${amount.toLocaleString()}
+                                    -{formatCurrency(amount)}
                                 </Button>
                             ))}
                         </div>

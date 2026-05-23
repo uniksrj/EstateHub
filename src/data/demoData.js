@@ -9,7 +9,7 @@ export const demoProperties = [
     price: 450000,
     property_type: "apartment",
     status: "for_sale",
-    city: "New York",
+    city: "Mumbai",
     state: "NY",
     bedrooms: 2,
     bathrooms: 2,
@@ -31,7 +31,7 @@ export const demoProperties = [
     price: 1250000,
     property_type: "villa",
     status: "under_contract",
-    city: "Miami",
+    city: "Goa",
     state: "FL",
     bedrooms: 4,
     bathrooms: 3.5,
@@ -74,7 +74,7 @@ export const demoProperties = [
     price: 750000,
     property_type: "house",
     status: "sold",
-    city: "Austin",
+    city: "Gurugram",
     state: "TX",
     bedrooms: 5,
     bathrooms: 3,
@@ -97,7 +97,7 @@ export const demoProperties = [
     price: 850000,
     property_type: "commercial",
     status: "draft",
-    city: "Chicago",
+    city: "Delhi",
     state: "IL",
     sq_ft: 2200,
     view_count: 0,
@@ -182,7 +182,7 @@ export const demoPropertiesList = [
     price: 450000,
     property_type: "apartment",
     status: "for_sale",
-    city: "New York",
+    city: "Mumbai",
     state: "NY",
     bedrooms: 2,
     bathrooms: 2,
@@ -204,7 +204,7 @@ export const demoPropertiesList = [
     price: 1250000,
     property_type: "villa",
     status: "for_sale",
-    city: "Miami",
+    city: "Goa",
     state: "FL",
     bedrooms: 4,
     bathrooms: 3.5,
@@ -247,7 +247,7 @@ export const demoPropertiesList = [
     price: 750000,
     property_type: "house",
     status: "under_contract",
-    city: "Austin",
+    city: "Gurugram",
     state: "TX",
     bedrooms: 5,
     bathrooms: 3,
@@ -370,7 +370,7 @@ export const demoInquiries = [
     propertyTitle: "Luxury Villa with Pool",
     propertyId: 102,
     propertyPrice: 1400000,
-    propertyCity: "Los Angeles",
+    propertyCity: "Bengaluru",
     propertyState: "CA",
     propertyBedrooms: 4,
     propertyBathrooms: 3,
@@ -387,7 +387,7 @@ export const demoInquiries = [
     responses: [
       {
         id: 1,
-        message: "Great to hear you're pre-approved! I've sent the HOA documents to your email. The average utilities run about $300-400 monthly.",
+        message: "Great to hear you're pre-approved! I've sent the HOA documents to your email. The average utilities run about ?30,000-40,000 monthly.",
         sender: "seller",
         sender_id: 1,
         timestamp: "2024-01-10T13:20:00Z",
@@ -420,7 +420,7 @@ export const demoInquiries = [
     responses: [
       {
         id: 1,
-        message: "The rental market is very strong in this area. Similar units rent for $2,800-3,200/month. Would you like me to send you a detailed ROI analysis?",
+        message: "The rental market is very strong in this area. Similar units rent for ?2,80,000-3,20,000/month. Would you like me to send you a detailed ROI analysis?",
         timestamp: "2024-01-13T09:00:00Z",
         sender: "seller"
       }
@@ -431,7 +431,7 @@ export const demoInquiries = [
 export const demoSchedules = [
   {
     id: 1,
-    property: { title: "Modern Apartment in Downtown", city: "New York" },
+    property: { title: "Modern Apartment in Downtown", city: "Mumbai" },
     buyer: { name: "Alice Johnson" },
     agent: { name: "Michael Lee" },
     scheduled_at: "2025-11-07 14:30",
@@ -441,7 +441,7 @@ export const demoSchedules = [
   },
   {
     id: 2,
-    property: { title: "Beachfront Cottage", city: "Miami" },
+    property: { title: "Beachfront Cottage", city: "Goa" },
     buyer: { name: "John Smith" },
     agent: { name: "Samantha Davis" },
     scheduled_at: "2025-11-10 10:00",
@@ -451,7 +451,7 @@ export const demoSchedules = [
   },
   {
     id: 3,
-    property: { title: "Luxury Villa in Beverly Hills", city: "Los Angeles" },
+    property: { title: "Luxury Villa in Beverly Hills", city: "Bengaluru" },
     buyer: { name: "Emma Brown" },
     agent: { name: "Michael Lee" },
     scheduled_at: "2025-11-12 16:00",
@@ -461,7 +461,7 @@ export const demoSchedules = [
   },
   {
     id: 4,
-    property: { title: "Luxury Villa in Beverly Hills", city: "Los Angeles" },
+    property: { title: "Luxury Villa in Beverly Hills", city: "Bengaluru" },
     buyer: { name: "Emma Brown" },
     // agent: { name: "Michael Lee" },
     scheduled_at: "2025-11-12 16:00",
@@ -476,7 +476,7 @@ export const testimonials = [
     id: 1,
     name: "Sarah Johnson",
     role: "Home Owner",
-    content: "EstateHub helped me find my dream home in just 2 weeks! The process was smooth and professional.",
+    content: "EstateHub India helped me find my dream home in just 2 weeks! The process was smooth and professional.",
     rating: 5,
     image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=500"
   },
@@ -515,7 +515,7 @@ export const featuredPropertiesData = [
     beds: 4,
     baths: 3,
     sqft: 3200,
-    price: "$2,500,000",
+    price: "?2,50,00,000",
     image: "https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470",
     featured: true
   },
@@ -526,29 +526,29 @@ export const featuredPropertiesData = [
     beds: 2,
     baths: 2,
     sqft: 1800,
-    price: "$1,800,000",
+    price: "?1,80,00,000",
     image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470",
     featured: true
   },
   {
     id: 3,
     title: "Beach House",
-    location: "Miami, FL",
+    location: "Goa, FL",
     beds: 3,
     baths: 2,
     sqft: 2200,
-    price: "$1,200,000",
+    price: "?1,20,00,000",
     image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470",
     featured: true
   },
   {
     id: 4,
     title: "Urban Loft",
-    location: "Chicago, IL",
+    location: "Delhi, IL",
     beds: 2,
     baths: 2,
     sqft: 1600,
-    price: "$950,000",
+    price: "?95,00,000",
     image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470"
   },
   {
@@ -558,17 +558,17 @@ export const featuredPropertiesData = [
     beds: 5,
     baths: 4,
     sqft: 3800,
-    price: "$3,200,000",
+    price: "?3,20,00,000",
     image: "https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470"
   },
   {
     id: 6,
     title: "City Penthouse",
-    location: "San Francisco, CA",
+    location: "Hyderabad, CA",
     beds: 3,
     baths: 3,
     sqft: 2400,
-    price: "$2,100,000",
+    price: "?2,10,00,000",
     image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1470"
   }
 ];
@@ -988,7 +988,7 @@ export const mockOffers = [
     status: "counter_offer",
     expiration: "2024-01-15",
     lastUpdated: "2024-01-09",
-    sellerResponse: "We'd like to counter at $345,000",
+    sellerResponse: "We'd like to counter at ?3,45,00,000",
     counterOffer: 345000,
     contingencies: ["financing"],
     earnestMoney: 8000,
@@ -1270,7 +1270,7 @@ export const activities = [
     property: "123 Main Street",
     user: "Escrow Company",
     action: "received",
-    item: "Earnest Money - $10,000",
+    item: "Earnest Money - ?10,00,000",
     step: "earnest_money"
   },
   {
@@ -1284,7 +1284,7 @@ export const activities = [
     property: "789 Pine Road",
     user: "System",
     action: "due",
-    item: "Appraisal Fee - $500",
+    item: "Appraisal Fee - ?50,000",
     step: "mortgage_processing"
   },
 

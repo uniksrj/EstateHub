@@ -21,7 +21,7 @@ const DealPipeline = ({ deadPipeData }) => {
                 <YAxis />
                 <Tooltip
                   formatter={(value, name) => {
-                    if (name === 'value') return [`$${value}M`, 'Total Value'];
+                    if (name === 'value') return [`₹${value} Cr`, 'Total Value'];
                     return [value, 'Number of Deals'];
                   }}
                 />

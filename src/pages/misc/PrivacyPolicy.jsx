@@ -94,7 +94,7 @@ const PrivacyPolicy = () => {
               <br />
               <strong>Phone:</strong> (555) 123-4567
               <br />
-              <strong>Address:</strong> 123 Real Estate Drive, Property City, PC 12345
+              <strong>Address:</strong> 12 MG Road, Bengaluru, Karnataka 560001
             </p>
           </section>
         </CardContent>

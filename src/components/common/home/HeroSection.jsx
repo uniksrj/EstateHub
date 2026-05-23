@@ -88,7 +88,7 @@ const HeroSection = () => {
                         {activeContent.badge}
                     </Badge>
                     <h1 className="max-w-3xl text-[28px] font-semibold leading-tight tracking-tight text-white sm:text-[28px] lg:text-[28px]">
-                        Estate Hub
+                        EstateHub India
                     </h1>
 
                     <div className="relative mt-5 min-h-[150px] max-w-3xl sm:min-h-[126px]">

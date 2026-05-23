@@ -10,7 +10,11 @@ const api = axios.create({
   withCredentials: true,
 });
 
+let csrfCookieRequest = null
+
 const getCsrfTokenFromCookie = () => {
+  if (typeof document === "undefined") return null
+
   const name = 'XSRF-TOKEN='
   const decodedCookie = decodeURIComponent(document.cookie)
   const ca = decodedCookie.split(';')
@@ -23,8 +27,25 @@ const getCsrfTokenFromCookie = () => {
   return null
 }
 
+const ensureCsrfCookie = async () => {
+  if (typeof document === "undefined" || getCsrfTokenFromCookie()) {
+    return
+  }
+
+  csrfCookieRequest ||= axios.get(`${API_ORIGIN}/sanctum/csrf-cookie`, {
+    withCredentials: true,
+    headers: {
+      Accept: "application/json",
+    },
+  }).finally(() => {
+    csrfCookieRequest = null
+  })
+
+  await csrfCookieRequest
+}
+
 api.interceptors.request.use(
-  (config) => {
+  async (config) => {
     if (config.data instanceof FormData) {
       delete config.headers["Content-Type"]
     }
@@ -36,10 +57,11 @@ api.interceptors.request.use(
 
     // Only add CSRF token for state-changing requests
     if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase())) {
+      await ensureCsrfCookie()
+
       const token = getCsrfTokenFromCookie()
       if (token) {
         config.headers['X-XSRF-TOKEN'] = token
-        console.log('CSRF token added to request:', token.substring(0, 10) + '...')
       } else {
         console.warn('No CSRF token found for', config.method, 'request')
       }
@@ -68,7 +90,21 @@ api.interceptors.request.use(
 // Response interceptor to handle errors
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    const originalRequest = error.config
+
+    if (error.response?.status === 419 && originalRequest && !originalRequest._csrfRetry) {
+      originalRequest._csrfRetry = true
+      await ensureCsrfCookie()
+
+      const token = getCsrfTokenFromCookie()
+      if (token) {
+        originalRequest.headers['X-XSRF-TOKEN'] = token
+      }
+
+      return api(originalRequest)
+    }
+
     if (error.response?.status === 401) {
       localStorage.removeItem("user")
       localStorage.removeItem("chatToken")

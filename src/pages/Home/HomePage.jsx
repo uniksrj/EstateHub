@@ -15,9 +15,9 @@ import { toBackendAssetUrl } from "@/config/env"
 import { useState, useEffect } from "react"
 
 const formatPrice = (price) =>
-  new Intl.NumberFormat("en-US", {
+  new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "USD",
+    currency: "INR",
     minimumFractionDigits: 0,
   }).format(Number(price || 0))
 
@@ -88,7 +88,7 @@ const HomePage = () => {
     <div className="min-h-screen bg-background text-foreground">
       <Seo
         title="Real Estate Marketplace"
-        description="Estate Hub helps buyers, sellers, agents, and investors discover and manage real estate listings."
+        description="EstateHub India helps buyers, sellers, agents, and investors discover and manage real estate listings."
         canonicalPath="/"
         schema={organizationSchema}
       />

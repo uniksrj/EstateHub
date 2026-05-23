@@ -240,7 +240,7 @@ const AddProperty = () => {
                   <Input
                     id="title"
                     name="title"
-                    placeholder="e.g., Modern Downtown Loft"
+                    placeholder="e.g., Modern Indiranagar Apartment"
                     // value={formData.title}
                     // onChange={handleChange}
                     // required
@@ -253,7 +253,7 @@ const AddProperty = () => {
                     id="price"
                     name="price"
                     type="number"
-                    placeholder="e.g., 850000"
+                    placeholder="e.g., 8500000"
                     // value={formData.price}
                     // onChange={handleChange}
                     // required
@@ -267,7 +267,7 @@ const AddProperty = () => {
                 <Input
                   id="address"
                   name="address"
-                  placeholder="e.g., Downtown District, City Name"
+                  placeholder="e.g., 12 MG Road, Bengaluru"
                   // value={formData.location}
                   // onChange={handleChange}
                   // required
@@ -281,7 +281,7 @@ const AddProperty = () => {
                   <Input
                     id="city"
                     name="city"
-                    placeholder="e.g., New york"
+                    placeholder="e.g., Bengaluru"
                     // value={formData.title}
                     // onChange={handleChange}
                     // required
@@ -293,7 +293,7 @@ const AddProperty = () => {
                   <Input
                     id="state"
                     name="state"
-                    placeholder="e.g., "
+                    placeholder="e.g., Karnataka"
                     // value={formData.price}
                     // onChange={handleChange}
                     // required
@@ -305,7 +305,7 @@ const AddProperty = () => {
                   <Input
                     id="country"
                     name="country"
-                    placeholder="e.g., USA"
+                    placeholder="e.g., India"
                     // value={formData.price}
                     // onChange={handleChange}
                     // required
@@ -313,11 +313,11 @@ const AddProperty = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="zip_code">Zip Code *</Label>
+                  <Label htmlFor="zip_code">PIN Code *</Label>
                   <Input
                     id="zip_code"
                     name="zip_code"
-                    placeholder="e.g., 122547"
+                    placeholder="e.g., 560001"
                     // value={formData.price}
                     // onChange={handleChange}
                     // required

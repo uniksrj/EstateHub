@@ -87,7 +87,7 @@ export function formatMemberSince(user) {
     return "Recently joined"
   }
 
-  return parsedDate.toLocaleDateString("en-US", {
+  return parsedDate.toLocaleDateString("en-IN", {
     month: "short",
     year: "numeric",
   })

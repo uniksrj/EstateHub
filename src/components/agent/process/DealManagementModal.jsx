@@ -20,6 +20,7 @@ import { DeadlineStatusBadge } from "../DeadlineStatusBadge";
 import { DeadlineExtensionPanel } from "../deal/DeadlineExtensionPanel";
 import { Label } from "@/components/ui/label";
 import { format } from "date-fns";
+import { formatCurrency } from "@/utils/userHelpers";
 
 export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
   const [activeTab, setActiveTab] = useState("process");
@@ -447,7 +448,7 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                         <div className="space-y-2">
                                           <Label>Amount</Label>
                                           <div className="flex">
-                                            <span className="px-3 py-2 border border-r-0 rounded-l-md">$</span>
+                                            <span className="px-3 py-2 border border-r-0 rounded-l-md">₹</span>
                                             <input
                                               type="number"
                                               value={extraFields.earnestAmount}
@@ -687,15 +688,15 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Loan Amount</p>
-                      <p className="font-medium">${deal.loan_application.loan_amount.toLocaleString()}</p>
+                      <p className="font-medium">{formatCurrency(deal.loan_application.loan_amount)}</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Monthly Payment</p>
-                      <p className="font-medium">${deal.loan_application.monthly_payment.toLocaleString()}</p>
+                      <p className="font-medium">{formatCurrency(deal.loan_application.monthly_payment)}</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Down Payment</p>
-                      <p className="font-medium">${deal.loan_application.down_payment.toLocaleString()}</p>
+                      <p className="font-medium">{formatCurrency(deal.loan_application.down_payment)}</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Status</p>

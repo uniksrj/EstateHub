@@ -90,17 +90,15 @@ const AdminLayout = () => {
               {sidebarItems.map((item) => {
                 const Icon = item.icon
                 const isActive = location.pathname === item.path
+                const className = item.disabled
+                  ? "flex cursor-not-allowed items-center space-x-3 rounded-lg px-3 py-2 text-muted-foreground/60"
+                  : `flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${isActive
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`
 
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setIsSidebarOpen(false)}
-                    className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${isActive
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                      }`}
-                  >
+                const content = (
+                  <>
                     <Icon className="h-4 w-4" />
                     <span className="text-sm font-medium">{item.label}</span>
                     {user.role_id === 1 && item.path === "/dashboard/beta-feedback" && newFeedbackCount > 0 && (
@@ -108,6 +106,21 @@ const AdminLayout = () => {
                         {newFeedbackCount}
                       </Badge>
                     )}
+                  </>
+                )
+
+                return item.disabled ? (
+                  <span key={item.path} className={className} title="Still working on it">
+                    {content}
+                  </span>
+                ) : (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={className}
+                  >
+                    {content}
                   </Link>
                 )
               })}

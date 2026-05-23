@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { FileText, Calendar, DollarSign, User, Home, X } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
+import { formatCurrency } from "@/utils/userHelpers"
 
 export function OfferDetailsModal({ offer, isOpen, onClose }) {
   const { user } = useAuth()
@@ -65,7 +66,7 @@ export function OfferDetailsModal({ offer, isOpen, onClose }) {
                   </div>
                   <div className="text-right">
                     <p className="text-2xl font-bold text-green-600">
-                      ${offer.offerAmount.toLocaleString()}
+                      {formatCurrency(offer.offerAmount)}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       Offered Amount
@@ -93,7 +94,7 @@ export function OfferDetailsModal({ offer, isOpen, onClose }) {
                   <div>
                     <h3 className="font-semibold">{offer.property.title}</h3>
                     <p className="text-sm text-muted-foreground">{`${offer?.property?.address}, ${offer?.property?.city}, ${offer?.property?.state}, ${offer?.property?.country}(${offer?.property?.zip_code})`}</p>
-                    <p className="text-lg font-bold mt-1">${offer.property.price.toLocaleString()}</p>
+                    <p className="text-lg font-bold mt-1">{formatCurrency(offer.property.price)}</p>
                   </div>
                 </div>
               </CardContent>

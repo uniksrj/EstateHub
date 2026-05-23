@@ -9,7 +9,7 @@ const NotFound = () => {
     <div className="min-h-screen flex items-center justify-center px-4">
       <Seo
         title="Page Not Found"
-        description="The Estate Hub page you requested could not be found."
+        description="The EstateHub India page you requested could not be found."
         canonicalPath="/404"
       />
       <div className="text-center">

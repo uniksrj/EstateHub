@@ -209,7 +209,7 @@ const RegisterForm = () => {
         <div className="h-full flex flex-col p-1 sm:p-2 min-w-0">
             <div className="text-center mb-6">
                 <h2 className="text-2xl sm:text-3xl font-bold">Create Account</h2>
-                <p className="text-muted-foreground">Join EstateHub today</p>
+                <p className="text-muted-foreground">Join EstateHub India today</p>
             </div>
 
             <form ref={formRef} onSubmit={handleSubmit} className="space-y-3">

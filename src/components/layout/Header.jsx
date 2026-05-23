@@ -76,6 +76,8 @@ const Header = () => {
     `inline-flex items-center rounded-full px-3 py-2 text-[14px] font-medium transition-colors hover:bg-muted hover:text-foreground ${
       active ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" : "text-muted-foreground"
     }`
+  const disabledNavClass = "inline-flex cursor-not-allowed items-center rounded-full px-3 py-2 text-[14px] font-medium text-muted-foreground/60"
+  const disabledMenuItemClass = "block cursor-not-allowed rounded-xl px-4 py-2.5 text-[14px] font-medium text-muted-foreground/60"
 
   return (
     <header ref={headerRef} className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/90 shadow-sm backdrop-blur-xl supports-[backdrop-filter]:bg-background/75">
@@ -87,8 +89,8 @@ const Header = () => {
               <Building2 className="h-6 w-6" />
             </span>
             <span className="leading-tight">
-              <span className="block text-[20px] font-semibold tracking-tight">Estate Hub</span>
-              <span className="hidden text-[12px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:block">Premium Realty</span>
+              <span className="block text-[20px] font-semibold tracking-tight">EstateHub India</span>
+              <span className="hidden text-[12px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:block">Indian Realty</span>
             </span>
           </Link>
 
@@ -189,10 +191,11 @@ const Header = () => {
                 }}
               >
                 <button
-                  onClick={() => handleToggle("agents")}
+                  onClick={(event) => event.preventDefault()}
                   aria-expanded={openDropdown === "agents"}
                   aria-controls="agents-menu"
-                  className={navLinkClass(isActive("/agents"))}
+                  className={disabledNavClass}
+                  title="Still working on it"
                 >
                   <Users className="h-4 w-4 mr-1" /> Agents
                   <ChevronDown className="h-3 w-3 ml-1" />
@@ -204,12 +207,12 @@ const Header = () => {
                   className={`absolute left-0 top-[calc(100%+4px)] w-56 rounded-2xl border border-border bg-popover p-2 shadow-xl ring-1 ring-black/5 z-50 transform transition duration-150 origin-top-left
                   ${openDropdown === "agents" ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
                 >
-                  <Link to="/agents" className="block rounded-xl px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted" role="menuitem">
+                  <span className={disabledMenuItemClass} role="menuitem" title="Still working on it">
                     Find an Agent
-                  </Link>
-                  <Link to="/agents/top" className="block rounded-xl px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted" role="menuitem">
+                  </span>
+                  <span className={disabledMenuItemClass} role="menuitem" title="Still working on it">
                     Top Rated Agents
-                  </Link>
+                  </span>
                 </div>
               </div>
             )
@@ -309,17 +312,16 @@ const Header = () => {
 
               {(user?.role_id === 5 || !user) && (
                 <>
-                  <Link
-                    to="/agents"
-                    className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/agents") ? "text-accent" : "text-foreground"}`}
-                    onClick={closeMenu}
+                  <span
+                    className="cursor-not-allowed text-sm font-medium text-muted-foreground/60"
+                    title="Still working on it"
                   >
                     Agents
-                  </Link>
+                  </span>
                   <div className="pl-3 border-l border-border space-y-2">
-                    <Link to="/agents/top" className="block text-sm text-muted-foreground hover:text-accent" onClick={closeMenu}>
+                    <span className="block cursor-not-allowed text-sm text-muted-foreground/60" title="Still working on it">
                       Top Rated Agents
-                    </Link>
+                    </span>
                   </div>
                 </>
               )}

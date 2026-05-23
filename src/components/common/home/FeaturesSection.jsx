@@ -7,7 +7,7 @@ const FeaturesSection = () => {
     <section className="py-16 px-4">
       <div className="container mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Why Choose EstateHub</h2>
+          <h2 className="text-3xl font-bold mb-4">Why Choose EstateHub India</h2>
           <p className="text-muted-foreground">Experience the difference with our premium platform</p>
         </div>
 

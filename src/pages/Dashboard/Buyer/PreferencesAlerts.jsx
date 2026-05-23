@@ -408,7 +408,7 @@ const PreferencesAlerts = () => {
                   <input
                     {...register("location")}
                     type="text"
-                    placeholder="City, Neighborhood, or ZIP"
+                    placeholder="City, Neighborhood, or PIN"
                     className="w-full p-3 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>

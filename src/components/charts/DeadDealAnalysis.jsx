@@ -43,7 +43,7 @@ const DeadDealAnalysis = () => {
                                 <CardTitle className="text-sm font-medium">Total Value Lost</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">$42.8M</div>
+                                <div className="text-2xl font-bold">₹42.8 Cr</div>
                                 <p className="text-xs text-muted-foreground">
                                     -5% from last quarter
                                 </p>
@@ -55,7 +55,7 @@ const DeadDealAnalysis = () => {
                                 <CardTitle className="text-sm font-medium">Avg. Deal Size</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">$301K</div>
+                                <div className="text-2xl font-bold">₹301 L</div>
                                 <p className="text-xs text-muted-foreground">
                                     +8% from last quarter
                                 </p>

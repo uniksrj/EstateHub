@@ -23,8 +23,8 @@ const setLink = (rel, href) => {
 
 const Seo = ({ title, description, canonicalPath, image, type = "website", schema }) => {
   useEffect(() => {
-    const metaTitle = title ? `${title} | Estate Hub` : "Estate Hub"
-    const metaDescription = truncateMeta(description || "Find homes, apartments, condos, and investment properties with Estate Hub.")
+    const metaTitle = title ? `${title} | EstateHub India` : "EstateHub India"
+    const metaDescription = truncateMeta(description || "Find homes, apartments, condos, and investment properties with EstateHub India.")
     const canonical = absoluteUrl(canonicalPath || window.location.pathname)
     const imageUrl = image ? absoluteUrl(image) : absoluteUrl("/building.svg")
 

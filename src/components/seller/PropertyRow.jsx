@@ -42,10 +42,10 @@ const PropertyRow = ({ property, onRefresh }) => {
   }
 
   const formatPrice = (price) => {
-    if (!price) return "$0"
-    return new Intl.NumberFormat("en-US", {
+    if (!price) return "₹0"
+    return new Intl.NumberFormat("en-IN", {
       style: "currency",
-      currency: "USD",
+      currency: "INR",
       minimumFractionDigits: 0,
     }).format(price)
   }

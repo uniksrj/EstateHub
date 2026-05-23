@@ -34,9 +34,9 @@ import { superAdminAPI, userAPI } from "@/services/api"
 const formatNumber = (value) => Number(value || 0).toLocaleString()
 
 const formatCurrency = (value) =>
-  new Intl.NumberFormat("en-US", {
+  new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "USD",
+    currency: "INR",
     notation: "compact",
     maximumFractionDigits: 1,
   }).format(Number(value || 0))

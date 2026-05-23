@@ -10,6 +10,7 @@ import QuickActions from "@/components/agent/process/QuickActions";
 import PriorityTasks from "@/components/agent/process/PriorityTasks";
 import PostAcceptanceProcess from "@/components/agent/process/PostAcceptanceProcess";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { formatCurrency } from "@/utils/userHelpers";
 
 export default function AgentDashboard() {
   const [properties, setProperties] = useState([]);
@@ -116,7 +117,7 @@ export default function AgentDashboard() {
     },
     {
       title: "This Month's Commission",
-      value: `$${dashboardStats.commission.toLocaleString()}`,
+      value: formatCurrency(dashboardStats.commission),
       subtitle: "Estimated",
       Icon: TrendingUp,
       trend: "up"

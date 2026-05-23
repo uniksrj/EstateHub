@@ -37,8 +37,8 @@ const DeadDealChart = () => {
             <YAxis yAxisId="right" orientation="right" />
             <Tooltip 
               formatter={(value, name) => {
-                if (name === 'valueLost') return [`$${value}M`, 'Value Lost'];
-                if (name === 'avgDealSize') return [`$${value}K`, 'Avg Deal Size'];
+                if (name === 'valueLost') return [`₹${value} Cr`, 'Value Lost'];
+                if (name === 'avgDealSize') return [`₹${value} L`, 'Avg Deal Size'];
                 return [value, 'Dead Deals'];
               }}
             />

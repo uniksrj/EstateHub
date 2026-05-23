@@ -58,7 +58,7 @@ const Login = () => {
         {/* Logo */}
         <div className="flex items-center justify-center space-x-2 mb-8">
           <Building2 className="h-8 w-8 text-accent" />
-          <span className="font-bold text-2xl">EstateHub</span>
+          <span className="font-bold text-2xl">EstateHub India</span>
         </div>
 
         <Card>

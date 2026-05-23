@@ -47,9 +47,9 @@ import {
 const FINANCIAL_SPLIT_COLORS = ["#0f766e", "#f59e0b", "#2563eb"]
 
 const formatCurrency = (value, compact = false) =>
-  new Intl.NumberFormat("en-US", {
+  new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "USD",
+    currency: "INR",
     notation: compact ? "compact" : "standard",
     maximumFractionDigits: compact ? 1 : 0,
   }).format(Number(value) || 0)
@@ -108,7 +108,7 @@ const getStatusVariant = (status) => {
 const formatDate = (value) => {
   if (!value) return "Not closed"
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("en-IN", {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -183,7 +183,7 @@ export default function FinancialReport() {
     0
   )
   const projectedPipelineValue =
-    pipelineStages.reduce((total, stage) => total + Number(stage?.value || 0), 0) * 1000000
+    pipelineStages.reduce((total, stage) => total + Number(stage?.value || 0), 0) * 10000000
   const closedDealAverage = soldProperties.length
     ? closedRevenue / soldProperties.length
     : 0
@@ -434,7 +434,7 @@ export default function FinancialReport() {
               <CardHeader>
                 <CardTitle>Pipeline Value by Stage</CardTitle>
                 <CardDescription>
-                  Financial exposure inside each deal stage, measured in millions of dollars
+                  Financial exposure inside each deal stage, measured in crores of rupees
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -443,9 +443,9 @@ export default function FinancialReport() {
                     <BarChart data={pipelineStages}>
                       <CartesianGrid strokeDasharray="3 3" className="opacity-20" />
                       <XAxis dataKey="stage" angle={-12} textAnchor="end" height={70} />
-                      <YAxis tickFormatter={(value) => `$${value}M`} />
+                      <YAxis tickFormatter={(value) => `₹${value} Cr`} />
                       <Tooltip
-                        content={<FinanceTooltip formatValue={(value) => `$${Number(value || 0).toFixed(2)}M`} />}
+                        content={<FinanceTooltip formatValue={(value) => `₹${Number(value || 0).toFixed(2)} Cr`} />}
                       />
                       <Bar dataKey="value" name="Pipeline Value" radius={[8, 8, 0, 0]} fill="#1d4ed8" />
                     </BarChart>

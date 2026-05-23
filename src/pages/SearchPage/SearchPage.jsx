@@ -8,14 +8,15 @@ import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Search, MapPin, Star, Bed, Bath, Square, Map, List } from "lucide-react"
+import { formatCurrency } from "@/utils/userHelpers"
 
 export default function SearchPage() {
   const searchResults = [
     {
       id: 1,
-      title: "Modern Downtown Loft",
-      price: 850000,
-      location: "Downtown District",
+      title: "Modern Indiranagar Apartment",
+      price: 8500000,
+      location: "Indiranagar, Bengaluru",
       beds: 2,
       baths: 2,
       sqft: 1200,
@@ -26,9 +27,9 @@ export default function SearchPage() {
     },
     {
       id: 2,
-      title: "Luxury Family Estate",
-      price: 1250000,
-      location: "Hillside Heights",
+      title: "Luxury Family Villa",
+      price: 12500000,
+      location: "Whitefield, Bengaluru",
       beds: 4,
       baths: 3,
       sqft: 2800,
@@ -40,8 +41,8 @@ export default function SearchPage() {
     {
       id: 3,
       title: "Cozy Garden Apartment",
-      price: 425000,
-      location: "Garden District",
+      price: 4250000,
+      location: "Koregaon Park, Pune",
       beds: 1,
       baths: 1,
       sqft: 750,
@@ -52,9 +53,9 @@ export default function SearchPage() {
     },
     {
       id: 4,
-      title: "Waterfront Penthouse",
-      price: 2100000,
-      location: "Marina Bay",
+      title: "Sea View Penthouse",
+      price: 21000000,
+      location: "Worli, Mumbai",
       beds: 3,
       baths: 3,
       sqft: 2200,
@@ -93,7 +94,7 @@ export default function SearchPage() {
                   <Label>Location</Label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Enter city, neighborhood..." className="pl-10" />
+                    <Input placeholder="Enter city, locality, or PIN code..." className="pl-10" />
                   </div>
                 </div>
 
@@ -102,16 +103,16 @@ export default function SearchPage() {
                   <Label>Price Range</Label>
                   <div className="px-2">
                     <Slider
-                      defaultValue={[400000, 1500000]}
-                      max={3000000}
-                      min={100000}
-                      step={50000}
+                      defaultValue={[4000000, 15000000]}
+                      max={30000000}
+                      min={1000000}
+                      step={100000}
                       className="w-full"
                     />
                   </div>
                   <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <span>$400K</span>
-                    <span>$1.5M</span>
+                    <span>{formatCurrency(4000000)}</span>
+                    <span>{formatCurrency(15000000)}</span>
                   </div>
                 </div>
 
@@ -258,9 +259,9 @@ export default function SearchPage() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-accent">${property.price.toLocaleString()}</p>
+                          <p className="text-2xl font-bold text-accent">{formatCurrency(property.price)}</p>
                           <p className="text-sm text-muted-foreground">
-                            ${Math.round(property.price / property.sqft)}/sqft
+                            {formatCurrency(Math.round(property.price / property.sqft))}/sqft
                           </p>
                         </div>
                       </div>

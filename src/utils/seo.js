@@ -38,6 +38,6 @@ export const propertyLocation = (property) => (
 export const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "RealEstateAgent",
-  name: "Estate Hub",
+  name: "EstateHub India",
   url: siteUrl,
 }

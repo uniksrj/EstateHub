@@ -100,7 +100,7 @@ const TermsOfService = () => {
             <h2 className="text-2xl font-semibold mb-4">10. Governing Law</h2>
             <p className="text-muted-foreground">
               These terms shall be governed by and construed in accordance with the laws of 
-              the State of California, without regard to its conflict of law provisions.
+              the State of Karnataka, without regard to its conflict of law provisions.
             </p>
           </section>
 

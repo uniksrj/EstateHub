@@ -95,7 +95,7 @@ export const PropertyCard = memo(function PropertyCard({
                 <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                     <img
                         src={getImageUrl(property.images?.[0], "f_auto,q_auto,c_fill,w_480,h_320")}
-                        alt={`${property.title} in ${property.city || "Estate Hub"}`}
+                        alt={`${property.title} in ${property.city || "EstateHub India"}`}
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         loading="lazy"
                         decoding="async"

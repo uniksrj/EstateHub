@@ -102,7 +102,7 @@ export default function ContactPage() {
                     <p className="text-muted-foreground">
                       123 Real Estate Ave
                       <br />
-                      Property City, PC 12345
+                      Bengaluru, Karnataka 560001
                     </p>
                   </div>
                 </div>
@@ -129,7 +129,7 @@ export default function ContactPage() {
               <CardContent className="space-y-4">
                 <div>
                   <h4 className="font-medium">Downtown Office</h4>
-                  <p className="text-sm text-muted-foreground">123 Real Estate Ave, Property City</p>
+                  <p className="text-sm text-muted-foreground">12 MG Road, Bengaluru</p>
                 </div>
                 <div>
                   <h4 className="font-medium">Hillside Branch</h4>

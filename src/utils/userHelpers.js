@@ -65,20 +65,21 @@ export function getStatusText(status) {
 }
 
 export const formatPrice = (price) => {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'INR',
     minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(price)
 }
 
 export function formatNumber(value) {
   if (!value) return;
-  if (value >= 1_000_000_000) {
-    return (value / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+  if (value >= 1_00_00_000) {
+    return (value / 1_00_00_000).toFixed(1).replace(/\.0$/, '') + 'Cr';
   }
-  if (value >= 1_000_000) {
-    return (value / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (value >= 1_00_000) {
+    return (value / 1_00_000).toFixed(1).replace(/\.0$/, '') + 'L';
   }
   if (value >= 1_000) {
     return (value / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
@@ -151,16 +152,16 @@ export const getDaysRemaining = (expirationDate) => {
 
 
 export const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'INR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   }).format(amount);
 };
 
 export const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
+  return new Date(dateString).toLocaleDateString('en-IN', {
     month: 'short',
     day: 'numeric',
     year: 'numeric'

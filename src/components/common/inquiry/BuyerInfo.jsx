@@ -1,4 +1,5 @@
 import { Calendar, Mail, Phone, User } from "lucide-react";
+import { formatCurrency } from "@/utils/userHelpers";
 
 export const BuyerInfo = ({selectedInquiry}) => {
     return (
@@ -22,7 +23,7 @@ export const BuyerInfo = ({selectedInquiry}) => {
                     <span><strong>Timeline:</strong> {selectedInquiry.timeline}</span>
                 </div>
                 <div className="p-2 bg-muted rounded-lg">
-                    <strong>Budget Range:</strong> ${parseInt(selectedInquiry.budget_min).toLocaleString()} - ${parseInt(selectedInquiry.budget_max).toLocaleString()}
+                    <strong>Budget Range:</strong> {formatCurrency(parseInt(selectedInquiry.budget_min))} - {formatCurrency(parseInt(selectedInquiry.budget_max))}
                 </div>
             </div>
         </div>

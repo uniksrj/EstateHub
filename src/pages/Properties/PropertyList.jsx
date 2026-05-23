@@ -94,9 +94,9 @@ const PropertyList = () => {
   }
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("en-IN", {
       style: "currency",
-      currency: "USD",
+      currency: "INR",
       minimumFractionDigits: 0,
     }).format(price)
   }
@@ -136,14 +136,14 @@ const PropertyList = () => {
     <div className="min-h-screen bg-background">
       <Seo
         title={type ? `${type.replace(/-/g, " ")} Properties` : "Properties"}
-        description="Browse homes, apartments, condos, townhouses, and commercial properties on Estate Hub."
+        description="Browse homes, apartments, condos, townhouses, and commercial properties on EstateHub India."
         canonicalPath={`/properties${type ? `/${type}` : ""}${currentPage > 1 ? `?page=${currentPage}` : ""}`}
         schema={organizationSchema}
       />
       <div className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-10 md:py-14">
           <div className="max-w-3xl">
-            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Estate Hub Properties</p>
+            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">EstateHub India Properties</p>
             <h1 className="text-[24px] font-semibold tracking-tight md:text-[28px]">Find a place that feels right before you ever step inside.</h1>
             <p className="mt-4 text-[15px] leading-6 text-muted-foreground md:text-[16px]">Browse verified listings with clear pricing, location context, and quick ways to connect.</p>
           </div>

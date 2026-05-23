@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { statusConfig } from "@/config/miscConfig";
 import { formatDate } from "@/lib/utils";
+import { formatCurrency } from "@/utils/userHelpers";
 import { Loading } from "@/pages/misc/Loading";
 import { Star } from "lucide-react";
 
@@ -56,7 +57,7 @@ export const InquiryList = ({loading , filteredInquiries, setSelectedInquiry ,se
                                         </p>
 
                                         <div className="flex items-center justify-between text-xs text-muted-foreground">
-                                            <span>Budget: ${parseInt(inquiry.budget_min).toLocaleString()} - ${parseInt(inquiry.budget_max).toLocaleString()}</span>
+                                            <span>Budget: {formatCurrency(parseInt(inquiry.budget_min))} - {formatCurrency(parseInt(inquiry.budget_max))}</span>
                                             <span>{formatDate(inquiry.createdAt)}</span>
                                         </div>
                                     </div>

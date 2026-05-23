@@ -61,9 +61,9 @@ const PropertyDetail = () => {
   }
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("en-IN", {
       style: "currency",
-      currency: "USD",
+      currency: "INR",
       minimumFractionDigits: 0,
     }).format(price)
   }
@@ -79,7 +79,7 @@ const PropertyDetail = () => {
     offers: {
       "@type": "Offer",
       price: property.price,
-      priceCurrency: "USD",
+      priceCurrency: "INR",
       availability: property.status === "sold" ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
       url: absoluteUrl(buildPropertyPath(property)),
     },
@@ -95,7 +95,7 @@ const PropertyDetail = () => {
       addressLocality: property.city,
       addressRegion: property.state,
       postalCode: property.zip_code,
-      addressCountry: property.country || "US",
+      addressCountry: property.country || "IN",
     },
   } : null
 

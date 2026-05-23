@@ -31,7 +31,7 @@ export default function RenterDashboard() {
             <Briefcase className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$1.2M</div>
+            <div className="text-2xl font-bold">?1.2 Cr</div>
             <p className="text-xs text-muted-foreground">8 properties</p>
           </CardContent>
         </Card>
@@ -53,7 +53,7 @@ export default function RenterDashboard() {
             <DollarSign className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$8,400</div>
+            <div className="text-2xl font-bold">?84,000</div>
             <p className="text-xs text-muted-foreground">Rental income</p>
           </CardContent>
         </Card>

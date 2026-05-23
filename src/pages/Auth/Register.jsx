@@ -66,13 +66,13 @@ const Register = () => {
         {/* Logo */}
         <div className="flex items-center justify-center space-x-2 mb-8">
           <Building2 className="h-8 w-8 text-accent" />
-          <span className="font-bold text-2xl">EstateHub</span>
+          <span className="font-bold text-2xl">EstateHub India</span>
         </div>
 
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Create Account</CardTitle>
-            <CardDescription>Join EstateHub to find your dream home</CardDescription>
+            <CardDescription>Join EstateHub India to find your dream home</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">

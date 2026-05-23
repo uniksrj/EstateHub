@@ -88,7 +88,7 @@ const ContactSellerDialog = memo(({ property,  isOpen, onClose }) => {
         title: "Modern Downtown Apartment",
         price: 450000,
         property_type: "apartment",
-        city: "New York",
+        city: "Mumbai",
         state: "NY",
         bedrooms: 2,
         bathrooms: 2,

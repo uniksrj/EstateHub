@@ -22,7 +22,7 @@ const AuthPage = () => {
         
         <div className="flex items-center justify-center space-x-2 mb-8">
           <Building2 className="h-8 w-8 text-accent" />
-          <span className="font-bold text-2xl">EstateHub</span>
+          <span className="font-bold text-2xl">EstateHub India</span>
         </div>
 
         <Card className="overflow-hidden">
@@ -37,7 +37,7 @@ const AuthPage = () => {
                   <div>
                     <h2 className="text-3xl font-bold mb-4">New Here?</h2>
                     <p className="mb-6 opacity-90">
-                      Join EstateHub today and discover your dream property with our expert agents
+                      Join EstateHub India today and discover your dream property with our expert agents
                     </p>
                     <button
                       onClick={() => navigate("/auth/register")}
@@ -67,7 +67,7 @@ const AuthPage = () => {
                   <div>
                     <h2 className="text-2xl font-bold mb-2">New Here?</h2>
                     <p className="mb-4 opacity-90 text-sm sm:text-base">
-                      Join EstateHub today and discover your dream property.
+                      Join EstateHub India today and discover your dream property.
                     </p>
                     <button
                       onClick={() => navigate("/auth/register")}

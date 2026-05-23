@@ -105,7 +105,7 @@ export const TIMEZONE_OPTIONS = [
   "Asia/Dubai",
   "Europe/London",
   "America/New_York",
-  "America/Chicago",
+  "America/Delhi",
   "America/Los_Angeles",
 ]
 
@@ -122,7 +122,7 @@ const ROLE_SECTION_CONFIG = {
         type: "select",
         options: ["Global", "Regional", "Support"],
       },
-      { name: "escalation_email", label: "Escalation Email", type: "email", placeholder: "ops@estatehub.com" },
+      { name: "escalation_email", label: "Escalation Email", type: "email", placeholder: "ops@EstateHub India.com" },
       {
         name: "dashboard_focus",
         label: "Dashboard Focus",
@@ -150,7 +150,7 @@ const ROLE_SECTION_CONFIG = {
         type: "select",
         options: ["Manager", "Coordinator", "Reviewer"],
       },
-      { name: "escalation_email", label: "Escalation Email", type: "email", placeholder: "support@estatehub.com" },
+      { name: "escalation_email", label: "Escalation Email", type: "email", placeholder: "support@EstateHub India.com" },
       {
         name: "dashboard_focus",
         label: "Dashboard Focus",
@@ -171,7 +171,7 @@ const ROLE_SECTION_CONFIG = {
     title: "Professional Agent Details",
     description: "Surface the qualifications and service areas that make buyers comfortable working with you.",
     fields: [
-      { name: "agency", label: "Agency Name", placeholder: "EstateHub Realty" },
+      { name: "agency", label: "Agency Name", placeholder: "EstateHub India Realty" },
       { name: "license_number", label: "License Number", placeholder: "AGT-2026-0014" },
       { name: "experience_years", label: "Experience (Years)", type: "number", placeholder: "5" },
       {
