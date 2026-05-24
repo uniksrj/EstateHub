@@ -3,6 +3,7 @@ import { Outlet } from "react-router"
 import Header from "./Header"
 import Footer from "./Footer"
 import { Toaster } from "sonner"
+import AnalyticsPageTracker from "@/components/common/AnalyticsPageTracker"
 
 const BetaNotice = lazy(() => import("@/components/common/BetaNotice"))
 const BetaFeedbackWidget = lazy(() => import("@/components/common/BetaFeedbackWidget"))
@@ -15,6 +16,7 @@ const Layout = () => {
         <BetaNotice />
         <BetaFeedbackWidget />
       </Suspense>
+      <AnalyticsPageTracker />
       <main className="flex-1">
         <Toaster
           position="top-right"

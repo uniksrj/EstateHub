@@ -15,6 +15,7 @@ import { useOffers } from "@/hooks/useOffers"
 import { toast } from "sonner"
 import { buildPropertyPath, organizationSchema } from "@/utils/seo"
 import Seo from "@/components/common/Seo"
+import { trackContactSeller, trackInquirySubmit } from "@/utils/analytics"
 
 const ContactSellerDialog = lazy(() => import("@/components/buyer/ContactSellerDialog"))
 const ScheduleManager = lazy(() => import("@/components/common/schedule/ScheduleManager"))
@@ -130,6 +131,7 @@ const PropertyList = () => {
   const handleContactSeller = (property) => {
     setSelectedProperty(property)
     setShowContactDialog(true)
+    trackContactSeller(property)
   }
 
   const contactSellerTrigger = (property) => (
@@ -410,6 +412,7 @@ const PropertyList = () => {
             <ContactSellerDialog
               property={selectedProperty}
               isOpen={showContactDialog}
+              onInquirySubmitted={() => trackInquirySubmit(selectedProperty)}
               onClose={() => {
                 setShowContactDialog(false)
                 setSelectedProperty(null)

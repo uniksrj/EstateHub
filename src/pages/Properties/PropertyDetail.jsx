@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useRef, useState, useEffect } from "react"
 import { useParams, Link } from "react-router"
 import { Button } from "../../components/ui/button"
 import { Card, CardContent } from "../../components/ui/card"
@@ -26,6 +26,12 @@ import AmenityIcons from "@/components/common/AmenityIcons"
 import { useAuth } from "@/hooks/useAuth"
 import Seo from "@/components/common/Seo"
 import { absoluteUrl, buildPropertyPath, propertyImageUrl, propertyLocation, truncateMeta } from "@/utils/seo"
+import {
+  trackContactSeller,
+  trackFavoriteProperty,
+  trackInquirySubmit,
+  trackPropertyView,
+} from "@/utils/analytics"
 
 const PropertyDetail = () => {
   const { id } = useParams()
@@ -33,14 +39,24 @@ const PropertyDetail = () => {
   const [property, setProperty] = useState(null)
   const [loading, setLoading] = useState(true)
   const [isFavorite, setIsFavorite] = useState(null);
+  const trackedPropertyIdRef = useRef(null)
 
   useEffect(() => {
     fetchProperty()
+  }, [id])
+
+  useEffect(() => {
     checkFavoriteStatus()
-    trackPropertyView(id);
   }, [id, user])
 
-  const trackPropertyView = async (propertyId, source = 'direct') => {
+  useEffect(() => {
+    if (!property?.id || trackedPropertyIdRef.current === property.id) return
+
+    trackedPropertyIdRef.current = property.id
+    trackPropertyView(property)
+  }, [property])
+
+  const savePropertyView = async (propertyId, source = 'direct') => {
     try {
       await propertiesAPI.saveViewById(propertyId, { view_source: source })
     } catch (error) {
@@ -53,6 +69,7 @@ const PropertyDetail = () => {
       const response = await propertiesAPI.getById(id)
       response.data.location = `${response.data.address}, ${response.data.city}, ${response.data.state} (${response.data.zip_code})`;
       setProperty(response.data)
+      savePropertyView(id)
     } catch (error) {
       console.error("Error fetching property:", error)
     } finally {
@@ -118,6 +135,9 @@ const PropertyDetail = () => {
     try {
       const response = await userAPI.toggleFavorite({ property_id: id })
       setIsFavorite(response.data.is_favorite);
+      if (response.data.is_favorite) {
+        trackFavoriteProperty(property)
+      }
     } catch (error) {
       console.error("Error updating favorite:", error)
       setIsFavorite(false);
@@ -335,11 +355,11 @@ const PropertyDetail = () => {
 
                   {/* Contact Buttons */}
                   <div className="space-y-3">
-                    <Button className="w-full rounded-full font-bold">
+                    <Button className="w-full rounded-full font-bold" onClick={() => trackContactSeller(property)}>
                       <Phone className="mr-2 h-4 w-4" />
                       Call {property.agent?.phone}
                     </Button>
-                    <Button variant="outline" className="w-full rounded-full bg-transparent font-bold">
+                    <Button variant="outline" className="w-full rounded-full bg-transparent font-bold" onClick={() => trackContactSeller(property)}>
                       <Mail className="mr-2 h-4 w-4" />
                       Send Email
                     </Button>
@@ -348,7 +368,12 @@ const PropertyDetail = () => {
                   <Separator className="my-6" />
 
                   <div>
-                    <InquiryForm propertyId={property.id} propertyTitle={property.title} />
+                    <InquiryForm
+                      property={property}
+                      propertyId={property.id}
+                      propertyTitle={property.title}
+                      onSubmitted={() => trackInquirySubmit(property)}
+                    />
                   </div>
                 </CardContent>
               </Card>

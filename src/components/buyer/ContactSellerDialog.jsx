@@ -19,7 +19,7 @@ import { MessageSquare, Send } from "lucide-react"
 import { PropertySidebar } from "./PropertySidebar"
 import { userAPI } from "@/services/api"
 
-const ContactSellerDialog = memo(({ property,  isOpen, onClose }) => {
+const ContactSellerDialog = memo(({ property,  isOpen, onClose, onInquirySubmitted }) => {
     console.log("this is project id details : ", property);    
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -55,6 +55,7 @@ const ContactSellerDialog = memo(({ property,  isOpen, onClose }) => {
             const response = await userAPI.storeBuyerInquiry(dataToSend);
             setLoading(false);
             setOpen(false)
+            onInquirySubmitted?.()
             alert('Message sent successfully! The seller will contact you soon.')
 
             // Reset form

@@ -13,7 +13,7 @@ import { useAuth } from "../../hooks/useAuth"
 import { toast } from "sonner"
 
 
-const InquiryForm = ({ propertyId, propertyTitle }) => {
+const InquiryForm = ({ propertyId, propertyTitle, onSubmitted }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -57,6 +57,7 @@ const InquiryForm = ({ propertyId, propertyTitle }) => {
       // })
 
       setSuccess(true)
+      onSubmitted?.()
       toast("Inquiry Sent", {
         description: "Your inquiry has been sent successfully. We'll get back to you soon!",
       })
