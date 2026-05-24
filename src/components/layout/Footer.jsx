@@ -35,15 +35,15 @@ const Footer = () => {
             <div className="space-y-3 text-[13px] text-muted-foreground">
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 text-foreground" />
-                <span>+91 80 4567 8900</span>
+                <span>+91 XX XXXX 0269</span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-foreground" />
-                <span>info@EstateHub India.business</span>
+                <span>info@estatehub.business</span>
               </div>
               <div className="flex items-start gap-3">
                 <MapPin className="mt-0.5 h-4 w-4 text-foreground" />
-                <span>MG Road, Bengaluru, Karnataka 560001</span>
+                <span>Sarabha Nagar, Ludhiana, Punjab 141001</span>
               </div>
             </div>
           </div>

@@ -6,19 +6,19 @@ export const FilterInquiryPage = ({showFilters , searchTerm, setSearchTerm, stat
     return (
         <>
             {showFilters && (
-                <div className="flex gap-4">
-                    <div className="relative">
+                <div className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto lg:items-center">
+                    <div className="relative min-w-0 flex-1 lg:w-72 lg:flex-none">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             placeholder="Search inquiries..."
-                            className="pl-10 w-64"
+                            className="w-full pl-10"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
 
                     <Select value={statusFilter} onValueChange={setStatusFilter}>
-                        <SelectTrigger className="w-40">
+                        <SelectTrigger className="w-full sm:w-44">
                             <Filter className="h-4 w-4 mr-2" />
                             <SelectValue placeholder="Filter status" />
                         </SelectTrigger>

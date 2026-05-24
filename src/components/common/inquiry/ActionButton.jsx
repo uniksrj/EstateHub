@@ -6,13 +6,13 @@ import { ConversationActions } from "./ConversationActions";
 export const ActionButton = ({ sendResponse, selectedInquiry, responseMessage, updateInquiryStatus, toggleImportant, archiveInquiry ,loading}) => {
     
     return (
-        <div className="flex gap-3 pt-4">
+        <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:flex-wrap">
             {selectedInquiry.status !== 3 ? (
                 <>
                     <Button
                         onClick={() => sendResponse(selectedInquiry.id)}
                         disabled={!responseMessage.trim()}
-                        className="flex-1 h-9 text-base"
+                        className="h-10 w-full text-sm sm:min-w-44 sm:flex-1 sm:text-base"
                         size="lg"
                     >
                         <Send className="h-5 w-5 mr-2" />
@@ -24,7 +24,7 @@ export const ActionButton = ({ sendResponse, selectedInquiry, responseMessage, u
                         onValueChange={(value) => updateInquiryStatus(selectedInquiry.id, Number(value))}
                         disabled={selectedInquiry.status === 3}
                     >
-                        <SelectTrigger className="w-36 h-9 px-3">
+                        <SelectTrigger className="h-10 w-full px-3 sm:w-40">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -38,20 +38,24 @@ export const ActionButton = ({ sendResponse, selectedInquiry, responseMessage, u
                     <Button
                         variant="outline"
                         size="lg"
-                        className="h-9 px-3"
+                        className="h-10 w-full px-3 sm:w-auto"
                         onClick={() => toggleImportant(selectedInquiry.id, selectedInquiry.important)}
                     >
-                        <Star className={`h-5 w-5 ${selectedInquiry.important ? 'fill-amber-500 text-amber-500' : ''}`} />
+                        <Star className={`h-5 w-5 sm:mr-0 ${selectedInquiry.important ? 'fill-amber-500 text-amber-500' : ''}`} />
+                        <span className="ml-2 sm:hidden">
+                            {selectedInquiry.important ? 'Remove Favorite' : 'Mark Favorite'}
+                        </span>
                     </Button>
 
                     <Button
                         variant="outline"
                         size="lg"
-                        className="h-9 px-3"
+                        className="h-10 w-full px-3 sm:w-auto"
                         disabled
                         onClick={() => archiveInquiry(selectedInquiry.id)}
                     >
-                        <Trash2 className="h-5 w-5" />
+                        <Trash2 className="h-5 w-5 sm:mr-0" />
+                        <span className="ml-2 sm:hidden">Remove Inquiry</span>
                     </Button>
                 </>
             ) : (

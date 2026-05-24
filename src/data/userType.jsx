@@ -75,7 +75,8 @@ export const sidebars = {
     { label: "Offers", path: "/seller/offers", icon: Tag },
     { label: "Inquiries", path: "/seller/inquiries", icon: MessageSquare },
     { label: "Schedule", path: "/seller/schedule", icon: Calendar, disabled: true },
-    // { label: "Profile", path: "/seller/profile", icon: User },
+    { label: "Analytics", path: "/seller/analytics", icon: BarChart3,disabled: true },
+    { label: "Notifications", path: "/seller/notifications", icon: Bell,disabled: true },
   ],
 
   investor: [

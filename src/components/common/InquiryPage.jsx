@@ -225,14 +225,20 @@ console.log("Inside inquiries Data :",selectedInquiry);
     return matchesStatus && matchesSearch;
   });
 
+  const stats = {
+    total: inquiries.length,
+    new: inquiries.filter(i => Number(i.status) === 0).length,
+    responded: inquiries.filter(i => Number(i.status) === 1).length,
+    important: inquiries.filter(i => i.important).length,
+  };
+
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <Toaster position="top-right" />
-        {/* Header Text */}
+    <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
+      <Toaster position="top-right" />
+
+      <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <HeaderLine userType={userType} />
 
-        {/* Filter Header */}
         <FilterInquiryPage
           showFilters={showFilters}
           searchTerm={searchTerm}
@@ -242,8 +248,7 @@ console.log("Inside inquiries Data :",selectedInquiry);
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Inquiry List */}
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
         <InquiryList
           loading={loading}
           filteredInquiries={filteredInquiries}
@@ -253,31 +258,26 @@ console.log("Inside inquiries Data :",selectedInquiry);
           toggleImportant={toggleImportant}
         />
 
-        {/* Details Sidebar */}
-        <div className="space-y-6">
+        <aside className="space-y-5 xl:sticky xl:top-6 xl:self-start">
           {selectedInquiry ? (
             <>
-              <Card>
-                <CardHeader>
-                  {/* Header Text  */}
+              <Card className="overflow-hidden shadow-sm">
+                <CardHeader className="border-b p-4 sm:p-5">
                   <SidebarHeaderText
                     selectedInquiry={selectedInquiry}
                   />
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* Buyer Information */}
+                <CardContent className="space-y-5 p-4 sm:p-5">
                   {(userType != "buyer" &&
                     <BuyerInfo
                       selectedInquiry={selectedInquiry}
                     />
                   )}
 
-                  {/* Original Message */}
                   <OriginalMsg
                     selectedInquiry={selectedInquiry}
                   />
 
-                  {/* Conversation History */}
                   {selectedInquiry.responses && selectedInquiry.responses.length > 0 && (
                     <HistoryInquiry
                       userId={userId}
@@ -285,7 +285,6 @@ console.log("Inside inquiries Data :",selectedInquiry);
                     />
                   )}
 
-                  {/* Response Input */}
                   {enableActions && (
                     <ResponseInquiry
                       status={selectedInquiry.status}
@@ -294,7 +293,6 @@ console.log("Inside inquiries Data :",selectedInquiry);
                     />
                   )}
 
-                  {/* Action Buttons */}
                   {enableActions && (
                     <ActionButton
                       sendResponse={sendResponse}
@@ -309,33 +307,32 @@ console.log("Inside inquiries Data :",selectedInquiry);
                 </CardContent>
               </Card>
 
-              {/* Quick Stats Card */}
-              <Card>
-                <CardHeader>
+              <Card className="shadow-sm">
+                <CardHeader className="p-4 pb-2 sm:p-5 sm:pb-2">
                   <CardTitle className="text-lg">Inquiry Statistics</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between items-center p-2 hover:bg-muted rounded">
-                      <span>Total Inquiries:</span>
-                      <Badge variant="outline">{inquiries.length}</Badge>
+                <CardContent className="p-4 pt-2 sm:p-5 sm:pt-2">
+                  <div className="divide-y text-sm">
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-muted-foreground">Total Inquiries</span>
+                      <Badge variant="outline">{stats.total}</Badge>
                     </div>
-                    <div className="flex justify-between items-center p-2 hover:bg-muted rounded">
-                      <span>New Inquiries:</span>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-muted-foreground">New Inquiries</span>
                       <Badge variant="default">
-                        {inquiries.filter(i => i.status === 'new').length}
+                        {stats.new}
                       </Badge>
                     </div>
-                    <div className="flex justify-between items-center p-2 hover:bg-muted rounded">
-                      <span>Responded:</span>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-muted-foreground">Responded</span>
                       <Badge variant="secondary">
-                        {inquiries.filter(i => i.status === 'responded').length}
+                        {stats.responded}
                       </Badge>
                     </div>
-                    <div className="flex justify-between items-center p-2 hover:bg-muted rounded">
-                      <span>Important:</span>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-muted-foreground">Important</span>
                       <Badge variant="default" className="bg-amber-500">
-                        {inquiries.filter(i => i.important).length}
+                        {stats.important}
                       </Badge>
                     </div>
                   </div>
@@ -343,17 +340,17 @@ console.log("Inside inquiries Data :",selectedInquiry);
               </Card>
             </>
           ) : (
-            <Card>
-              <CardContent className="p-8 text-center">
-                <MessageSquare className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
-                <h3 className="text-lg font-semibold mb-2">Select an Inquiry</h3>
-                <p className="text-muted-foreground">
+            <Card className="shadow-sm">
+              <CardContent className="p-6 text-center sm:p-8">
+                <MessageSquare className="mx-auto mb-4 h-12 w-12 text-muted-foreground opacity-50 sm:h-14 sm:w-14" />
+                <h3 className="mb-2 text-lg font-semibold">Select an Inquiry</h3>
+                <p className="mx-auto max-w-sm text-sm text-muted-foreground">
                   Click on an inquiry from the list to view details and respond to the buyer
                 </p>
               </CardContent>
             </Card>
           )}
-        </div>
+        </aside>
       </div>
     </div>
   );

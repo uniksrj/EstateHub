@@ -29,20 +29,20 @@ export default function ContactPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" placeholder="John" />
+                  <Input id="firstName" placeholder="Sukhbir" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" placeholder="Doe" />
+                  <Input id="lastName" placeholder="Singh" />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="john@example.com" />
+                <Input id="email" type="email" placeholder="sukhbir@example.com" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
-                <Input id="phone" type="tel" placeholder="+1 (555) 123-4567" />
+                <Input id="phone" type="tel" placeholder="+1 (161) 123-4567" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="inquiry">Inquiry Type</Label>
@@ -81,7 +81,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="font-medium">Phone</p>
-                    <p className="text-muted-foreground">1-800-ESTATE (378-2831)</p>
+                    <p className="text-muted-foreground">1-161 (378-2831)</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -90,7 +90,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="font-medium">Email</p>
-                    <p className="text-muted-foreground">info@estatehub.com</p>
+                    <p className="text-muted-foreground">info@estatehub.business</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -100,9 +100,9 @@ export default function ContactPage() {
                   <div>
                     <p className="font-medium">Address</p>
                     <p className="text-muted-foreground">
-                      123 Real Estate Ave
+                      12G Chives market, Sarabbha Nagar,
                       <br />
-                      Bengaluru, Karnataka 560001
+                      Ludhiana, Punjab 141001
                     </p>
                   </div>
                 </div>
@@ -128,17 +128,17 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="font-medium">Downtown Office</h4>
-                  <p className="text-sm text-muted-foreground">12 MG Road, Bengaluru</p>
+                  <h4 className="font-medium">Head Office</h4>
+                  <p className="text-sm text-muted-foreground">12G Chives market, Sarabbha Nagar, Ludhiana, Punjab 141001</p>
                 </div>
-                <div>
+                {/* <div>
                   <h4 className="font-medium">Hillside Branch</h4>
                   <p className="text-sm text-muted-foreground">456 Hill Street, Hillside Heights</p>
                 </div>
                 <div>
                   <h4 className="font-medium">Marina Location</h4>
                   <p className="text-sm text-muted-foreground">789 Marina Blvd, Marina Bay</p>
-                </div>
+                </div> */}
               </CardContent>
             </Card>
           </div>
