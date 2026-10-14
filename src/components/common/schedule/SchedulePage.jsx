@@ -98,7 +98,7 @@ export default function SchedulePage() {
 
               {/* 🎯 Role-based Actions */}
               <div className="flex flex-wrap gap-2 pt-2">
-                {userRole.role_id === 3 && schedule.status === "pending" && (
+                {(userRole.role_id === 3 || userRole.role_id === 6) && schedule.status === "pending" && (
                   <>
                     <Button size="sm" onClick={() => updateStatus(schedule.id, "approved")}>
                       <Check className="w-4 h-4 mr-1" /> Approve
@@ -109,7 +109,7 @@ export default function SchedulePage() {
                   </>
                 )}
 
-                {userRole.role_id === 3 && schedule.status === "approved" && (
+                {(userRole.role_id === 3 || userRole.role_id === 6) && schedule.status === "approved" && (
                   <Button
                     size="sm"
                     variant="outline"

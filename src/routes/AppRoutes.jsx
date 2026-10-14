@@ -193,6 +193,7 @@ export const router = createBrowserRouter([
           { path: "manage-properties", Component: ManageProperties },
           { path: "properties", Component: ListingPage },
           { path: "offers", Component: Offers },
+          { path: "schedule", Component: SchedulePage },
           { path: "properties/:id/edit", Component: AddProperty, errorElement: <div>Error loading property</div>, },
           { path: "inquiries", Component: SellerInquiryPage },
         ],

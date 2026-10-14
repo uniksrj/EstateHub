@@ -74,7 +74,7 @@ export const sidebars = {
     { label: "Add Property", path: "/seller/add-property", icon: Plus },
     { label: "Offers", path: "/seller/offers", icon: Tag },
     { label: "Inquiries", path: "/seller/inquiries", icon: MessageSquare },
-    { label: "Schedule", path: "/seller/schedule", icon: Calendar, disabled: true },
+    { label: "Schedule", path: "/seller/schedule", icon: Calendar, disabled: false },
     { label: "Analytics", path: "/seller/analytics", icon: BarChart3,disabled: true },
     { label: "Notifications", path: "/seller/notifications", icon: Bell,disabled: true },
   ],
