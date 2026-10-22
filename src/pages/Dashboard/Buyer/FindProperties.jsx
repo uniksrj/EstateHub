@@ -3,7 +3,6 @@ import { Filtersidebar } from "@/components/buyer/Filtersidebar"
 import { PropertyCard } from "@/components/buyer/PropertyCard"
 import { Paginationlink } from "@/components/common/Pagination"
 import { NoPropertyFound } from "@/components/common/property/NoPropertyFound"
-import { demoPropertiesList } from "@/data/demoData"
 import { Loading } from "@/pages/misc/Loading"
 import { propertiesAPI } from "@/services/api"
 import { formatPrice } from "@/utils/userHelpers"
@@ -13,7 +12,7 @@ import { useSearchParams } from "react-router"
 export default function FindProperties() {
     const [searchParams, setSearchParams] = useSearchParams()
     const [properties, setProperties] = useState([])
-    const [filteredProperties, setFilteredProperties] = useState(demoPropertiesList)
+    const [filteredProperties, setFilteredProperties] = useState([])
     const [loading, setLoading] = useState(true)
     const [lastPage, setLastPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page")) || 1);
@@ -28,7 +27,7 @@ export default function FindProperties() {
         status: "for_sale"
     })
 
-    const [favorites, setFavorites] = useState([])
+    const [, setFavorites] = useState([])
 
     useEffect(() => {
         const fetchProperties = async () => {
@@ -123,9 +122,9 @@ export default function FindProperties() {
 
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="buyer-search-page min-h-screen bg-background">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-12">
+            <div className="buyer-search-page__header py-12">
                 <div className="container mx-auto px-4">
                     <h1 className="text-4xl font-bold mb-4">Find Your Dream Home</h1>
                     <p className="text-xl opacity-90">Discover {properties.length} properties matching your criteria</p>

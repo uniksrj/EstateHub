@@ -9,7 +9,6 @@ import StatisticsSection from "@/components/common/home/StatisticsSection"
 import VideoTourSection from "@/components/common/home/VideoTourSection"
 import Seo from "@/components/common/Seo"
 import { organizationSchema } from "@/utils/seo"
-import { featuredPropertiesData } from "@/data/demoData"
 import { propertiesAPI } from "@/services/api"
 import { toBackendAssetUrl } from "@/config/env"
 import { useState, useEffect } from "react"
@@ -68,14 +67,10 @@ const HomePage = () => {
               ? featuredOnly
               : properties
         ).slice(0, 6)
-        setFeaturedProperties(
-          selectedProperties.length > 0
-            ? selectedProperties.map(mapPropertyToFeaturedCard)
-            : featuredPropertiesData
-        )
+        setFeaturedProperties(selectedProperties.map(mapPropertyToFeaturedCard))
       } catch (error) {
         console.error("Error fetching featured properties:", error);
-        setFeaturedProperties(featuredPropertiesData);
+        setFeaturedProperties([])
       } finally {
         setLoading(false);
       }

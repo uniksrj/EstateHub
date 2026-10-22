@@ -13,7 +13,7 @@ createRoot(document.getElementById('root')).render(
     <ThemeProvider>
       <AuthProvider>
         <OfferProvider>
-          <Suspense fallback={null}>
+          <Suspense fallback={<div className="app-loading" role="status"><span aria-hidden="true" />Loading EstateHub</div>}>
             <RouterProvider router={router} />
           </Suspense>
         </OfferProvider>

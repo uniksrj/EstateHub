@@ -25,8 +25,8 @@ const DealPipeline = ({ deadPipeData }) => {
                     return [value, 'Number of Deals'];
                   }}
                 />
-                <Bar dataKey="deals" fill="#3b82f6" name="Deals" />
-                <Bar dataKey="value" fill="#8b5cf6" name="Value" />
+                <Bar dataKey="deals" fill="var(--red)" name="Deals" />
+                <Bar dataKey="value" fill="var(--red-deep)" name="Value" />
               </BarChart>
             </ResponsiveContainer>
           </div>

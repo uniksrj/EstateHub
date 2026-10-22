@@ -9,14 +9,14 @@ const FeaturedPropertiesSection = ({ loading, featuredProperties }) => {
   const secondaryProperties = properties.slice(1)
 
   return (
-    <section className="relative overflow-hidden border-b border-border bg-background px-4 py-20 [content-visibility:auto] [contain-intrinsic-size:900px]">
+    <section className="home-featured relative overflow-hidden border-b border-border bg-background px-4 py-20 [content-visibility:auto] [contain-intrinsic-size:900px]">
       <div className="container mx-auto relative z-10">
         <div className="mb-12 grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
           <div className="max-w-2xl">
-            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Featured Properties</p>
-            <h2 className="text-[24px] font-semibold leading-tight tracking-tight md:text-[30px]">Homes worth a closer look this week.</h2>
+            <p className="eyebrow mb-3">Featured properties</p>
+            <h2 className="text-[24px] font-semibold leading-tight tracking-tight md:text-[30px]">A closer look at homes on EstateHub.</h2>
             <p className="mt-4 text-[15px] leading-6 text-muted-foreground">
-              A short list of active listings selected for visibility, location quality, and buyer interest.
+              Explore properties currently highlighted in the marketplace.
             </p>
           </div>
           <Link to="/properties">

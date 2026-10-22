@@ -42,7 +42,7 @@ const PropertyTypesChart = ({ data }) => {
                   labelLine={false}
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
                   outerRadius={80}
-                  fill="#0c00f9ff"
+                  fill="var(--red)"
                   dataKey="value"
                 >
                   {data.map((entry, index) => (

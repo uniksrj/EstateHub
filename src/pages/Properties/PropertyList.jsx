@@ -161,17 +161,17 @@ const PropertyList = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="listing-page min-h-screen bg-background">
       <Seo
         title={type ? `${type.replace(/-/g, " ")} Properties` : "Properties"}
         description="Browse homes, apartments, condos, townhouses, and commercial properties on EstateHub India."
         canonicalPath={`/properties${type ? `/${type}` : ""}${currentPage > 1 ? `?page=${currentPage}` : ""}`}
         schema={organizationSchema}
       />
-      <div className="border-b border-border bg-[#2563eb]">
+      <div className="border-b border-border bg-secondary">
         <div className="container mx-auto px-4 py-8 md:py-10">
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-2xl text-white">
+            <div className="max-w-2xl text-foreground">
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em]">EstateHub India</p>
               <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
                 {type ? `${type.replace(/-/g, " ")} properties` : "Properties"}

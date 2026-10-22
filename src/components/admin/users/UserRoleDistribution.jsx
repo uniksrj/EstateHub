@@ -26,9 +26,9 @@ export default function UserRoleDistribution({distributionRole}) {
                 formatter={(value) => [value.toLocaleString(), 'Users']}
                 contentStyle={{ 
                   backgroundColor: 'white', 
-                  border: '1px solid #aaafb6ff',
+                  border: '1px solid var(--beige-dark)',
                   borderRadius: '6px',
-                  color: '#000',
+                  color: 'var(--ink)',
                   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
                   fontSize: '14px',
                   padding: '10px'

@@ -203,7 +203,7 @@ const PropertyDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="property-detail min-h-screen bg-background">
       <Seo
         title={`${property.title} in ${property.city}`}
         description={`${formatPrice(property.price)} ${property.property_type} in ${propertyLocation(property)}. ${property.bedrooms} beds, ${property.bathrooms} baths. ${property.description}`}

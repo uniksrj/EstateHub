@@ -29,7 +29,7 @@ const DealRecoveryRate = () => {
               {recoveryData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
-                  fill={entry.recoveryRate > 20 ? '#10b981' : entry.recoveryRate > 15 ? '#f59e0b' : '#ef4444'} 
+                  fill={entry.recoveryRate > 20 ? 'var(--red)' : entry.recoveryRate > 15 ? 'var(--beige-dark)' : 'var(--red-deep)'}
                 />
               ))}
             </Bar>

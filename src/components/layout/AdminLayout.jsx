@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { betaFeedbackAPI } from "@/services/api"
+import MotionObserver from "@/components/common/motion/MotionObserver"
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -58,7 +59,7 @@ const AdminLayout = () => {
   }, [user?.role_id])
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="dashboard-shell min-h-screen bg-background">
       <div className="border-b border-border px-4 py-3 lg:hidden">
         <Button
           variant="outline"
@@ -138,7 +139,10 @@ const AdminLayout = () => {
 
         {/* Main Content */}
         <main className="flex-1 p-4 sm:p-6">
-          <Outlet />
+          <MotionObserver />
+          <div key={location.pathname} className="route-content">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

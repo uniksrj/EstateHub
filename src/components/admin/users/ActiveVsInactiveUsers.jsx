@@ -1,6 +1,6 @@
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-const COLORS = ['#10b981', '#6b7280'];
+const COLORS = ['var(--red)', 'var(--beige-dark)'];
 
 export default function ActiveVsInactiveUsers({activeInactive}) {
   const totalUsers = activeInactive ? (activeInactive.active_users.value + activeInactive.inactive_users) : 0;
@@ -34,7 +34,7 @@ export default function ActiveVsInactiveUsers({activeInactive}) {
                 <Tooltip
                   formatter={(value) => [value.toLocaleString(), 'Users']}
                   contentStyle={{
-                    backgroundColor: '#ffffffff',
+                    backgroundColor: 'var(--white)',
                     border: '1px solid var(--border)',
                     borderRadius: 'var(--radius)',
                     // color: 'var(--foreground)'

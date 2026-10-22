@@ -61,13 +61,13 @@ export default function UserRetentionChart({retentionData}) {
               <Legend />
               <Bar
                 dataKey="retained"
-                fill="#10b981"
+                fill="var(--red)"
                 name="Retained Users"
                 radius={[4, 4, 0, 0]}
               />
               <Bar
                 dataKey="churned"
-                fill="#ef4444"
+                fill="var(--red-deep)"
                 name="Churned Users"
                 radius={[4, 4, 0, 0]}
               />
