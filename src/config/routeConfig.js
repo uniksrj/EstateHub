@@ -35,7 +35,6 @@ export const ROUTE_PERMISSIONS = {
   '/dashboard/add-property': [USER_ROLES.ADMIN, USER_ROLES.AGENT, USER_ROLES.BROKER],
   '/dashboard/manage-properties': [USER_ROLES.SUPERADMIN, USER_ROLES.ADMIN, USER_ROLES.AGENT, USER_ROLES.BROKER],
   
-  // Buyers, Sellers, Investors, Renters (No admin panel access)
-  '/dashboard': ADMIN_PANEL_ACCESS // Main dashboard access
-  
+  // Main dashboard access (renders role-specific dashboard for each authenticated role)
+  '/dashboard': Object.values(USER_ROLES)
 }
