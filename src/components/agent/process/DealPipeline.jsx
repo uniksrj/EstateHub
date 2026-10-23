@@ -48,7 +48,6 @@ const DealPipeline = ({ deals, loading, setActiveDeals }) => {
   if (loading) {
     return <Loading loading={loading} />
   }
-  console.log("Rendering DealPipeline with deals:", deals);
   return (
     <Card>
       <CardHeader>

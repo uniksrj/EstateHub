@@ -101,38 +101,38 @@ export const PropertyCard = memo(function PropertyCard({
                         decoding="async"
                     />
                     <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-                        <Badge className="rounded-full border border-border bg-card px-3 py-1 text-[12px] font-semibold text-foreground shadow-lg">
+                        <Badge className="rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-foreground shadow-lg">
                             {property.property_type || property.type || "Property"}
                         </Badge>
                         {property?.is_boost_active && (
-                            <Badge className="rounded-full bg-gold px-3 py-1 text-[12px] font-semibold text-accent-foreground shadow-lg">
+                            <Badge className="rounded-full bg-gold px-3 py-1 text-xs font-semibold text-accent-foreground shadow-lg">
                                 Featured
                             </Badge>
                         )}
                     </div>
-                    <div className="absolute bottom-4 left-4 rounded-full bg-background/85 px-3 py-1 text-[12px] font-medium text-foreground backdrop-blur-md">
+                    <div className="absolute bottom-4 left-4 rounded-md bg-background px-3 py-1 text-xs font-medium text-foreground">
                         {property.view_count || 0} views
                     </div>
                 </div>
 
                 <CardContent className="p-5">
                     <div className="mb-3 flex items-start justify-between gap-3">
-                        <h3 className="line-clamp-2 text-[18px] font-semibold leading-snug md:text-[20px]">{property.title}</h3>
-                        <span className="shrink-0 text-[20px] font-bold text-foreground md:text-[24px]">
+                        <h3 className="line-clamp-2 text-lg font-semibold leading-snug md:text-xl">{property.title}</h3>
+                        <span className="shrink-0 text-xl font-bold text-foreground md:text-2xl">
                             {formatPrice(property.price)}
                         </span>
                     </div>
 
                     <div className="mb-4 flex items-center text-muted-foreground">
                         <MapPin className="mr-1.5 h-4 w-4 shrink-0" />
-                        <span className="text-[14px]">{property.city}, {property.state}</span>
+                        <span className="text-sm">{property.city}, {property.state}</span>
                     </div>
 
-                    <p className="mb-5 line-clamp-2 text-[14px] leading-6 text-muted-foreground md:text-[15px]">
+                    <p className="mb-5 line-clamp-2 text-sm leading-6 text-muted-foreground md:text-base">
                         {property.description}
                     </p>
 
-                    <div className="mb-5 grid grid-cols-3 gap-2 text-[12px] md:text-[13px]">
+                    <div className="mb-5 grid grid-cols-3 gap-2 text-xs md:text-sm">
                             <div className="flex items-center justify-center rounded-2xl bg-muted/70 px-3 py-2 font-semibold">
                                 <Bed className="mr-1.5 h-4 w-4" />
                                 <span>{property.bedrooms} bed</span>
@@ -148,13 +148,13 @@ export const PropertyCard = memo(function PropertyCard({
                     </div>
 
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-[12px] text-muted-foreground md:text-[13px]">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground md:text-sm">
                             <Eye className="h-4 w-4" />
                             <span>{property.view_count} views</span>
                             <Calendar className="ml-2 h-4 w-4" />
                             <span>{property.days_on_market}d ago</span>
                         </div>
-                        <span className="text-[13px] font-semibold text-foreground">View Details</span>
+                        <span className="text-sm font-semibold text-foreground">View Details</span>
                     </div>
                 </CardContent>
             </Link>

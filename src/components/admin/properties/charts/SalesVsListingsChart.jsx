@@ -6,7 +6,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 
 const SalesVsListingsChart = ({ data = [] }) => {
-  console.log("data sales :", data);
 
   return (
     <Card className="bg-card border-border">

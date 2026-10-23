@@ -2,30 +2,32 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Eye, Calendar, Users, DollarSign } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 const QuickActions = () => {
+  const navigate = useNavigate();
   const actions = [
     {
       icon: Eye,
       label: 'View All Properties',
-      onClick: () => console.log('View properties'),
+      onClick: () => navigate('/properties'),
     },
     {
       icon: Calendar,
-      label: 'Schedule Tour',
-      onClick: () => console.log('Schedule tour'),
+      label: 'Browse & Schedule',
+      onClick: () => navigate('/properties'),
       variant: 'outline',
     },
     {
       icon: Users,
-      label: 'Manage Clients',
-      onClick: () => console.log('Manage clients'),
+      label: 'Manage Users',
+      onClick: () => navigate('/dashboard/users'),
       variant: 'outline',
     },
     {
       icon: DollarSign,
       label: 'Financial Reports',
-      onClick: () => console.log('Financial reports'),
+      onClick: () => navigate('/dashboard/finance'),
       variant: 'outline',
     },
   ];

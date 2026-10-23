@@ -24,7 +24,6 @@ import { toast } from "sonner";
 import { userAPI } from "@/services/api";
 
 export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
-    console.log("Deal data in DealUpdateModal:", deal);
     const [notes, setNotes] = useState("");
     const [documents, setDocuments] = useState([]);
 
@@ -81,7 +80,6 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     }
 
     const [state, dispatch] = useReducer(dealReducer, initialState);
-    console.log("this is deal data : ", deal);
     useEffect(() => {
         if (isOpen && deal) {
             fetchDocuments();
@@ -96,7 +94,6 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
 
     useEffect(() => {
         const filteredDocument = documents.map(item => item.document_type);
-        console.log("full document list :", documents)
         dispatch({ type: "UPDATE_FIELD", field: "selectedDocuments", value: filteredDocument });
     }, [documents])
 
@@ -132,7 +129,6 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         }
         return count;
     }, 0);
-    console.log("Current state haschanges Info:", state);
     const handleProgressChange = (value) => {
         const newProgress = value[0];
 
@@ -142,7 +138,6 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         );
 
         const stage_key_item = processSteps[newStageIndex];
-        console.log("this is new key  which find :", stage_key_item)
         if (!stage_key_item) return;
         if (newStageIndex > currentStepIndex) {
             const targetStage = processSteps[newStageIndex];
@@ -159,7 +154,6 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         }
     };
 
-    console.log("Selected Documents:", state.selectedDocuments);
     // Toggle document selection
     const toggleDocument = (docType) => {
         dispatch({
@@ -223,7 +217,6 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         dispatch({ type: "UPDATE_FIELD", field: "progress", value: progressValue });
 
         const stage = processSteps[newIndex];
-        console.log("Stage info for next step determination:", stage);
         dispatch({ type: "UPDATE_FIELD", field: "nextStep", value: `Complete ${stage.label} requirements` });
         if (stage) {
             const firstRequiredDoc = stage.requiredDocuments.find(doc => doc.required);
@@ -299,7 +292,6 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
                 ...deal,
                 ...updateData
             };
-            console.log("This is updating data :", updatedDeal);
             if (onUpdate) {
                 onUpdate(updatedDeal);
             }
@@ -317,14 +309,6 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
         } finally {
             dispatch({ type: "UPDATE_FIELD", field: "isSaving", value: false });
         }
-    };
-
-    const getDefaultNextStep = (stageKey) => {
-        const stage = processSteps.find(s => s.key === stageKey);
-        if (!stage) return "Complete paperwork";
-
-        const nextDoc = stage.requiredDocuments.find(doc => doc.required);
-        return nextDoc ? `Submit ${nextDoc.name}` : "Complete stage requirements";
     };
 
     function setPriority(level) {
@@ -350,7 +334,6 @@ export const DealUpdateModal = ({ isOpen, onClose, deal, onUpdate }) => {
     const currentStepDocuments = currentStep?.requiredDocuments || [];
     const uploadedDocsCount = currentStepDocuments.filter(doc => state.selectedDocuments.includes(doc.type)).length;
     const requiredDocsCount = currentStepDocuments.filter(doc => doc.required).length;
-    // console.log("This is a selected document :",state.selectedDocuments)
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-xl md:max-w-2xl lg:max-w-3xl w-full max-h-[90vh] overflow-hidden">

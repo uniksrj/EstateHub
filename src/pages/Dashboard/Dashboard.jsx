@@ -50,7 +50,6 @@ const Dashboard = () => {
         page: page,
       };
       const propertiesResponse = await userAPI.getProperties(propertyDetails)
-      console.log(propertiesResponse.data);
 
       if (propertiesResponse.data && propertiesResponse.data.data) {
         setMyProperties(propertiesResponse.data);

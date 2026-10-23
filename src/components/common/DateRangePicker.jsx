@@ -22,14 +22,12 @@ export default function DateRangePicker() {
   const handlePresetSelect = (range) => {
     setSelectedRange(range);
     setIsOpen(false);
-    console.log('Selected date range:', range);
   };
 
   const handleCustomRangeApply = () => {
     if (customRange.start && customRange.end) {
       setIsOpen(false);
       // Handle custom range selection
-      console.log('Custom date range:', customRange);
     }
   };
 

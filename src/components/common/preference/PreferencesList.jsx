@@ -22,14 +22,14 @@ export const PreferencesList = ({ preferences, activePreference, setActivePrefer
                 <div className="absolute top-2 left-[-12px] right-[-12px] flex justify-between pointer-events-none z-1000">
                     <button
                         onClick={scrollLeft}
-                        className="p-2 rounded-sm bg-background/80 backdrop-blur-sm hover:bg-card transition-colors duration-200 disabled:opacity-0 pointer-events-auto shadow-sm"
+                        className="p-2 rounded-sm bg-card hover:bg-accent transition-colors duration-200 disabled:opacity-0 pointer-events-auto border border-border"
                         disabled={preferences.length <= 3}
                     >
                         ←
                     </button>
                     <button
                         onClick={scrollRight}
-                        className="p-2 rounded-sm bg-background/80 backdrop-blur-sm hover:bg-card transition-colors duration-200 disabled:opacity-0 pointer-events-auto shadow-sm"
+                        className="p-2 rounded-sm bg-card hover:bg-accent transition-colors duration-200 disabled:opacity-0 pointer-events-auto border border-border"
                         disabled={preferences.length <= 3}
                     >
                         →

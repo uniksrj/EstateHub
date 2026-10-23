@@ -3,17 +3,17 @@
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
-  background: var(--beige-light);
+  background: var(--ivory);
   border-radius: 3px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: var(--beige);
+  background: var(--ivory-deep);
   border-radius: 3px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: var(--beige-dark);
+  background: var(--border);
 }
 
 /* Hide scrollbar but keep functionality */

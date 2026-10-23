@@ -2,7 +2,6 @@ import { formatPrice } from "@/utils/userHelpers"
 import { Badge, Bath, Bed, Clock, Mail, MapPin, Phone, Square } from "lucide-react"
 
 export const PropertySidebar = ({ propertyData }) => {
-    console.log("this is sidebar details", propertyData)
     return (
         <>
             {/* Property & Agent Info Sidebar */}

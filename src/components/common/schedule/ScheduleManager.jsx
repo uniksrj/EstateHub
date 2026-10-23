@@ -23,7 +23,6 @@ export default function ScheduleManager({
     schedules = [],
     onScheduleCreated,
 }) {
-    console.log("ScheduleManager props:", { mode, isOpen, property, schedules });
     const [formData, setFormData] = useState({
         date: null,
         time: "",
@@ -32,7 +31,6 @@ export default function ScheduleManager({
     })
     const [loading, setLoading] = useState(false)
 
-    console.log("Schedules passed to ScheduleManager:", schedules);
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }

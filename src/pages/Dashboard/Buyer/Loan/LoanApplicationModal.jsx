@@ -148,7 +148,6 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
         selectedLoan: selectedLoan,
       }
       let res = await userAPI.save_property_loan_details(UpdatedFormData);
-      console.log("Backend response after saving loan application:", res);
       setApplicationRefNumber(res.data.application.application_number);
       toast.success("Loan application submitted successfully!", {
         id: toastId,
@@ -192,7 +191,6 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
   ];
 
   const handleLoanSelect = (loan) => {
-    console.log("Selected loan inside function:", loan);
     const final_price = offerDetails?.status === 'accepted' ? offerDetails.final_price : propertyDetails?.price || 400000;
     const fullLoan = generateLoanDetails(loan, final_price);
     setSelectedLoan(fullLoan);
@@ -203,7 +201,7 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/50"
         onClick={onClose}
       />
 

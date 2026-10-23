@@ -260,7 +260,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(120,119,198,0.08),transparent_30%),var(--background)] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-secondary px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
         <ProfileHeroCard
           user={previewUser}

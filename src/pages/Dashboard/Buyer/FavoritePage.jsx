@@ -28,7 +28,6 @@ export default function FavoritePage() {
                 const response = await propertiesAPI.getAll(params)
                 setLastPage(response.data.last_page)
                 let settleData = response.data.data;
-                console.log("return data for filter : ", settleData);
 
                 const filtered_data = settleData.map((val) => {
                     const filteredFavorites = val.favorites?.filter(fav => fav.user_id === user.id) || [];
@@ -36,7 +35,6 @@ export default function FavoritePage() {
                 }).filter(val => val.favorites.length > 0);
                     
                 // const filtered_data = settleData.filter((val) => val.favorites?.[0]?.user_id === user.id)
-                console.log("Filtered data : ", filtered_data);
 
                 setProperties(filtered_data)
                 setLoading(false)
@@ -73,7 +71,7 @@ export default function FavoritePage() {
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-12">
+            <div className="border-b border-border bg-secondary py-12 text-foreground">
                 <div className="container mx-auto px-4 text-center">
                     <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
                         Your Favorite Properties

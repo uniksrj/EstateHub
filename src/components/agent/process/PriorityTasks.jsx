@@ -66,7 +66,6 @@ const PriorityTasks = ({ stats, deals }) => {
   };
 
   const handleTaskClick = (taskId) => {
-    console.log(`Task ${taskId} clicked`);
     // Implement task handling logic
   };
 

@@ -82,7 +82,6 @@ const Offers = () => {
    * Filters and sorts offers based on current filter criteria
    */
   const filterOffers = () => {
-    console.log("Filtering offers with criteria:", offers);
     if (!offers || offers.length === 0) {
       setFilteredOffers([]);
       return;

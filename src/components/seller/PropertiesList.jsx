@@ -9,7 +9,6 @@ import PropertyRow from "./PropertyRow"
 
 const PropertiesList = ({ properties, loading, filters, onRefresh }) => {
 
-  console.log("Inside PropertyList :", properties);
 
   // Filter properties based on search and status
   const filteredProperties = properties?.data?.data.filter((property) => {

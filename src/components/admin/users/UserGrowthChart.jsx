@@ -18,12 +18,12 @@ export default function UserGrowthChart({value}) {
               <CartesianGrid strokeDasharray="3 3" className="opacity-30 stroke-border" />
               <XAxis 
                 dataKey="date" 
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: "var(--type-caption)" }}
                 tickLine={false}
                 stroke="var(--muted-foreground)"
               />
               <YAxis 
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: "var(--type-caption)" }}
                 tickLine={false}
                 stroke="var(--muted-foreground)"
               />

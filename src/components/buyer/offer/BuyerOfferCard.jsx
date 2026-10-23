@@ -8,7 +8,6 @@ import { OfferTerms } from "@/components/buyer/offer/OfferTerms"
 import { Link } from "react-router"
 
 const BuyerOfferCard = ({ offer, onAction, onApplyForMortgage }) => {
-  console.log("this is offer lsit array :",  offer)
   const mortgageStatus = offer.loanApplications?.[0]?.status ?? null; 
   const canApplyForMortgage = ['pending', 'accepted', 'counter_offer'].includes(offer.status) && !offer.loanApplications?.[0]?.status;
   // const canApplyForMortgage = (offer) => offer.status === 'accepted' && !offer.loanApplications?.[0]?.status;

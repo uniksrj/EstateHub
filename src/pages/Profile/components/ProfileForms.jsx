@@ -50,7 +50,7 @@ function AvatarUploader({ name, avatarSrc, onAvatarChange }) {
 
   return (
     <div className="flex flex-col gap-5 rounded-2xl border border-dashed border-border bg-muted/40 p-5 sm:flex-row sm:items-center">
-      <div className="flex size-20 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-primary/15 to-primary/5 text-lg font-semibold text-primary">
+      <div className="flex size-20 items-center justify-center overflow-hidden rounded-2xl bg-accent text-lg font-semibold text-primary">
         {avatarSrc ? (
           <img src={avatarSrc} alt={`${name || "Profile"} avatar`} className="size-full object-cover" />
         ) : (

@@ -100,7 +100,6 @@ const PreferencesAlerts = () => {
       };
 
       const newPreference = await userAPI.create_preference(newPrefData);
-      console.log('New Preference Created:', newPreference);
       setPreferences(prev => [...prev, newPreference.data]);
       setActivePreference(newPreference.data);
       reset(newPreference.data);
@@ -139,7 +138,6 @@ const PreferencesAlerts = () => {
   };
 
   const onSubmitPreferences = async (data) => {
-    console.log("data from use Form :", data);
 
     if (!activePreference) return;
 
@@ -220,7 +218,6 @@ const PreferencesAlerts = () => {
           alert.id === existingAlert.id ? updatedAlert : alert
         ));
 
-        console.log('Alert updated:', updatedAlert);
       } else {
         // CREATE new alert
         const alertData = {
@@ -243,7 +240,6 @@ const PreferencesAlerts = () => {
         const newAlert = response.data || response;
 
         setAlerts(prev => [newAlert, ...prev]);
-        console.log('New alert created:', newAlert);
       }
     } catch (error) {
       console.error('Error handling alert for preference:', error);
@@ -529,7 +525,6 @@ const PreferencesAlerts = () => {
                 </button> */}
               </div>
             ) : (
-              console.log('Rendering alerts:', alerts),
               alerts.map(alert => (
                 <div key={alert.id} className="border border-border rounded-lg p-4 hover:border-primary/50 transition-colors duration-200">
                   <div className="flex items-start justify-between mb-3">

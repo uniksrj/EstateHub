@@ -47,7 +47,7 @@ const DeadDealChart = () => {
               yAxisId="left"
               type="monotone" 
               dataKey="deadDeals" 
-              stroke="var(--red-deep)"
+              stroke="var(--green-deep)"
               activeDot={{ r: 8 }} 
               name="Dead Deals"
             />
@@ -55,14 +55,14 @@ const DeadDealChart = () => {
               yAxisId="right"
               type="monotone" 
               dataKey="valueLost" 
-              stroke="var(--red-deep)"
+              stroke="var(--green-deep)"
               name="Value Lost"
             />
             <Line 
               yAxisId="right"
               type="monotone" 
               dataKey="avgDealSize" 
-              stroke="var(--red)"
+              stroke="var(--green)"
               name="Avg Deal Size"
             />
           </LineChart>

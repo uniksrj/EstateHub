@@ -4,7 +4,6 @@ import { useAuth } from "@/hooks/useAuth";
 
 export const AgentInquiry = () => {
   const { user } = useAuth();
-  console.log(user);
   
   return (
     <InquiryPage 

@@ -29,7 +29,7 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
   const [uploadModal, setUploadModal] = useState({ open: false, documentType: null });
   const [viewModal, setViewModal] = useState({ open: false, document: null });
   const [loading, setLoading] = useState(true);
-  const [extensionAdded, handleExtensionAdded] = useState(true);
+  const [, handleExtensionAdded] = useState(true);
   const [missedDeadline, setMissedDeadline] = useState(deal?.deadline_status === 'missed');
   const [extraFields, setExtraFields] = useState({
     earnestAmount: '',
@@ -60,7 +60,6 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
       setLoading(false);
     }
   };
-  console.log("Deal Data :", deal);
 
   const handleUploadComplete = (newDocument) => {
     setDocuments(prev => [...prev, newDocument]);
@@ -82,9 +81,7 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
     }
     try {
       const resp = await userAPI.changeStep(deal.id, stepKey);
-      console.log("response from chnage status data :", resp)
       const nextStep = getNextStep(stepKey);
-      console.log("Next Step Key :", nextStep)
       toast.success(`${step.label} marked as complete.`);
       onUpdate(prevDeals =>
         prevDeals.map(d =>
@@ -129,11 +126,9 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
   };
 
   const getStepDocuments = (stepKey) => {
-    console.log("Getting documents for step:", documents);
     const step = processSteps.find(s => s.key === stepKey);
     return step.requiredDocuments.map(reqDoc => {
       const uploadedDoc = documents.find(doc => doc.document_type === reqDoc.type);
-      // console.log("Getting documents for step:", uploadedDoc);
       return {
         ...reqDoc,
         uploaded: !!uploadedDoc,
@@ -186,7 +181,6 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
       </Badge>
     );
   };
-  console.log("This is after add next step data :", deal);
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
@@ -370,7 +364,6 @@ export const DealManagementModal = ({ isOpen, onClose, deal, onUpdate }) => {
                                 <div className="space-y-2">
                                   {stepDocuments.map((doc) => {
                                     const isMarkedReceived = documents.find(d => String(d.document_type) === String(doc.type) && d.marked_received_at !== null);
-                                    console.log("Document Received Status :", missedDeadline);
                                     const titleTXT = isMarkedReceived ? "This document has been received in onsite documentation process." : missedDeadline ? "Cannot upload document until deadline extension is added." : "";
                                     return (
                                       <div

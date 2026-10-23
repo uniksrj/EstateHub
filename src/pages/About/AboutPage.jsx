@@ -89,14 +89,14 @@ const AboutPage = () => {
       <section className="relative overflow-hidden border-b border-border bg-card px-4 py-16 md:py-20">
         <div className="container mx-auto grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
-            <p className="mb-4 inline-flex items-center rounded-full border border-border bg-background px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            <p className="mb-4 inline-flex items-center rounded-full border border-border bg-background px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               <Sparkles className="mr-2 h-4 w-4 text-primary" />
               About EstateHub India
             </p>
             <h1 className="max-w-4xl text-4xl font-black tracking-tight md:text-5xl lg:text-6xl">
               A clearer way to search, list, and close real estate.
             </h1>
-            <p className="mt-6 max-w-2xl text-[17px] leading-8 text-muted-foreground md:text-lg">
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground md:text-lg">
               EstateHub India brings buyers, renters, sellers, agents, and investors into one connected platform. From discovering the right property to managing inquiries, offers, tours, loans, and documents, we help every user move with more confidence and less guesswork.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -170,7 +170,7 @@ const AboutPage = () => {
       <section className="border-y border-border bg-card px-4 py-16">
         <div className="container mx-auto grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
           <div>
-            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-primary">What we focus on</p>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-primary">What we focus on</p>
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Real estate tools that stay useful after the search begins.</h2>
             <p className="mt-4 leading-7 text-muted-foreground">
               A good property platform should support the whole journey: search, shortlisting, communication, financing, scheduling, offers, and closing work. EstateHub India keeps those pieces close together so users can move from interest to action.

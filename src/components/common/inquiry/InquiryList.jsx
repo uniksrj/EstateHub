@@ -8,7 +8,6 @@ import { Loading } from "@/pages/misc/Loading";
 import { Star } from "lucide-react";
 
 export const InquiryList = ({loading , filteredInquiries, setSelectedInquiry ,selectedInquiry , enableActions, toggleImportant}) => {
-    console.log("inquiry List :",filteredInquiries);
     
     return (
         <div className="min-w-0 space-y-4">

@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authAPI.login(credentials)
       const { user, chatToken } = response.data
-      console.log(user);
 
       // localStorage.setItem("auth_token", token)
       localStorage.setItem("chatToken",chatToken)

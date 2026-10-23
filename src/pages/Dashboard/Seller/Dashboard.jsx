@@ -39,7 +39,6 @@ export default function SellerDashboard() {
     recentInquiries: []
   })
   const [loading, setLoading] = useState(true)
-console.log("This is Dashboard Data :", dashboardData);
 
   useEffect(() => {
     fetchSellerDashboard()
@@ -49,7 +48,6 @@ console.log("This is Dashboard Data :", dashboardData);
     setLoading(true)
     try {
       const response = await propertiesAPI.getDashboardListByUser();
-      console.log("response from data :",response);      
       setDashboardData(response.data)
     } catch (error) {
       console.error('Error fetching seller dashboard:', error)

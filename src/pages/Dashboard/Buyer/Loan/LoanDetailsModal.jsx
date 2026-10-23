@@ -15,7 +15,7 @@ const LoanDetailsModal = ({ isOpen, onClose, loan, onApply, showApplyButton = tr
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/50" onClick={onClose} />
 
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="relative bg-card rounded-xl shadow-2xl border border-border w-full max-w-2xl">

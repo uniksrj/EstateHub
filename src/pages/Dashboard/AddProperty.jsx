@@ -39,7 +39,6 @@ const AddProperty = () => {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files)
-    console.log(files);
     const newImages = files.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
@@ -131,7 +130,6 @@ const AddProperty = () => {
       const formData = new FormData(formRef.current);
 
       const data = Object.fromEntries(formData.entries());
-      // console.log(data);
 
       if (!data.title?.trim() || !data.description?.trim() || !data.price?.trim() ||
         !data.address?.trim() || !data.property_type?.trim() || !data.bedrooms?.trim() ||
@@ -171,7 +169,6 @@ const AddProperty = () => {
         setLoading(false)
         return;
       }
-      console.log("images form the form submit", images);
       let imageUploadIndex = 0;
       images.forEach((image) => {
         if (image.file instanceof File) {
@@ -210,7 +207,7 @@ const AddProperty = () => {
         state: { message: "Property added successfully!" },
       })
     } catch (err) {
-      console.log(err);
+      console.error(err);
       setError(err.response?.data?.error_type || `Failed to ${btnTxt} property. Please try again.`);
       toast.error("Error", {
         description: `(${err.data?.error_type}) Failed to ${btnTxt} property. Please try again.`,
@@ -221,7 +218,6 @@ const AddProperty = () => {
     }
   }
 
-  console.log(loading);
 
 
   return (

@@ -21,7 +21,6 @@ export function DialogBox({ user = {}, isNew = "" }) {
         is_active: user.is_active || "",
         is_verified: user.is_verified || ""
     });
-    console.log("details :", form);
 
     const [saving, setSaving] = useState(false);
 

@@ -1,6 +1,6 @@
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-const COLORS = ['var(--red)', 'var(--beige-dark)'];
+const COLORS = ['var(--green)', 'var(--border)'];
 
 export default function ActiveVsInactiveUsers({activeInactive}) {
   const totalUsers = activeInactive ? (activeInactive.active_users.value + activeInactive.inactive_users) : 0;

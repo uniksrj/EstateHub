@@ -11,7 +11,7 @@ const StatisticsSection = () => {
         <div className="grid gap-10 lg:grid-cols-[.8fr_1.5fr] lg:items-end">
           <div className="max-w-md">
             <p className="eyebrow">One connected experience</p>
-            <h2 className="mt-3 text-[32px] font-medium leading-tight tracking-tight md:text-[40px]">
+            <h2 className="mt-3 text-3xl font-medium leading-tight tracking-tight md:text-4xl">
               From first search to next steps.
             </h2>
           </div>

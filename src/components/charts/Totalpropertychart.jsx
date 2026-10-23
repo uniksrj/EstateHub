@@ -5,16 +5,16 @@ import { Cell, Label, LabelList, Pie, PieChart } from "recharts"
 import { PropertyStatusLegend } from "../common/PropertyStatus"
 
 const propertyStatusConfig = {
-    Available: { label: "Available", color: "var(--red)" },
-    Sold: { label: "Sold", color: "var(--red)" },
-    Rented: { label: "Rented", color: "var(--beige-dark)" },
-    Maintenance: { label: "Maintenance", color: "var(--red-deep)" },
-    Pending: { label: "Pending", color: "var(--red-deep)" },
+    Available: { label: "Available", color: "var(--green)" },
+    Sold: { label: "Sold", color: "var(--green)" },
+    Rented: { label: "Rented", color: "var(--border)" },
+    Maintenance: { label: "Maintenance", color: "var(--green-deep)" },
+    Pending: { label: "Pending", color: "var(--green-deep)" },
 }
 
 const activeinactive = {
-    Available: { label: "active", color: "var(--red)" },
-    Sold: { label: "inactive", color: "var(--red-deep)" },
+    Available: { label: "active", color: "var(--green)" },
+    Sold: { label: "inactive", color: "var(--green-deep)" },
 }
 
 export const Totalpropertychart = ({ propertyStatusData }) => {

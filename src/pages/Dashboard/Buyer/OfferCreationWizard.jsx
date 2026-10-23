@@ -46,10 +46,9 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
     };
     onOfferSubmit(property, finalOffer);
   };
-  console.log("Offer Data at submission:", offerData);
 
   return (
-    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-foreground/40 z-50 flex items-center justify-center p-4">
       <div className="bg-card rounded-2xl shadow-2xl border border-border max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="border-b border-border p-6">

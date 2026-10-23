@@ -36,7 +36,6 @@ const SellerProperties = () => {
             setLoading(false)
         }
     }
-    console.log("This is user property", properties);
 
     const handleFiltersChange = (newFilters) => {
         setFilters(newFilters)

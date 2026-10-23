@@ -17,12 +17,12 @@ const AuthPage = () => {
   // },[location.pathname]);
     
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-6 sm:py-10 bg-gradient-to-br from-background to-muted/20">
+    <div className="min-h-screen flex items-center justify-center px-4 py-6 sm:py-10 bg-secondary">
       <div className="w-full max-w-6xl">
         
         <div className="flex items-center justify-center space-x-2 mb-8">
           <Building2 className="h-8 w-8 text-accent" />
-          <span className="font-bold text-2xl">EstateHub India</span>
+          <span className="auth-brand font-bold text-2xl">EstateHub India</span>
         </div>
 
         <Card className="overflow-hidden">
@@ -31,7 +31,7 @@ const AuthPage = () => {
               {isLogin ? <LoginForm /> : <RegisterForm />}
             </div>
 
-            <div className="hidden lg:flex bg-gradient-to-r from-accent to-accent/80 text-white items-center justify-center p-8">
+            <div className="hidden lg:flex bg-primary text-primary-foreground items-center justify-center p-8">
               <div className="text-center max-w-md">
                 {isLogin ? (
                   <div>
@@ -61,7 +61,7 @@ const AuthPage = () => {
               </div>
             </div>
 
-            <div className="lg:hidden bg-gradient-to-r from-accent to-accent/80 text-white p-5 sm:p-6 order-1">
+            <div className="lg:hidden bg-primary text-primary-foreground p-5 sm:p-6 order-1">
               <div className="text-center">
                 {isLogin ? (
                   <div>

@@ -43,8 +43,7 @@ export default function ProfileHeroCard({
 
   return (
     <Card className="overflow-hidden border-border/70 shadow-xl shadow-black/5">
-      <div className={`relative bg-gradient-to-br ${roleMeta.accentClassName} px-6 py-8 text-white sm:px-8`}>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.18),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.08),transparent_25%)]" />
+      <div className={`relative ${roleMeta.accentClassName} px-6 py-8 text-white sm:px-8`}>
         <CardContent className="relative space-y-8 px-0">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
@@ -64,7 +63,7 @@ export default function ProfileHeroCard({
                   <span className="text-sm text-white/70">Member since {memberSince}</span>
                   {user?.is_verified ? (
                     <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm text-white/85">
-                      <CheckCircle2 className="size-4 text-emerald-300" />
+                      <CheckCircle2 className="size-4 text-white" />
                       Verified account
                     </span>
                   ) : null}
@@ -82,7 +81,7 @@ export default function ProfileHeroCard({
                     const FactIcon = fact.icon
 
                     return (
-                      <span key={fact.value} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5">
+                      <span key={fact.value} className="inline-flex min-w-0 items-center gap-2 py-1.5 break-all">
                         <FactIcon className="size-4 text-white/70" />
                         <span>{fact.value}</span>
                       </span>
@@ -104,15 +103,15 @@ export default function ProfileHeroCard({
 
           <div className="grid gap-3 md:grid-cols-3">
             {highlights.map((item) => (
-              <div key={item.label} className="rounded-2xl border border-white/12 bg-white/8 p-4 backdrop-blur-sm">
-                <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/60">{item.label}</p>
+              <div key={item.label} className="rounded-lg border border-border bg-accent p-4 text-accent-foreground">
+                <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">{item.label}</p>
                 <div className="mt-3 flex items-start gap-3">
                   <div className="rounded-full bg-white/10 p-2">
-                    <ShieldCheck className="size-4 text-white/80" />
+                    <ShieldCheck className="size-4 text-primary" />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-lg font-semibold text-white">{item.value}</p>
-                    <p className="text-sm leading-5 text-white/65">{item.helper}</p>
+                    <p className="text-lg font-semibold text-foreground">{item.value}</p>
+                    <p className="text-sm leading-5 text-muted-foreground">{item.helper}</p>
                   </div>
                 </div>
               </div>

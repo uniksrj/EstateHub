@@ -33,8 +33,6 @@ const StatCard = ({ title, value, subtitle, Icon, iconColor = "text-muted-foregr
         )}
       </CardContent>
       
-      {/* Subtle background accent */}
-      <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-primary/5 to-transparent rounded-bl-full" />
     </Card>
   );
 };

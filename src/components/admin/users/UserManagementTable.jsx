@@ -29,7 +29,6 @@ export default function UserManagementTable({ user_list }) {
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
-  console.log("paginatedUsers", paginatedUsers);
 
   const handleDeleteUser = async (userId) => {
     try {

@@ -37,17 +37,14 @@ export const InquiryPage = ({
     if (!selectedInquiry?.id) return;
     refreshEchoAuth();
 
-    console.log('🔐 Setting up channel for inquiry:', selectedInquiry.id);
 
     // Use ONLY the working channel name
     const channelName = `inquiry.${selectedInquiry.id}`;
 
-    console.log('📡 Subscribing to:', channelName);
 
     const channel = echo.private(channelName);
 
     channel.subscribed(() => {
-      console.log('✅ ✅ ✅ SUCCESS: Subscribed to', channelName);
     });
 
     channel.error((error) => {
@@ -55,8 +52,6 @@ export const InquiryPage = ({
     });
 
     channel.listen('.response.created', (event) => {
-      console.log('📨 📨 📨 EVENT RECEIVED:', event);
-      console.log('🔍 Full event data:', JSON.stringify(event, null, 2));
 
       setInquiries((prev) =>
         prev.map((inquiry) =>
@@ -77,11 +72,9 @@ export const InquiryPage = ({
 
     // Also listen without the dot prefix (sometimes needed)
     channel.listen('response.created', (event) => {
-      console.log('📨 EVENT RECEIVED (without dot):', event);
     });
 
     return () => {
-      console.log('🔴 Leaving channel:', channelName);
       echo.leave(channelName);
     };
   }, [selectedInquiry?.id]);
@@ -150,7 +143,6 @@ export const InquiryPage = ({
       let { data } = await inquiryWebhookService.sendResponse(inquiryId, { "message": responseMessage, selectedResponse: selectedInquiry.status });
 
       let newResponse = data;
-      console.log("Inside Response Data :",newResponse);
       
       setInquiries(prev => prev.map(inquiry =>
         inquiry.id === inquiryId
@@ -160,14 +152,12 @@ export const InquiryPage = ({
           }
           : inquiry
       ));
-      console.log("Inside inquiries Data :",inquiries);
       if (selectedInquiry?.id === inquiryId) {
         setSelectedInquiry(prev => ({
           ...prev,
           responses: [...(prev.responses || []), newResponse]
         }));
       }
-console.log("Inside inquiries Data :",selectedInquiry);
       setResponseMessage('');
       toast.success('Response sent successfully');
     } catch (error) {
@@ -213,7 +203,6 @@ console.log("Inside inquiries Data :",selectedInquiry);
     }
   };
 
-  console.log("full log Data :",inquiries);
   
 
   // Filter inquiries based on user type

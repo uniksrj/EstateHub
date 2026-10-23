@@ -187,8 +187,8 @@ const PropertyDetail = () => {
     return (
       <div className="min-h-screen py-8">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="mb-4 text-[24px] font-semibold">Property Not Found</h1>
-          <p className="mb-8 text-[14px] text-muted-foreground md:text-[15px]">
+          <h1 className="mb-4 text-2xl font-semibold">Property Not Found</h1>
+          <p className="mb-8 text-sm text-muted-foreground md:text-base">
             The property you're looking for doesn't exist or has been removed.
           </p>
           <Link to="/properties">
@@ -214,7 +214,7 @@ const PropertyDetail = () => {
       />
       <div className="container mx-auto px-4 py-8">
         {/* Back Button */}
-        <Link to="/properties" className="mb-6 inline-flex items-center rounded-full border border-border bg-card px-4 py-2 text-[14px] font-medium text-muted-foreground shadow-sm transition hover:text-foreground">
+        <Link to="/properties" className="mb-6 inline-flex items-center rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-muted-foreground shadow-sm transition hover:text-foreground">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Properties
         </Link>
@@ -243,13 +243,13 @@ const PropertyDetail = () => {
                     </Badge>
                     <div className="flex items-center rounded-full bg-muted px-3 py-1">
                       <Star className="h-4 w-4 text-gold fill-current mr-1" />
-                      <span className="text-[12px] font-medium">4.8 (24 reviews)</span>
+                      <span className="text-xs font-medium">4.8 (24 reviews)</span>
                     </div>
                   </div>
-                  <h1 className="text-[24px] font-semibold tracking-tight md:text-[28px]">{property.title}</h1>
+                  <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">{property.title}</h1>
                   <div className="mt-4 flex items-start text-muted-foreground">
                     <MapPin className="mr-2 mt-1 h-5 w-5 shrink-0" />
-                    <span className="text-[14px] leading-6 md:text-[15px]">{property.location}</span>
+                    <span className="text-sm leading-6 md:text-base">{property.location}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -261,7 +261,7 @@ const PropertyDetail = () => {
                   </Button>
                 </div>
               </div>
-              <div className="text-[20px] font-bold text-foreground md:text-[24px]">{formatPrice(property.price)}</div>
+              <div className="text-xl font-bold text-foreground md:text-2xl">{formatPrice(property.price)}</div>
             </div>
 
             {/* Property Stats */}
@@ -271,29 +271,29 @@ const PropertyDetail = () => {
                   <div className="flex items-center gap-3 rounded-3xl bg-muted/60 p-4">
                     <Bed className="h-5 w-5 text-foreground" />
                     <div>
-                      <div className="text-[18px] font-semibold">{property.bedrooms}</div>
-                      <div className="text-[12px] text-muted-foreground">Bedrooms</div>
+                      <div className="text-lg font-semibold">{property.bedrooms}</div>
+                      <div className="text-xs text-muted-foreground">Bedrooms</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 rounded-3xl bg-muted/60 p-4">
                     <Bath className="h-5 w-5 text-foreground" />
                     <div>
-                      <div className="text-[18px] font-semibold">{property.bathrooms}</div>
-                      <div className="text-[12px] text-muted-foreground">Bathrooms</div>
+                      <div className="text-lg font-semibold">{property.bathrooms}</div>
+                      <div className="text-xs text-muted-foreground">Bathrooms</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 rounded-3xl bg-muted/60 p-4">
                     <Square className="h-5 w-5 text-foreground" />
                     <div>
-                      <div className="text-[18px] font-semibold">{property.sq_ft?.toLocaleString()}</div>
-                      <div className="text-[12px] text-muted-foreground">Sq Ft</div>
+                      <div className="text-lg font-semibold">{property.sq_ft?.toLocaleString()}</div>
+                      <div className="text-xs text-muted-foreground">Sq Ft</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 rounded-3xl bg-muted/60 p-4">
                     <Calendar className="h-5 w-5 text-foreground" />
                     <div>
-                      <div className="text-[18px] font-semibold">{property.year_built}</div>
-                      <div className="text-[12px] text-muted-foreground">Year Built</div>
+                      <div className="text-lg font-semibold">{property.year_built}</div>
+                      <div className="text-xs text-muted-foreground">Year Built</div>
                     </div>
                   </div>
                 </div>
@@ -302,31 +302,31 @@ const PropertyDetail = () => {
 
             {/* Description */}
             <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm md:p-8">
-              <h2 className="mb-4 text-[20px] font-semibold tracking-tight md:text-[22px]">Description</h2>
-              <p className="text-[14px] leading-7 text-muted-foreground md:text-[15px]">{property.description}</p>
+              <h2 className="mb-4 text-xl font-semibold tracking-tight md:text-2xl">Description</h2>
+              <p className="text-sm leading-7 text-muted-foreground md:text-base">{property.description}</p>
             </div>
 
             {/* Features */}
 
             <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm md:p-8">
-              <h2 className="mb-5 text-[20px] font-semibold tracking-tight md:text-[22px]">Features</h2>
+              <h2 className="mb-5 text-xl font-semibold tracking-tight md:text-2xl">Features</h2>
               <div className="grid gap-3 md:grid-cols-2">
                 {property?.features && property.features.trim() !== '' ? (
                   JSON.parse(property.features).map((feature, index) => (
                     <div key={index} className="flex items-center gap-3 rounded-2xl bg-muted/60 px-4 py-3">
                       <div className="h-2 w-2 rounded-full bg-foreground"></div>
-                      <span className="text-[14px] font-medium md:text-[15px]">{feature.replace(/\[\]/g, "")}</span>
+                      <span className="text-sm font-medium md:text-base">{feature.replace(/\[\]/g, "")}</span>
                     </div>
                   ))
                 ) : (
-                  <p className="text-[14px] text-muted-foreground">No features listed.</p>
+                  <p className="text-sm text-muted-foreground">No features listed.</p>
                 )}
               </div>
             </div>
 
             {/* Amenities */}
             <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm md:p-8">
-              <h2 className="mb-5 text-[20px] font-semibold tracking-tight md:text-[22px]">Amenities</h2>
+              <h2 className="mb-5 text-xl font-semibold tracking-tight md:text-2xl">Amenities</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <AmenityIcons property={property} />
               </div>
@@ -336,7 +336,7 @@ const PropertyDetail = () => {
             <div className="space-y-6">
               <Card className="sticky top-24 rounded-[2rem] border-border shadow-xl shadow-primary/10">
                 <CardContent className="p-6">
-                  <h3 className="mb-4 text-[18px] font-semibold md:text-[20px]">Contact Agent</h3>
+                  <h3 className="mb-4 text-lg font-semibold md:text-xl">Contact Agent</h3>
 
                   {/* Agent Info */}
                   <div className="mb-6 flex items-center gap-3 rounded-3xl bg-muted/60 p-4">
@@ -346,8 +346,8 @@ const PropertyDetail = () => {
                       className="h-14 w-14 rounded-full object-cover"
                     />
                     <div>
-                      <div className="text-[16px] font-semibold">{property.agent?.name}</div>
-                      <div className="text-[12px] text-muted-foreground">Licensed Agent</div>
+                      <div className="text-base font-semibold">{property.agent?.name}</div>
+                      <div className="text-xs text-muted-foreground">Licensed Agent</div>
                     </div>
                   </div>
 

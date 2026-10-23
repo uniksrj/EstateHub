@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, MessageSquare, Calendar, FileText, Users, Home, Bell } from "lucide-react";
+import { Plus, MessageSquare, Calendar, FileText, Users, Home } from "lucide-react";
 import { useNavigate } from "react-router";
 
 const QuickActions = () => {
@@ -12,7 +12,7 @@ const QuickActions = () => {
       icon: Plus,
       onClick: () => navigate("/agent/add-property"),
       variant: "default",
-      color: "bg-blue-500 hover:bg-blue-600"
+      color: ""
     },
     {
       title: "Schedule Tour",
@@ -22,31 +22,31 @@ const QuickActions = () => {
       variant: "outline"
     },
     {
-      title: "Send Updates",
-      description: "Notify clients about progress",
+      title: "Client inquiries",
+      description: "Reply to client messages",
       icon: MessageSquare,
-      onClick: () => console.log("Send updates"),
+      onClick: () => navigate("/agent/inquiries"),
       variant: "outline"
     },
     {
       title: "Generate Contract",
-      description: "Create purchase agreements",
+      description: "Track active transactions",
       icon: FileText,
-      onClick: () => console.log("Generate contract"),
+      onClick: () => navigate("/agent/pipeline"),
       variant: "outline"
     },
     {
       title: "Add Client",
-      description: "Register new client",
+      description: "View your client list",
       icon: Users,
-      onClick: () => console.log("Add client"),
+      onClick: () => navigate("/agent/clients"),
       variant: "outline"
     },
     {
-      title: "Market Analysis",
-      description: "Run comps analysis",
+      title: "Browse listings",
+      description: "Explore current properties",
       icon: Home,
-      onClick: () => console.log("Market analysis"),
+      onClick: () => navigate("/properties"),
       variant: "outline"
     }
   ];

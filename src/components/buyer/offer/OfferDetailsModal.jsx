@@ -12,7 +12,6 @@ import { formatCurrency } from "@/utils/userHelpers"
 
 export function OfferDetailsModal({ offer, isOpen, onClose }) {
   const { user } = useAuth()
-  console.log("im here for offer details  ", user)
   const getStatusColor = (status) => {
     switch (status) {
       case 'accepted': return 'bg-green-500'

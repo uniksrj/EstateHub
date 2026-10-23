@@ -87,7 +87,7 @@ const HomePage = () => {
         canonicalPath="/"
         schema={organizationSchema}
       />
-      <HeroSection />
+      <HeroSection featuredProperties={featuredProperties} />
       <StatisticsSection />
       <FeaturedPropertiesSection loading={loading} featuredProperties={featuredProperties} />
       <HowItWorksSection />

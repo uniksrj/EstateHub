@@ -13,12 +13,12 @@ export default function UserRoleDistribution({distributionRole}) {
               <CartesianGrid strokeDasharray="3 3" className="opacity-30 stroke-border" />
               <XAxis 
                 dataKey="role" 
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: "var(--type-caption)" }}
                 tickLine={false}
                 stroke="var(--muted-foreground)"
               />
               <YAxis 
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: "var(--type-caption)" }}
                 tickLine={false}
                 stroke="var(--muted-foreground)"
               />
@@ -26,11 +26,11 @@ export default function UserRoleDistribution({distributionRole}) {
                 formatter={(value) => [value.toLocaleString(), 'Users']}
                 contentStyle={{ 
                   backgroundColor: 'white', 
-                  border: '1px solid var(--beige-dark)',
+                  border: '1px solid var(--border)',
                   borderRadius: '6px',
                   color: 'var(--ink)',
                   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                  fontSize: '14px',
+                  fontSize: 'var(--type-supporting)',
                   padding: '10px'
                 }}
               />

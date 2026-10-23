@@ -23,7 +23,6 @@ const LoginForm = () => {
     const { login } = useAuth()
     const navigate = useNavigate()
     const location = useLocation()
-    console.log("location inside data :", location);
     
 
     // const from = location.state?.from?.pathname || "/"

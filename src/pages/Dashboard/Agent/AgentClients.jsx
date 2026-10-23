@@ -29,7 +29,6 @@ const AgentClients = () => {
         }
     }
 
-    console.log("this is client data",clients);
     
     const filteredClients = clients?.buyers?.filter(c =>
         c.name.toLowerCase().includes(search.toLowerCase())

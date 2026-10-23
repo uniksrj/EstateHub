@@ -107,7 +107,7 @@ export default function PropertyByType() {
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-12">
+            <div className="border-b border-border bg-secondary py-12 text-foreground">
                 <div className="container mx-auto px-4">
                    <h1 className="text-4xl font-bold mb-4">{getTitle()}</h1>
                 </div>

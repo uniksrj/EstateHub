@@ -34,7 +34,7 @@ const BetaNotice = () => {
     }}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <div className="mb-2 flex size-11 items-center justify-center rounded-full bg-amber-100 text-amber-700">
+          <div className="mb-2 flex size-11 items-center justify-center rounded-full bg-accent text-accent-foreground">
             <AlertTriangle className="h-5 w-5" />
           </div>
           <DialogTitle>Beta Testing Notice</DialogTitle>

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router"
 import { Building2, Menu, X, UserRound, LogOut, ChevronDown, ArrowUpRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import ThemeToggle from "@/components/ThemeToggle"
 import { useAuth } from "@/hooks/useAuth"
 
 const propertyLinks = [
@@ -37,6 +36,11 @@ const Header = () => {
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [])
+
+  useEffect(() => {
+    setMenuOpen(false)
+    setPropertiesOpen(false)
+  }, [location.pathname])
 
   const closeMenu = () => {
     setMenuOpen(false)
@@ -85,7 +89,6 @@ const Header = () => {
         </nav>
 
         <div className="site-header__actions hidden items-center gap-3 lg:flex">
-          <ThemeToggle />
           {user ? (
             <>
               <Link to="/profile" className="site-profile"><UserRound size={16} aria-hidden="true" />{user.name}</Link>
@@ -119,7 +122,6 @@ const Header = () => {
             {user && <Link to={dashboardPath} onClick={closeMenu}>Workspace</Link>}
           </nav>
           <div className="site-mobile-nav__actions">
-            <ThemeToggle />
             {user ? (
               <>
                 <Link to="/profile" onClick={closeMenu}>Profile · {user.name}</Link>

@@ -39,12 +39,12 @@ export default function UserRetentionChart({retentionData}) {
               <CartesianGrid strokeDasharray="3 3" className="opacity-30  stroke-border" />
               <XAxis
                 dataKey="week"
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: "var(--type-caption)" }}
                 tickLine={false}
                 stroke="var(--muted-foreground)"
               />
               <YAxis
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: "var(--type-caption)" }}
                 tickLine={false}
                 stroke="var(--muted-foreground)"
                 tickFormatter={(value) => `${value}%`}
@@ -61,13 +61,13 @@ export default function UserRetentionChart({retentionData}) {
               <Legend />
               <Bar
                 dataKey="retained"
-                fill="var(--red)"
+                fill="var(--green)"
                 name="Retained Users"
                 radius={[4, 4, 0, 0]}
               />
               <Bar
                 dataKey="churned"
-                fill="var(--red-deep)"
+                fill="var(--green-deep)"
                 name="Churned Users"
                 radius={[4, 4, 0, 0]}
               />

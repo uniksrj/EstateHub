@@ -3,7 +3,6 @@ import { ArrowRight, Check, X } from 'lucide-react';
 import { formatCurrency } from '@/utils/userHelpers';
 
 const LoanComparisonCard = ({ loan, onViewDetails, onApply, showApplyButton = true }) => { 
-  console.log('LoanComparisonCard rendered with loan:', loan);
 
   return (
     <div className="border border-border rounded-lg p-4 hover:border-primary/50 hover:shadow-md transition-all duration-200">

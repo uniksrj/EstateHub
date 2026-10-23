@@ -26,7 +26,6 @@ export const AgentOffersList = ({ offers, onAction, emptyState }) => {
 }
 
 const AgentOfferCard = ({ offer, onAction }) => {
-  console.log("This is offer details :", offer)
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 sm:p-6">

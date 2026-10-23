@@ -56,7 +56,7 @@ export default function ResetPassword() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white w-full p-2 rounded hover:bg-blue-700"
+          className="bg-primary text-primary-foreground w-full p-2 rounded hover:bg-primary/90"
         >
           {loading ? "Resetting..." : "Reset Password"}
         </button>

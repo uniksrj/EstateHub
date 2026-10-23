@@ -17,7 +17,6 @@ const AgentPipeline = () => {
         setLoading(true)
         try {
             const response = await userAPI.get_agent_pipeline();
-            console.log(response);
 
             setPipelineData(response?.data || []);
         } catch (error) {
@@ -28,7 +27,6 @@ const AgentPipeline = () => {
         }
     }
 
-    console.log("This is pipe line Details",pipelineData);
     
     if (loading) {
         return <div className="flex justify-center items-center h-64"><Loader2 className="animate-spin h-6 w-6" /></div>;
@@ -49,7 +47,7 @@ const AgentPipeline = () => {
                                 <XAxis dataKey="stage" />
                                 <YAxis />
                                 <Tooltip formatter={(value, name) => [value, name === 'count' ? 'Deals' : 'Value ($)']} />
-                                <Bar dataKey="count" name="Deals" fill="var(--red)" />
+                                <Bar dataKey="count" name="Deals" fill="var(--green)" />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>

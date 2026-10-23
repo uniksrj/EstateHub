@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { activities } from "@/data/demoData";
 import { Loading } from "@/pages/misc/Loading";
 
-const RecentActivity = ({ dealId }) => {
+const RecentActivity = () => {
 
   const [allActivities, setAllActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,6 @@ const RecentActivity = ({ dealId }) => {
     try {
       const resp = await userAPI.getAllDetailsActivity();   
       setAllActivities(resp?.data?.activities)
-      // console.log("activity data :", resp);
          
     } catch (error) {
       console.error("Something wen wrong!", error.message)
@@ -32,7 +31,6 @@ const RecentActivity = ({ dealId }) => {
     }
   }
   const groupActivitiesByDate = (activities) => {
-    console.log('function inside data :', activities);
     
     const groups = {
       today: [],

@@ -39,7 +39,6 @@ const AgentDealLosses = () => {
         setLoading(true)
         try {
             const response = await userAPI.get_deal_losses();
-            console.log(response);
 
             setDealLosses(response?.data || []);
         } catch (error) {
@@ -49,7 +48,6 @@ const AgentDealLosses = () => {
             setLoading(false)
         }
     }
-    console.log("This is property details", dealLosses);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
