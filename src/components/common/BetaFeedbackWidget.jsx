@@ -73,7 +73,7 @@ const BetaFeedbackWidget = () => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="fixed bottom-5 right-5 z-50 h-12 rounded-full px-5 shadow-2xl">
+        <Button className="btn-report-issue fixed bottom-5 right-5 z-50 h-12 rounded-full !bg-red-600 px-5 !text-white shadow-2xl hover:!bg-red-700">
           <Bug className="mr-2 h-4 w-4" />
           Report Issue
         </Button>
@@ -180,7 +180,7 @@ const BetaFeedbackWidget = () => {
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Close
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} className="btn-report-issue !bg-red-600 !text-white hover:!bg-red-700">
               <Send className="mr-2 h-4 w-4" />
               {isSubmitting ? "Sending..." : "Send Issue"}
             </Button>
