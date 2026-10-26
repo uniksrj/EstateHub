@@ -120,17 +120,20 @@ export function CounterOfferModal({
                     {/* Counter Offer Amount */}
                     <div className="space-y-2">
                         <Label htmlFor="counterAmount" className="flex items-center gap-2">
-                            <IndianRupee className="w-4 h-4" />
+                            <span className="font-semibold text-sm">₹</span>
                             Your Counter Offer Amount *
                         </Label>
-                        <Input
+                        <div className="relative">
+                            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground pointer-events-none select-none">₹</span>
+                            <Input
                             id="counterAmount"
                             type="number"
                             placeholder="Enter counter offer amount"
                             value={formData.counterAmount}
                             onChange={(e) => handleCounterAmountChange(e.target.value)}
-                            className="text-lg font-medium"
+                            className="pl-8 text-lg font-medium"
                         />
+                        </div>
 
                         {/* Price Difference Indicator */}
                         {offer && formData.counterAmount && (

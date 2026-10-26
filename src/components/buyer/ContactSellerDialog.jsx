@@ -194,7 +194,7 @@ const ContactSellerDialog = memo(({ property,  isOpen, onClose, onInquirySubmitt
                                 </h3>
 
                                 <div className="space-y-3">
-                                    <Label className="text-m font-medium">Budget Range (Optional)</Label>
+                                    <Label className="text-m font-medium">Budget Range (₹) (Optional)</Label>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
                                             <Input

@@ -300,8 +300,8 @@ const PreferencesAlerts = () => {
               {/* Price Range */}
               <div className="space-y-3">
                 <label className="flex items-center gap-2 text-sm font-medium text-card-foreground">
-                  <IndianRupee className="w-4 h-4" />
-                  Price Range
+                  <span className="font-semibold text-sm">₹</span>
+                  Price Range (₹)
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <div>

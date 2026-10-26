@@ -264,7 +264,7 @@ const PropertyList = () => {
 
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-sm font-medium">Min Price</label>
+                <label className="mb-2 block text-sm font-medium">Min Price (₹)</label>
                 <Input
                   type="number"
                   placeholder="Min price"
@@ -274,7 +274,7 @@ const PropertyList = () => {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium">Max Price</label>
+                <label className="mb-2 block text-sm font-medium">Max Price (₹)</label>
                 <Input
                   type="number"
                   placeholder="Max price"

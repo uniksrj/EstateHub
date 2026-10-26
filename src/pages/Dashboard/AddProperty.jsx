@@ -281,17 +281,21 @@ const AddProperty = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price *</Label>
-                  <Input
-                    id="price"
+                  <Label htmlFor="price">Price (₹) *</Label>
+                  <div className="relative">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground pointer-events-none select-none">₹</span>
+                    <Input
+                      id="price"
                     name="price"
                     type="number"
                     placeholder="e.g., 8500000"
-                    // value={formData.price}
-                    // onChange={handleChange}
-                    // required
-                    disabled={loading}
-                  />
+                      className="pl-8"
+                      // value={formData.price}
+                      // onChange={handleChange}
+                      // required
+                      disabled={loading}
+                    />
+                  </div>
                 </div>
               </div>
 

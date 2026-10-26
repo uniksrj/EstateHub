@@ -97,7 +97,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
                     Offer Amount
                   </label>
                   <div className="relative">
-                    <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <span className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-sm font-semibold text-muted-foreground pointer-events-none select-none">₹</span>
                     <input
                       type="number"
                       value={offerData.offerAmount}
@@ -115,7 +115,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
                     Earnest Money
                   </label>
                   <div className="relative">
-                    <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <span className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-sm font-semibold text-muted-foreground pointer-events-none select-none">₹</span>
                     <input
                       type="number"
                       value={offerData.earnestMoney}

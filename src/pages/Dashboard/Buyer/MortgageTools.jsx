@@ -265,7 +265,7 @@ const MortgageTools = () => {
                       Home Price
                     </label>
                     <div className="relative">
-                      <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <span className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-sm font-semibold text-muted-foreground pointer-events-none select-none">₹</span>
                       <input
                         type="number"
                         value={formData.homePrice}
@@ -332,7 +332,7 @@ const MortgageTools = () => {
                   <div className="space-y-3">
                     <label className="text-sm font-medium text-card-foreground">Annual Property Tax</label>
                     <div className="relative">
-                      <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <span className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-sm font-semibold text-muted-foreground pointer-events-none select-none">₹</span>
                       <input
                         type="number"
                         value={formData.annualTax}
@@ -345,7 +345,7 @@ const MortgageTools = () => {
                   <div className="space-y-3">
                     <label className="text-sm font-medium text-card-foreground">Annual Insurance</label>
                     <div className="relative">
-                      <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <span className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-sm font-semibold text-muted-foreground pointer-events-none select-none">₹</span>
                       <input
                         type="number"
                         value={formData.annualInsurance}
@@ -398,7 +398,7 @@ const MortgageTools = () => {
                     <div className="space-y-3">
                       <label className="text-sm font-medium text-card-foreground">Annual Income</label>
                       <div className="relative">
-                        <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <span className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-sm font-semibold text-muted-foreground pointer-events-none select-none">₹</span>
                         <input
                           type="number"
                           className="w-full pl-10 pr-4 py-3 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -410,7 +410,7 @@ const MortgageTools = () => {
                     <div className="space-y-3">
                       <label className="text-sm font-medium text-card-foreground">Monthly Debts</label>
                       <div className="relative">
-                        <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <span className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-sm font-semibold text-muted-foreground pointer-events-none select-none">₹</span>
                         <input
                           type="number"
                           className="w-full pl-10 pr-4 py-3 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
