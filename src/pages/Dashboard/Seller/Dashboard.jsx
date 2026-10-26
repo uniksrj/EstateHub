@@ -13,7 +13,7 @@ import {
   Tag, 
   TrendingUp, 
   Users,
-  DollarSign,
+  IndianRupee,
   Calendar,
   ArrowUp,
   ArrowDown
@@ -101,7 +101,7 @@ export default function SellerDashboard() {
       title: 'Sold Properties',
       value: dashboardData?.overview?.soldProperties,
       description: 'Successfully sold',
-      icon: DollarSign,
+      icon: IndianRupee,
       color: 'text-emerald-600',
       trend: '+3'
     }

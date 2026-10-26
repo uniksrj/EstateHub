@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
-import { Briefcase, TrendingUp, Calculator, DollarSign } from "lucide-react"
+import { Briefcase, TrendingUp, Calculator, IndianRupee } from "lucide-react"
 
 const roiData = [
   { month: "Jan", roi: 5.2 },
@@ -31,7 +31,7 @@ export default function InvestorDashboard() {
             <Briefcase className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">?1.2 Cr</div>
+            <div className="text-2xl font-bold">₹1.2 Cr</div>
             <p className="text-xs text-muted-foreground">8 properties</p>
           </CardContent>
         </Card>
@@ -50,10 +50,10 @@ export default function InvestorDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Monthly Income</CardTitle>
-            <DollarSign className="size-4 text-muted-foreground" />
+            <IndianRupee className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">?84,000</div>
+            <div className="text-2xl font-bold">₹84,000</div>
             <p className="text-xs text-muted-foreground">Rental income</p>
           </CardContent>
         </Card>

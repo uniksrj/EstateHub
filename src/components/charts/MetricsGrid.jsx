@@ -1,7 +1,7 @@
 // components/MetricsGrid.jsx
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Building, DollarSign, Target, TrendingDown, TrendingUp, Users } from 'lucide-react';
+import { Building, IndianRupee, Target, TrendingDown, TrendingUp, Users } from 'lucide-react';
 import { formatNumber } from '@/utils/userHelpers';
 
 const MetricsGrid = ({ metricsData }) => {
@@ -11,7 +11,7 @@ const MetricsGrid = ({ metricsData }) => {
       value: formatNumber(metricsData?.overview?.totalValue),
       change: `${metricsData?.overview?.valueGrowth?.change}%`,
       trend: metricsData?.overview?.valueGrowth?.trend,
-      icon: <DollarSign className="h-4 w-4" />,
+      icon: <IndianRupee className="h-4 w-4" />,
       description: 'From last quarter'
     },
     {

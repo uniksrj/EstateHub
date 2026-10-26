@@ -1,6 +1,6 @@
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Search, Calendar, DollarSign, CheckCircle } from "lucide-react"
+import { Search, Calendar, IndianRupee, CheckCircle } from "lucide-react"
 
 const HowItWorksSection = () => {
   return (
@@ -26,7 +26,7 @@ const HowItWorksSection = () => {
               description: "Book virtual or physical tours at your convenience"
             },
             {
-              icon: DollarSign,
+              icon: IndianRupee,
               step: "03",
               title: "Make an Offer",
               description: "Get expert negotiation support for the best deal"

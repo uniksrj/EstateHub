@@ -1,6 +1,6 @@
 // components/properties/OverviewCards.jsx
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building, Home, TrendingUp, DollarSign } from 'lucide-react';
+import { Building, Home, TrendingUp, IndianRupee } from 'lucide-react';
 
 const OverviewCards = ({ data = {} }) => {
 
@@ -57,7 +57,7 @@ const OverviewCards = ({ data = {} }) => {
       title: 'Total Portfolio Value',
       value: formatCurrency(data?.totalValue || 0),
       description: `Avg: ${formatCurrency(data?.averagePrice || 0)}`,
-      icon: DollarSign,
+      icon: IndianRupee,
     },
   ];
   

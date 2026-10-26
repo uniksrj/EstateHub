@@ -1,5 +1,5 @@
 import { AGENT_OFFER_STATUS, OFFER_STATUS } from "@/constants/offerTypes";
-import { AlertCircle, AlertOctagon, AlertTriangle, Ban, Building, Calendar, CheckCircle, CheckCircle2, CircleCheckBig, ClipboardCheck, Clock, DollarSign, Download, FileText, Info, Mail, PenTool, RefreshCcw, Shield, Upload } from "lucide-react";
+import { AlertCircle, AlertOctagon, AlertTriangle, Ban, Building, Calendar, CheckCircle, CheckCircle2, CircleCheckBig, ClipboardCheck, Clock, IndianRupee, Download, FileText, Info, Mail, PenTool, RefreshCcw, Shield, Upload } from "lucide-react";
 
 export const getStatusInfo = (user) => {
   switch (user.is_active) {
@@ -204,7 +204,7 @@ export const getAgentStatusInfo = (status) => {
     },
     earnest_money: {
       label: "EMD Processing",
-      icon: DollarSign,
+      icon: IndianRupee,
       color: "bg-amber-100 text-amber-800 border-amber-200",
       description: "Processing earnest money deposit"
     },
@@ -272,7 +272,7 @@ export const getTypeIcon = (type) => {
     document_request: Download,
     step_completed: CheckCircle2,
     step_started: Clock,
-    payment_received: DollarSign,
+    payment_received: IndianRupee,
     payment_due: AlertCircle,
     message_sent: Mail,
     deadline_approaching: AlertCircle,

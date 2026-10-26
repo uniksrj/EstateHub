@@ -394,7 +394,7 @@ const RegisterForm = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="min_budget"> {selectedRole === 'renter' ? 'Minimum Rent ($)' : 'Minimum Budget ($)'}</Label>
+                                <Label htmlFor="min_budget"> {selectedRole === 'renter' ? 'Minimum Rent (₹)' : 'Minimum Budget (₹)'}</Label>
                                 <Input
                                     id="min_budget"
                                     name="min_budget"
@@ -408,7 +408,7 @@ const RegisterForm = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="max_budget">{selectedRole === 'renter' ? 'Maximum Rent ($)' : 'Maximum Budget ($)'}</Label>
+                                <Label htmlFor="max_budget">{selectedRole === 'renter' ? 'Maximum Rent (₹)' : 'Maximum Budget (₹)'}</Label>
                                 <Input
                                     id="max_budget"
                                     name="max_budget"

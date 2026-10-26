@@ -1,5 +1,5 @@
 import React from 'react';
-import { XCircle, TrendingUp, Calendar, DollarSign, Home, AlertCircle } from 'lucide-react';
+import { XCircle, TrendingUp, Calendar, IndianRupee, Home, AlertCircle } from 'lucide-react';
 
 const LoanDetailsModal = ({ isOpen, onClose, loan, onApply, showApplyButton = true }) => {
   if (!isOpen) return null;
@@ -40,7 +40,7 @@ const LoanDetailsModal = ({ isOpen, onClose, loan, onApply, showApplyButton = tr
                 <div className="text-lg font-bold text-primary">{loan.rate}%</div>
               </div>
               <div className="p-3 bg-success/5 rounded-lg">
-                <DollarSign className="w-4 h-4 text-success mb-1" />
+                <IndianRupee className="w-4 h-4 text-success mb-1" />
                 <div className="text-xs text-muted-foreground">Monthly Payment</div>
                 <div className="text-lg font-bold text-success">{formatCurrency(loan.monthlyPI)}</div>
               </div>

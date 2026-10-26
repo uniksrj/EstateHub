@@ -14,9 +14,9 @@ import {
   YAxis,
 } from "recharts"
 import {
-  BadgeDollarSign,
+  BadgeIndianRupee,
   Building2,
-  CircleDollarSign,
+  IndianRupee,
   Landmark,
   ReceiptText,
   ShieldCheck,
@@ -257,7 +257,7 @@ export default function FinancialReport() {
         <MetricCard
           title="Closed Revenue"
           value={formatCurrency(closedRevenue, true)}
-          icon={BadgeDollarSign}
+          icon={BadgeIndianRupee}
         />
         <MetricCard
           title="Closed Sales This Month"
@@ -269,7 +269,7 @@ export default function FinancialReport() {
           title="Average Closed Deal"
           value={formatCurrency(closedDealAverage, true)}
           change={formatSignedChange(averageDealGrowth)}
-          icon={CircleDollarSign}
+          icon={IndianRupee}
         />
       </div>
 

@@ -46,7 +46,7 @@ const AgentPipeline = () => {
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="stage" />
                                 <YAxis />
-                                <Tooltip formatter={(value, name) => [value, name === 'count' ? 'Deals' : 'Value ($)']} />
+                                <Tooltip formatter={(value, name) => [value, name === 'count' ? 'Deals' : 'Value (₹)']} />
                                 <Bar dataKey="count" name="Deals" fill="var(--green)" />
                             </BarChart>
                         </ResponsiveContainer>

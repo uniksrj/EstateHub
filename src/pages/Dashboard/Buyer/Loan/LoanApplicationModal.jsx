@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DollarSign, User, Mail, Phone, Home, Briefcase, CheckCircle, XCircle, ArrowLeft, FileText, Upload, Badge, Info } from 'lucide-react';
+import { IndianRupee, User, Mail, Phone, Home, Briefcase, CheckCircle, XCircle, ArrowLeft, FileText, Upload, Badge, Info } from 'lucide-react';
 import { loanOptions } from '@/data/loanData';
 import { calculateMonthlyPayment, generateLoanDetails } from '@/utils/loan';
 import { toast } from 'sonner';
@@ -549,7 +549,7 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
                               Annual Income *
                             </label>
                             <div className="relative">
-                              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                              <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                               <input
                                 type="number"
                                 value={formData.annualIncome}
@@ -629,7 +629,7 @@ const LoanApplicationModal = ({ isOpen, onClose, propertyDetails, offerDetails, 
                           Down Payment Amount *
                         </label>
                         <div className="relative">
-                          <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                           <input
                             type="number"
                             value={formData.downPayment}

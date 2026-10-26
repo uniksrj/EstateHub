@@ -1,7 +1,7 @@
 // components/properties/QuickActions.jsx
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Eye, Calendar, Users, DollarSign } from 'lucide-react';
+import { Eye, Calendar, Users, IndianRupee } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
 const QuickActions = () => {
@@ -25,7 +25,7 @@ const QuickActions = () => {
       variant: 'outline',
     },
     {
-      icon: DollarSign,
+      icon: IndianRupee,
       label: 'Financial Reports',
       onClick: () => navigate('/dashboard/finance'),
       variant: 'outline',

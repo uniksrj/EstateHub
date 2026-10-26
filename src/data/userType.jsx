@@ -1,7 +1,7 @@
 import {
   BarChart3,
   Users,
-  DollarSign,
+  IndianRupee,
   Settings,
   Home,
   FileText,
@@ -27,7 +27,7 @@ export const sidebars = {
   superadmin: [
     { label: "Platform Analytics", path: "/dashboard", icon: BarChart3 },
     { label: "User Management", path: "/dashboard/users", icon: Users },
-    { label: "Financial Reports", path: "/dashboard/finance", icon: DollarSign },
+    { label: "Financial Reports", path: "/dashboard/finance", icon: IndianRupee },
     { label: "System Settings", path: "/dashboard/system", icon: Settings },
     { label: "Beta Feedback", path: "/dashboard/beta-feedback", icon: Bug },
     { label: "All Properties", path: "/dashboard/properties", icon: Home },

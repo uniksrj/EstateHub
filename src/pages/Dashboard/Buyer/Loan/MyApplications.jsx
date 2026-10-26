@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, CheckCircle, XCircle, Clock, Eye, Search, DollarSign, TrendingUp } from 'lucide-react';
+import { FileText, CheckCircle, XCircle, Clock, Eye, Search, IndianRupee, TrendingUp } from 'lucide-react';
 import ApplicationDetailsModal from './ApplicationDetailsModal';
 
 const MyApplications = () => {
@@ -102,7 +102,7 @@ const MyApplications = () => {
                   {formatCurrency(applications.reduce((sum, app) => sum + (app.loanAmount || 0), 0))}
                 </p>
               </div>
-              <DollarSign className="w-8 h-8 text-primary opacity-50" />
+              <IndianRupee className="w-8 h-8 text-primary opacity-50" />
             </div>
           </div>
         </div>

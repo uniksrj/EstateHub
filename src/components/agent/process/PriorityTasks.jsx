@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, FileText, Calendar, Users, Clock, DollarSign } from "lucide-react";
+import { AlertCircle, FileText, Calendar, Users, Clock, IndianRupee } from "lucide-react";
 
 const PriorityTasks = ({ stats, deals }) => {
   const tasks = [
@@ -49,7 +49,7 @@ const PriorityTasks = ({ stats, deals }) => {
       id: 5,
       title: "EMD Verification",
       description: "2 deposits to confirm",
-      icon: DollarSign,
+      icon: IndianRupee,
       priority: "medium",
       count: 2,
       deadline: "Today",

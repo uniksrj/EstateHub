@@ -1,4 +1,4 @@
-import { AlertCircle, Building, Calculator, Calendar, CheckCircle, CheckCircle2, ClipboardCheck, Clock, DollarSign, FileText, Mail, PenTool, Shield, Upload } from "lucide-react";
+import { AlertCircle, Building, Calculator, Calendar, CheckCircle, CheckCircle2, ClipboardCheck, Clock, IndianRupee, FileText, Mail, PenTool, Shield, Upload } from "lucide-react";
 
 // demoData/sellerProperties.js
 export const demoProperties = [
@@ -1036,7 +1036,7 @@ export const processSteps = [
   {
     key: "earnest_money",
     label: "Earnest Money",
-    icon: DollarSign,
+    icon: IndianRupee,
     color: "amber",
     requiredDocuments: [
       { type: "emd_receipt", name: "EMD Receipt", required: true },
@@ -1120,7 +1120,7 @@ export const processPostProcessSteps = [
       "Update system with receipt date",
       "Send confirmation to all parties"
     ],
-    icon: DollarSign,
+    icon: IndianRupee,
     color: "border-l-amber-500 bg-amber-50",
     iconColor: "text-amber-600",
     duration: "3-5 days",
@@ -1249,7 +1249,7 @@ export const activities = [
     message: "Earnest money step initiated",
     time: "1 day ago",
     status: "active",
-    icon: DollarSign,
+    icon: IndianRupee,
     color: "text-blue-500",
     property: "456 Oak Avenue",
     user: "System",
@@ -1265,12 +1265,12 @@ export const activities = [
     message: "Earnest money deposit received",
     time: "3 hours ago",
     status: "completed",
-    icon: DollarSign,
+    icon: IndianRupee,
     color: "text-green-500",
     property: "123 Main Street",
     user: "Escrow Company",
     action: "received",
-    item: "Earnest Money - ?10,00,000",
+    item: "Earnest Money - ₹10,00,000",
     step: "earnest_money"
   },
   {

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { DollarSign, MessageSquare, Calculator } from "lucide-react"
+import { IndianRupee, MessageSquare, Calculator } from "lucide-react"
 import { toast } from "sonner"
 import { formatCurrency } from "@/utils/userHelpers"
 
@@ -120,7 +120,7 @@ export function CounterOfferModal({
                     {/* Counter Offer Amount */}
                     <div className="space-y-2">
                         <Label htmlFor="counterAmount" className="flex items-center gap-2">
-                            <DollarSign className="w-4 h-4" />
+                            <IndianRupee className="w-4 h-4" />
                             Your Counter Offer Amount *
                         </Label>
                         <Input

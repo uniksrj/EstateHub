@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import {
-  DollarSign, CheckCircle,
+  IndianRupee, CheckCircle,
   ArrowLeft, ArrowRight, Shield,
   Calendar,
   Calculator
@@ -73,7 +73,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
                   ? 'bg-primary border-primary text-primary-foreground'
                   : 'border-muted-foreground text-muted-foreground'
                   }`}>
-                  {step.icon === 'DollarSign' && <DollarSign className="w-5 h-5" />}
+                  {step.icon === 'IndianRupee' && <IndianRupee className="w-5 h-5" />}
                   {step.icon === 'Shield' && <Shield className="w-5 h-5" />}
                   {step.icon === 'Calculator' && <Calculator className="w-5 h-5" />}
                   {step.icon === 'CheckCircle' && <CheckCircle className="w-5 h-5" />}
@@ -97,7 +97,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
                     Offer Amount
                   </label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <input
                       type="number"
                       value={offerData.offerAmount}
@@ -115,7 +115,7 @@ const OfferCreationWizard = ({ property, onClose, onOfferSubmit }) => {
                     Earnest Money
                   </label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <input
                       type="number"
                       value={offerData.earnestMoney}

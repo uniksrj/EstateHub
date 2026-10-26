@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TrendingUp, MapPin, Home, DollarSign, Users, Calendar, ArrowUp, ArrowDown, Search, Filter, Download, Share2 } from 'lucide-react';
+import { TrendingUp, MapPin, Home, IndianRupee, Users, Calendar, ArrowUp, ArrowDown, Search, Filter, Download, Share2 } from 'lucide-react';
 
 const MarketInsights = () => {
   const [marketData, setMarketData] = useState({
@@ -157,7 +157,7 @@ const MarketInsights = () => {
               <div className="bg-card rounded-xl shadow-lg border border-border p-6">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="p-2 bg-primary/10 rounded-lg">
-                    <DollarSign className="w-4 h-4 text-primary" />
+                    <IndianRupee className="w-4 h-4 text-primary" />
                   </div>
                   <div>
                     <div className="text-sm text-muted-foreground">Average Price</div>

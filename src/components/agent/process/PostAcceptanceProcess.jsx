@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileText, DollarSign, ClipboardCheck, Shield, Mail, Users, Home, CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import { FileText, IndianRupee, ClipboardCheck, Shield, Mail, Users, Home, CheckCircle2, Clock, AlertCircle } from "lucide-react";
 import { processPostProcessSteps } from "@/data/demoData";
 
 const PostAcceptanceProcess = () => {

@@ -43,7 +43,7 @@ export const AGENT_OFFER_STATUS = {
 
 // Wizard steps
 export const OFFER_WIZARD_STEPS = [
-    { number: 1, title: 'Offer Terms', icon: 'DollarSign' },
+    { number: 1, title: 'Offer Terms', icon: 'IndianRupee' },
     { number: 2, title: 'Contingencies', icon: 'Shield' },
     { number: 3, title: 'Financing', icon: 'Calculator' },
     { number: 4, title: 'Review', icon: 'CheckCircle' }

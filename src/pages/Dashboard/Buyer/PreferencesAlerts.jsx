@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bell, Filter, Save, Sliders, MapPin, Home, DollarSign, Square, Plus } from 'lucide-react';
+import { Bell, Filter, Save, Sliders, MapPin, Home, IndianRupee, Square, Plus } from 'lucide-react';
 import { userAPI } from '@/services/api';
 import { useForm } from 'react-hook-form';
 import { toast, Toaster } from 'sonner';
@@ -300,7 +300,7 @@ const PreferencesAlerts = () => {
               {/* Price Range */}
               <div className="space-y-3">
                 <label className="flex items-center gap-2 text-sm font-medium text-card-foreground">
-                  <DollarSign className="w-4 h-4" />
+                  <IndianRupee className="w-4 h-4" />
                   Price Range
                 </label>
                 <div className="grid grid-cols-2 gap-3">

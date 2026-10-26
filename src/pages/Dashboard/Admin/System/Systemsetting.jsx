@@ -7,7 +7,7 @@ import {
   BadgeCheck,
   BarChart3,
   Building2,
-  CircleDollarSign,
+  IndianRupee,
   FileText,
   Lock,
   RefreshCw,
@@ -132,7 +132,7 @@ export default function Systemsetting() {
     {
       title: "Revenue and reporting",
       description: "Track total platform value, closed sales, and financial health before making operational decisions.",
-      icon: CircleDollarSign,
+      icon: IndianRupee,
       path: "/dashboard/finance",
       cta: "View financial reports",
     },
