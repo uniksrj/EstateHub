@@ -62,8 +62,11 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const response = await authAPI.register(userData)
-      const { user } = response.data
+      const { user, chatToken } = response.data
 
+      if (chatToken) {
+        localStorage.setItem('chatToken', chatToken)
+      }
       persistUser(user)
 
       return { success: true }

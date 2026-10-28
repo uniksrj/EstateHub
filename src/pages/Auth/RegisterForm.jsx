@@ -175,23 +175,20 @@ const RegisterForm = () => {
         try {
             const result = await register(data);
             if (result.success) {
-                navigate("/");
+                toast.success("Account created successfully!");
+                navigate("/", { replace: true });
             } else {
-                toast({
-                    title: "Registration Notice",
-                    description: result.error || "Registration failed. Please try again.",
-                    variant: "destructive",
-                })
-                setError(result.error);
-                navigate("/auth/register");
+                const message = result.error || "Registration failed. Please try again.";
+                toast.error(message);
+                setError(message);
             }
         } catch (err) {
             console.error(err);
-            setError("An unexpected error occurred. Please try again.");
-            navigate("/auth/register");
+            const message = "An unexpected error occurred. Please try again.";
+            setError(message);
+            toast.error(message);
         } finally {
             setLoading(false);
-            navigate("/auth/register");
         }
     };
 
