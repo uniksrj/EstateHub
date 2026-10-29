@@ -132,9 +132,7 @@ export const authAPI = {
   },
   logout: () => api.post("/api/auth/logout"),
   forgotPassword: (email) => api.post("/api/auth/forgot-password", { email }),
-  resetPassword: async (data) => {
-    await api.post("/api/reset-password", data)
-  },
+  resetPassword: (data) => api.post("/api/reset-password", data),
   getUser: () => api.get("/api/auth/user"),
 }
 
