@@ -83,10 +83,10 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-secondary/50">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#F7F6F0]">
       <Toaster position="top-right" richColors />
 
-      <div className="w-full max-w-5xl rounded-2xl sm:rounded-3xl shadow-2xl bg-card border border-border/80 overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+      <div className="w-full max-w-5xl rounded-2xl sm:rounded-3xl shadow-2xl bg-white border border-[#E1E5DE] overflow-hidden grid grid-cols-1 lg:grid-cols-2">
         {/* Left Side: Brand & App Overview Panel */}
         <AuthBrandPanel
           badge="Account Security"
@@ -95,17 +95,20 @@ export default function ResetPassword() {
         />
 
         {/* Right Side: Reset Password Form */}
-        <div className="flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-card">
+        <div className="flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-white text-[#202A24]">
           {/* Mobile Top Brand Header */}
-          <div className="lg:hidden flex items-center space-x-2.5 mb-6 pb-4 border-b border-border/60">
-            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+          <div className="lg:hidden flex items-center space-x-2.5 mb-6 pb-4 border-b border-[#E1E5DE]">
+            <div
+              className="w-9 h-9 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: "#E4EDE7", color: "#234C3D" }}
+            >
               <Building2 className="h-5 w-5" />
             </div>
             <div>
-              <span className="font-bold text-lg leading-none block text-foreground">
+              <span className="font-bold text-lg leading-none block text-[#202A24]">
                 EstateHub India
               </span>
-              <span className="text-[11px] text-muted-foreground">
+              <span className="text-[11px] text-[#68736C]">
                 Real Estate Platform
               </span>
             </div>
@@ -113,39 +116,42 @@ export default function ResetPassword() {
 
           <div className="my-auto space-y-6">
             <div className="space-y-2">
-              <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3">
+              <div
+                className="w-11 h-11 rounded-xl flex items-center justify-center mb-3"
+                style={{ backgroundColor: "#E4EDE7", color: "#234C3D" }}
+              >
                 <Lock className="h-5 w-5" />
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#202A24]">
                 Set New Password
               </h1>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-[#556059] leading-relaxed">
                 Choose a strong password with at least 8 characters to secure your account.
               </p>
             </div>
 
             {email && (
-              <div className="px-3.5 py-2 rounded-lg bg-secondary/80 border border-border/80 flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Account:</span>
-                <span className="font-semibold text-foreground truncate max-w-[220px]">
+              <div className="px-3.5 py-2 rounded-lg bg-[#F7F6F0] border border-[#E1E5DE] flex items-center justify-between text-xs">
+                <span className="text-[#68736C] font-medium">Account:</span>
+                <span className="font-bold text-[#202A24] truncate max-w-[220px]">
                   {email}
                 </span>
               </div>
             )}
 
             {isLinkMissingParams && (
-              <Alert variant="destructive" className="border-destructive/30">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <AlertDescription className="text-xs sm:text-sm">
+              <Alert variant="destructive" className="border-amber-200 bg-amber-50 text-amber-900">
+                <AlertCircle className="h-4 w-4 shrink-0 text-amber-700" />
+                <AlertDescription className="text-xs sm:text-sm text-amber-900 font-medium">
                   This reset link is missing required verification parameters. Please request a new link.
                 </AlertDescription>
               </Alert>
             )}
 
             {error && (
-              <Alert variant="destructive" className="border-destructive/30">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <AlertDescription className="text-xs sm:text-sm">
+              <Alert variant="destructive" className="border-red-200 bg-red-50 text-red-800">
+                <AlertCircle className="h-4 w-4 shrink-0 text-red-600" />
+                <AlertDescription className="text-xs sm:text-sm text-red-800 font-medium">
                   {error}
                 </AlertDescription>
               </Alert>
@@ -154,7 +160,10 @@ export default function ResetPassword() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* New Password */}
               <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                <Label
+                  htmlFor="password"
+                  className="text-xs font-bold text-[#202A24] uppercase tracking-wider block"
+                >
                   New Password
                 </Label>
                 <div className="relative">
@@ -168,7 +177,7 @@ export default function ResetPassword() {
                       setPassword(e.target.value)
                       if (error) setError("")
                     }}
-                    className="pr-10 h-11 bg-background"
+                    className="pr-10 h-11 bg-white text-[#202A24] border-[#D0D7D2] placeholder:text-[#68736C] focus:border-[#234C3D]"
                     required
                     minLength={8}
                     disabled={loading || isLinkMissingParams}
@@ -177,7 +186,7 @@ export default function ResetPassword() {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     tabIndex={-1}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#68736C] hover:text-[#202A24] p-1 transition-colors cursor-pointer"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -188,7 +197,7 @@ export default function ResetPassword() {
               <div className="space-y-1.5">
                 <Label
                   htmlFor="password_confirmation"
-                  className="text-xs font-semibold text-foreground uppercase tracking-wider"
+                  className="text-xs font-bold text-[#202A24] uppercase tracking-wider block"
                 >
                   Confirm New Password
                 </Label>
@@ -203,7 +212,7 @@ export default function ResetPassword() {
                       setPasswordConfirmation(e.target.value)
                       if (error) setError("")
                     }}
-                    className="pr-10 h-11 bg-background"
+                    className="pr-10 h-11 bg-white text-[#202A24] border-[#D0D7D2] placeholder:text-[#68736C] focus:border-[#234C3D]"
                     required
                     minLength={8}
                     disabled={loading || isLinkMissingParams}
@@ -212,7 +221,7 @@ export default function ResetPassword() {
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     tabIndex={-1}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#68736C] hover:text-[#202A24] p-1 transition-colors cursor-pointer"
                   >
                     {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -220,28 +229,40 @@ export default function ResetPassword() {
               </div>
 
               {/* Password Requirements Checklist */}
-              <div className="p-3 rounded-lg bg-secondary/50 border border-border/50 text-xs space-y-1.5">
+              <div className="p-3.5 rounded-xl bg-[#F7F6F0] border border-[#E1E5DE] text-xs space-y-2">
                 <div className="flex items-center gap-2">
                   <div
-                    className={`w-4 h-4 rounded-full flex items-center justify-center transition-colors ${
-                      isLengthValid ? "bg-emerald-600 text-white" : "bg-muted text-muted-foreground"
-                    }`}
+                    className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 transition-colors"
+                    style={{
+                      backgroundColor: isLengthValid ? "#234C3D" : "#E1E5DE",
+                      color: isLengthValid ? "#FFFFFF" : "#68736C",
+                    }}
                   >
                     <Check className="h-2.5 w-2.5" />
                   </div>
-                  <span className={isLengthValid ? "text-foreground font-medium" : "text-muted-foreground"}>
+                  <span
+                    className={
+                      isLengthValid ? "text-[#17382D] font-semibold" : "text-[#68736C]"
+                    }
+                  >
                     At least 8 characters long
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div
-                    className={`w-4 h-4 rounded-full flex items-center justify-center transition-colors ${
-                      isMatchValid ? "bg-emerald-600 text-white" : "bg-muted text-muted-foreground"
-                    }`}
+                    className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 transition-colors"
+                    style={{
+                      backgroundColor: isMatchValid ? "#234C3D" : "#E1E5DE",
+                      color: isMatchValid ? "#FFFFFF" : "#68736C",
+                    }}
                   >
                     <Check className="h-2.5 w-2.5" />
                   </div>
-                  <span className={isMatchValid ? "text-foreground font-medium" : "text-muted-foreground"}>
+                  <span
+                    className={
+                      isMatchValid ? "text-[#17382D] font-semibold" : "text-[#68736C]"
+                    }
+                  >
                     Passwords match
                   </span>
                 </div>
@@ -249,33 +270,38 @@ export default function ResetPassword() {
 
               {isLinkMissingParams ? (
                 <Link to="/auth/forgot-password" className="block w-full">
-                  <Button variant="outline" type="button" className="w-full h-11 gap-2">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="w-full h-11 gap-2 border-[#D0D7D2] text-[#202A24]"
+                  >
                     <KeyRound className="h-4 w-4" />
                     Request a New Reset Link
                   </Button>
                 </Link>
               ) : (
-                <Button
+                <button
                   type="submit"
-                  className="w-full h-11 text-sm font-semibold shadow-md transition-all gap-2"
+                  className="w-full h-11 rounded-md text-sm font-semibold shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                  style={{ backgroundColor: "#234C3D", color: "#FFFFFF" }}
                   disabled={loading || !isLengthValid || !isMatchValid}
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin text-white" />
                       Updating Password...
                     </>
                   ) : (
                     "Reset Password"
                   )}
-                </Button>
+                </button>
               )}
             </form>
 
-            <div className="pt-2 text-center border-t border-border/60">
+            <div className="pt-2 text-center border-t border-[#E1E5DE]">
               <Link
                 to="/auth/login"
-                className="inline-flex items-center text-sm font-medium text-primary hover:underline gap-1.5 transition-colors"
+                className="inline-flex items-center text-sm font-semibold text-[#234C3D] hover:underline gap-1.5 transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to Login
@@ -284,7 +310,7 @@ export default function ResetPassword() {
           </div>
 
           {/* Bottom security microcopy */}
-          <div className="mt-8 text-center text-xs text-muted-foreground">
+          <div className="mt-8 text-center text-xs text-[#68736C]">
             Protected by EstateHub Security Protocol
           </div>
         </div>

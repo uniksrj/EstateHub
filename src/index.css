@@ -349,6 +349,40 @@ footer .bg-primary { background: var(--white); color: var(--green-deep); }
 [class*="animate-pulse"] > div { background-color: var(--ivory-deep) !important; }
 [role="alert"], [aria-invalid="true"] { scroll-margin-top: 6rem; }
 
+/* Ensure dark auth brand panels maintain high contrast and are not affected by global palette rewrites */
+.auth-brand-panel,
+.auth-brand-panel * {
+  box-sizing: border-box;
+}
+
+.auth-brand-panel h1,
+.auth-brand-panel h2,
+.auth-brand-panel h3,
+.auth-brand-panel h4,
+.auth-brand-panel strong,
+.auth-brand-panel b {
+  color: #ffffff !important;
+}
+
+.auth-brand-panel p,
+.auth-brand-panel span:not([class*="auth-panel-accent"]):not([class*="auth-panel-badge"]):not([class*="auth-panel-meta"]) {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.auth-brand-panel .auth-panel-meta {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.auth-brand-panel .auth-panel-accent {
+  color: #a7f3d0 !important;
+}
+
+.auth-brand-panel .auth-panel-badge {
+  color: #d1fae5 !important;
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
 @media (max-width: 639px) {
   [data-slot="dialog-content"], [data-slot="alert-dialog-content"] {
     box-sizing: border-box;
