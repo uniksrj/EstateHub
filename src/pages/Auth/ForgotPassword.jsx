@@ -120,15 +120,13 @@ const ForgotPassword = () => {
                     Try Another Email
                   </Button>
 
-                  <Link to="/auth/login" className="block w-full">
-                    <button
-                      type="button"
-                      className="w-full h-11 rounded-md font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
-                      style={{ backgroundColor: "#234C3D", color: "#FFFFFF" }}
-                    >
-                      <ArrowLeft className="h-4 w-4" />
-                      Back to Login
-                    </button>
+                  <Link
+                    to="/auth/login"
+                    className="w-full h-11 rounded-md font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                    style={{ backgroundColor: "#234C3D", color: "#FFFFFF" }}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to Login
                   </Link>
                 </div>
               </div>

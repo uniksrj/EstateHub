@@ -5,11 +5,12 @@ import ProtectedRoute from "../components/common/ProtectedRoute"
 import AdminLayout from "../components/layout/AdminLayout"
 import { USER_ROLES } from "@/config/routeConfig"
 import GuestRoute from "@/components/common/GuestRoute"
+import AuthPage from "../pages/Auth/AuthPage"
+import ForgotPassword from "../pages/Auth/ForgotPassword"
+import ResetPassword from "@/pages/Auth/ResetPassword"
 
 const PropertyList = lazy(() => import("../pages/Properties/PropertyList"))
 const PropertyDetail = lazy(() => import("../pages/Properties/PropertyDetail"))
-const AuthPage = lazy(() => import("../pages/Auth/AuthPage"))
-const ForgotPassword = lazy(() => import("../pages/Auth/ForgotPassword"))
 const AddProperty = lazy(() => import("../pages/Dashboard/AddProperty"))
 const ManageProperties = lazy(() => import("../pages/Dashboard/ManageProperties"))
 const ContactPage = lazy(() => import("@/pages/Contact/ContactPage"))
@@ -20,7 +21,6 @@ const NotFound = lazy(() => import("@/pages/misc/NotFound"))
 const Dashboard = lazy(() => import("@/components/dashboard/Dashboard"))
 const UserManagementPage = lazy(() => import("@/pages/Dashboard/Admin/User/Users"))
 const Unauthorized = lazy(() => import("@/pages/misc/Unauthorized"))
-const ResetPassword = lazy(() => import("@/pages/Auth/ResetPassword"))
 const Propertiespage = lazy(() => import("@/pages/Dashboard/Admin/Properties/Propertiespage"))
 const FinancialReport = lazy(() => import("@/pages/Dashboard/Admin/Finance/FinancialReport"))
 const Systemsetting = lazy(() => import("@/pages/Dashboard/Admin/System/Systemsetting"))

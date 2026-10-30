@@ -28,8 +28,16 @@ const Layout = () => {
           }}
         />
         <MotionObserver />
-        <div key={pathname} className="route-content">
-          <Outlet />
+        <div className="route-content">
+          <Suspense
+            fallback={
+              <div className="min-h-[50vh] flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            }
+          >
+            <Outlet />
+          </Suspense>
         </div>
       </main>
       <Footer />

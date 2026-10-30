@@ -4,12 +4,10 @@ import { Card } from "../../components/ui/card"
 import { Building2 } from "lucide-react"
 import LoginForm from "./LoginForm"
 import RegisterForm from "./RegisterForm"
-import { useLocation, useNavigate } from "react-router"
+import { useLocation, Link } from "react-router"
 
 const AuthPage = () => { 
-  const navigate = useNavigate();
   const location = useLocation();
-  // const [isLogin, setIsLogin] = useState(() => location.pathname.endsWith("/login"))
   const isLogin = location.pathname.endsWith("/login")
 
   // useEffect(() =>{
@@ -39,23 +37,23 @@ const AuthPage = () => {
                     <p className="mb-6 opacity-90">
                       Join EstateHub India today and discover your dream property with our expert agents
                     </p>
-                    <button
-                      onClick={() => navigate("/auth/register")}
-                      className="px-8 py-3 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors"
+                    <Link
+                      to="/auth/register"
+                      className="inline-block px-8 py-3 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors font-medium cursor-pointer"
                     >
                       Sign Up
-                    </button>
+                    </Link>
                   </div>
                 ) : (
                   <div>
                     <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
                     <p className="mb-6 opacity-90">Sign in to access your account and continue your property journey</p>
-                    <button
-                      onClick={() => navigate("/auth/login")}
-                      className="px-8 py-3 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors"
+                    <Link
+                      to="/auth/login"
+                      className="inline-block px-8 py-3 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors font-medium cursor-pointer"
                     >
                       Sign In
-                    </button>
+                    </Link>
                   </div>
                 )}
               </div>
@@ -69,23 +67,23 @@ const AuthPage = () => {
                     <p className="mb-4 opacity-90 text-sm sm:text-base">
                       Join EstateHub India today and discover your dream property.
                     </p>
-                    <button
-                      onClick={() => navigate("/auth/register")}
-                      className="px-6 py-2.5 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors"
+                    <Link
+                      to="/auth/register"
+                      className="inline-block px-6 py-2.5 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors font-medium cursor-pointer"
                     >
                       Sign Up
-                    </button>
+                    </Link>
                   </div>
                 ) : (
                   <div>
                     <h2 className="text-2xl font-bold mb-2">Welcome Back!</h2>
                     <p className="mb-4 opacity-90 text-sm sm:text-base">Sign in to access your account.</p>
-                    <button
-                      onClick={() => navigate("/auth/login")}
-                      className="px-6 py-2.5 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors"
+                    <Link
+                      to="/auth/login"
+                      className="inline-block px-6 py-2.5 border-2 border-white rounded-lg hover:bg-white hover:text-accent transition-colors font-medium cursor-pointer"
                     >
                       Sign In
-                    </button>
+                    </Link>
                   </div>
                 )}
               </div>
