@@ -1,16 +1,6 @@
 import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-
-// const retentionData = [
-//   { week: 'Week 1', retained: 95, churned: 5 },
-//   { week: 'Week 2', retained: 85, churned: 15 },
-//   { week: 'Week 3', retained: 78, churned: 22 },
-//   { week: 'Week 4', retained: 72, churned: 28 },
-//   { week: 'Week 8', retained: 65, churned: 35 },
-//   { week: 'Week 12', retained: 58, churned: 42 },
-// ];
-
 export default function UserRetentionChart({retentionData}) {  
 
   const chartData = useMemo(()=>{
@@ -61,13 +51,13 @@ export default function UserRetentionChart({retentionData}) {
               <Legend />
               <Bar
                 dataKey="retained"
-                fill="var(--green)"
+                fill="#10B981"
                 name="Retained Users"
                 radius={[4, 4, 0, 0]}
               />
               <Bar
                 dataKey="churned"
-                fill="var(--green-deep)"
+                fill="#EF4444"
                 name="Churned Users"
                 radius={[4, 4, 0, 0]}
               />

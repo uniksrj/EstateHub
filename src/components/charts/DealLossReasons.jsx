@@ -11,7 +11,7 @@ const data = [
   { name: 'Other', value: 5 },
 ];
 
-const COLORS = ['var(--green-deep)', 'var(--green)', 'var(--border)', 'var(--green)', 'var(--green)', 'var(--green-deep)'];
+const COLORS = ['#EF4444', '#F59E0B', '#3B82F6', '#8B5CF6', '#EC4899', '#64748B'];
 
 const DealLossReasons = () => {
   return (
@@ -25,7 +25,6 @@ const DealLossReasons = () => {
               cy="50%"
               labelLine={false}
               outerRadius={80}
-              fill="var(--green)"
               dataKey="value"
               label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
             >

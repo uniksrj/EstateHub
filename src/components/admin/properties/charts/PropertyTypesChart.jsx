@@ -4,23 +4,27 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { Building } from 'lucide-react';
 import { useChartColors } from '@/hooks/useTheme';
 
-const PropertyTypesChart = ({ data }) => {  
-  
+const PropertyTypesChart = ({ data = [] }) => {  
+  const colors = useChartColors(); 
+
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload;      
+      const item = payload[0].payload;
+      const color = item.color || payload[0].color || 'var(--primary)';
       return (
-        <div className="bg-card dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-lg shadow-lg">
-          <p className="font-semibold">{data.name}</p>
-          <p className="text-sm" style={{ color: data.color }}>
-            Count: {data.value}
+        <div className="bg-card border border-border p-3 rounded-lg shadow-lg">
+          <p className="font-semibold text-foreground">{item.name}</p>
+          <p className="text-sm" style={{ color }}>
+            Count: {item.value}
           </p>
         </div>
       );
     }
     return null;
   };
-  const colors = useChartColors(); 
+
+  const safeData = data || [];
+
   return (
     <Card className="bg-card border-border">
       <CardHeader>
@@ -36,17 +40,19 @@ const PropertyTypesChart = ({ data }) => {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={data}
+                  data={safeData}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
                   outerRadius={80}
-                  fill="var(--green)"
                   dataKey="value"
                 >
-                  {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`}  fill={colors[index % colors.length]} />
+                  {safeData.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`}  
+                      fill={entry.color || colors[index % colors.length]} 
+                    />
                   ))}
                 </Pie>
                 <Tooltip content={<CustomTooltip />} />

@@ -42,12 +42,12 @@
   --gold: var(--green);
   --success: var(--green);
   --warning: var(--muted);
-  --chart-1: var(--green);
-  --chart-2: var(--green-deep);
-  --chart-3: var(--muted);
-  --chart-4: var(--ink);
-  --chart-5: var(--green-soft);
-  --color-count: var(--green);
+  --chart-1: #3B82F6;
+  --chart-2: #10B981;
+  --chart-3: #F59E0B;
+  --chart-4: #8B5CF6;
+  --chart-5: #EC4899;
+  --color-count: #3B82F6;
   --color-counter: var(--ink);
   --font-body: "DM Sans", "Segoe UI", Arial, sans-serif;
   --font-heading: "DM Serif Display", Georgia, "Times New Roman", serif;

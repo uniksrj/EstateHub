@@ -49,17 +49,17 @@ const LocationDistributionChart = ({ data }) => {
                 <Area 
                   type="monotone" 
                   dataKey="properties" 
-                  stroke="var(--chart-3)" 
-                  fill="var(--chart-3)" 
-                  fillOpacity={0.3}
+                  stroke="var(--chart-1)" 
+                  fill="var(--chart-1)" 
+                  fillOpacity={0.25}
                   name="Properties"
                 />
                 <Area 
                   type="monotone" 
                   dataKey="avgPrice" 
-                  stroke="var(--chart-4)" 
-                  fill="var(--chart-4)" 
-                  fillOpacity={0.3}
+                  stroke="var(--chart-2)" 
+                  fill="var(--chart-2)" 
+                  fillOpacity={0.25}
                   name="Avg Price"
                 />
                 <Legend />

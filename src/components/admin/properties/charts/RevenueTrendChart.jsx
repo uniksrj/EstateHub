@@ -43,9 +43,9 @@ const RevenueTrendChart = ({ data }) => {
                 <Line 
                   type="monotone" 
                   dataKey="revenue" 
-                  stroke="var(--chart-5)" 
+                  stroke="var(--chart-2)" 
                   strokeWidth={3}
-                  dot={{ fill: "var(--chart-5)", strokeWidth: 2, r: 4 }}
+                  dot={{ fill: "var(--chart-2)", strokeWidth: 2, r: 4 }}
                   activeDot={{ r: 6 }}
                 />
               </LineChart>

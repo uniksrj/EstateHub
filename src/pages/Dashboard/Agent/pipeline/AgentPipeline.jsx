@@ -47,7 +47,7 @@ const AgentPipeline = () => {
                                 <XAxis dataKey="stage" />
                                 <YAxis />
                                 <Tooltip formatter={(value, name) => [value, name === 'count' ? 'Deals' : 'Value (₹)']} />
-                                <Bar dataKey="count" name="Deals" fill="var(--green)" />
+                                <Bar dataKey="count" name="Deals" fill="#3B82F6" radius={[6, 6, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>

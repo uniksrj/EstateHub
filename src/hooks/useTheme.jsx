@@ -18,9 +18,9 @@ export const useChartColors = () => {
     'var(--chart-3)',
     'var(--chart-4)',
     'var(--chart-5)',
-    'var(--color-primary)',
-    'var(--color-secondary)',
-    'var(--color-accent)'
+    '#06B6D4',
+    '#F97316',
+    '#6366F1'
   ];
   
   return colors;

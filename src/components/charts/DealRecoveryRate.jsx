@@ -25,11 +25,11 @@ const DealRecoveryRate = () => {
                 return [value, 'Total Dead Deals'];
               }}
             />
-            <Bar dataKey="recoveryRate" name="recoveryRate">
+            <Bar dataKey="recoveryRate" name="recoveryRate" radius={[0, 4, 4, 0]}>
               {recoveryData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
-                  fill={entry.recoveryRate > 20 ? 'var(--green)' : entry.recoveryRate > 15 ? 'var(--border)' : 'var(--green-deep)'}
+                  fill={entry.recoveryRate >= 20 ? '#10B981' : entry.recoveryRate >= 15 ? '#3B82F6' : '#F59E0B'}
                 />
               ))}
             </Bar>

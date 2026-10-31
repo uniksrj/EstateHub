@@ -1,14 +1,14 @@
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-const COLORS = ['var(--green)', 'var(--border)'];
+const COLORS = ['#10B981', '#94A3B8'];
 
 export default function ActiveVsInactiveUsers({activeInactive}) {
   const totalUsers = activeInactive ? (activeInactive.active_users.value + activeInactive.inactive_users) : 0;
   const data = activeInactive ? [
     { name: 'Active Users', value: activeInactive.active_users.value },
     { name: 'Inactive Users', value: activeInactive.inactive_users },
-  ] : data;
-  const activePercentage = ((data[0].value / totalUsers) * 100).toFixed(1);
+  ] : [];
+  const activePercentage = totalUsers > 0 ? ((data[0]?.value / totalUsers) * 100).toFixed(1) : 0;
 
   return (
     <div className="bg-card p-6 rounded-lg border border-border shadow-sm max-h-[420px]">
@@ -34,10 +34,10 @@ export default function ActiveVsInactiveUsers({activeInactive}) {
                 <Tooltip
                   formatter={(value) => [value.toLocaleString(), 'Users']}
                   contentStyle={{
-                    backgroundColor: 'var(--white)',
+                    backgroundColor: 'var(--card)',
                     border: '1px solid var(--border)',
                     borderRadius: 'var(--radius)',
-                    // color: 'var(--foreground)'
+                    color: 'var(--foreground)'
                   }}
                 />
                 <Legend />
@@ -47,7 +47,7 @@ export default function ActiveVsInactiveUsers({activeInactive}) {
         </div>
         <div className="space-y-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">{activePercentage}%</div>
+            <div className="text-2xl font-bold text-emerald-600">{activePercentage}%</div>
             <div className="text-sm text-muted-foreground">Active Rate</div>
           </div>
           <div className="space-y-2">
@@ -55,11 +55,11 @@ export default function ActiveVsInactiveUsers({activeInactive}) {
               <div key={item.name} className="flex items-center gap-2">
                 <div
                   className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: COLORS[index] }}
+                  style={{ backgroundColor: COLORS[index % COLORS.length] }}
                 />
                 <span className="text-sm">{item.name}</span>
                 <span className="text-sm font-medium ml-auto">
-                  {((item.value / totalUsers) * 100).toFixed(1)}%
+                  {totalUsers > 0 ? ((item.value / totalUsers) * 100).toFixed(1) : 0}%
                 </span>
               </div>
             ))}

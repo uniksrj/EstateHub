@@ -44,7 +44,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-const FINANCIAL_SPLIT_COLORS = ["var(--green-deep)", "var(--border)", "var(--green)"]
+const FINANCIAL_SPLIT_COLORS = ["#10B981", "#3B82F6", "#F59E0B"]
 
 const formatCurrency = (value, compact = false) =>
   new Intl.NumberFormat("en-IN", {
@@ -339,8 +339,8 @@ export default function FinancialReport() {
                     <AreaChart data={monthlyTrends}>
                       <defs>
                         <linearGradient id="revenueFill" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="var(--green-deep)" stopOpacity={0.35} />
-                          <stop offset="95%" stopColor="var(--green-deep)" stopOpacity={0.02} />
+                          <stop offset="5%" stopColor="#10B981" stopOpacity={0.35} />
+                          <stop offset="95%" stopColor="#10B981" stopOpacity={0.02} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" className="opacity-20" />
@@ -357,7 +357,7 @@ export default function FinancialReport() {
                         type="monotone"
                         dataKey="revenue"
                         name="Revenue"
-                        stroke="var(--green-deep)"
+                        stroke="#10B981"
                         fill="url(#revenueFill)"
                         strokeWidth={3}
                       />
@@ -365,7 +365,7 @@ export default function FinancialReport() {
                         type="monotone"
                         dataKey="sales"
                         name="Sales"
-                        stroke="var(--green)"
+                        stroke="#3B82F6"
                         fillOpacity={0}
                         strokeWidth={2}
                       />
@@ -447,7 +447,7 @@ export default function FinancialReport() {
                       <Tooltip
                         content={<FinanceTooltip formatValue={(value) => `₹${Number(value || 0).toFixed(2)} Cr`} />}
                       />
-                      <Bar dataKey="value" name="Pipeline Value" radius={[8, 8, 0, 0]} fill="var(--green-deep)" />
+                      <Bar dataKey="value" name="Pipeline Value" radius={[8, 8, 0, 0]} fill="#3B82F6" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

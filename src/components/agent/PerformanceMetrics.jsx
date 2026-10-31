@@ -20,9 +20,9 @@ const dealStageData = [
 ];
 
 const chartConfig = {
-  sales: { label: "Sales", color: "hsl(var(--chart-1))" },
-  views: { label: "Views", color: "hsl(var(--chart-2))" },
-  deals: { label: "Deals", color: "hsl(var(--chart-3))" },
+  sales: { label: "Sales", color: "var(--chart-1)" },
+  views: { label: "Views", color: "var(--chart-2)" },
+  deals: { label: "Deals", color: "var(--chart-3)" },
 };
 
 const PerformanceMetrics = () => {

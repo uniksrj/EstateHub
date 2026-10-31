@@ -3,8 +3,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import CustomTooltip from '@/components/ui/CustomTooltip';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-
-
 const SalesVsListingsChart = ({ data = [] }) => {
 
   return (
@@ -46,11 +44,11 @@ const SalesVsListingsChart = ({ data = [] }) => {
                   yAxisId="right"
                   type="monotone"
                   dataKey="conversionRate"
-                  stroke="var(--chart-5)"
+                  stroke="var(--chart-3)"
                   strokeWidth={2}
                   strokeDasharray="5 5"
                   name="Conversion Rate %"
-                  dot={{ fill: "var(--chart-5)", strokeWidth: 2, r: 3 }}
+                  dot={{ fill: "var(--chart-3)", strokeWidth: 2, r: 3 }}
                 />
               </LineChart>
             </ResponsiveContainer>

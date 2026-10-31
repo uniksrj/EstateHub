@@ -13,7 +13,7 @@ const roiData = [
 ]
 
 const chartConfig = {
-  roi: { label: "ROI %", color: "hsl(var(--chart-1))" },
+  roi: { label: "ROI %", color: "var(--chart-1)" },
 }
 
 export default function RenterDashboard() {

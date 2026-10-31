@@ -5,22 +5,22 @@ import { Cell, Label, LabelList, Pie, PieChart } from "recharts"
 import { PropertyStatusLegend } from "../common/PropertyStatus"
 
 const propertyStatusConfig = {
-    Available: { label: "Available", color: "var(--green)" },
-    Sold: { label: "Sold", color: "var(--green)" },
-    Rented: { label: "Rented", color: "var(--border)" },
-    Maintenance: { label: "Maintenance", color: "var(--green-deep)" },
-    Pending: { label: "Pending", color: "var(--green-deep)" },
+    Available: { label: "Available", color: "#10B981" },
+    Sold: { label: "Sold", color: "#3B82F6" },
+    Rented: { label: "Rented", color: "#8B5CF6" },
+    Maintenance: { label: "Maintenance", color: "#F59E0B" },
+    Pending: { label: "Pending", color: "#EC4899" },
 }
 
 const activeinactive = {
-    Available: { label: "active", color: "var(--green)" },
-    Sold: { label: "inactive", color: "var(--green-deep)" },
+    Available: { label: "active", color: "#10B981" },
+    Sold: { label: "inactive", color: "#94A3B8" },
 }
 
 export const Totalpropertychart = ({ propertyStatusData }) => {
     const totalVisitors = useMemo(() => {
-        return propertyStatusData.reduce((acc, curr) => acc + curr.count, 0)
-    }, [])
+        return (propertyStatusData || []).reduce((acc, curr) => acc + curr.count, 0)
+    }, [propertyStatusData])
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
             <Card className="flex flex-col">
@@ -45,8 +45,8 @@ export const Totalpropertychart = ({ propertyStatusData }) => {
                                 innerRadius={60}
                                 strokeWidth={5}
                             >
-                                {propertyStatusData.map((entry, index) => (
-                                    <Cell key={index} fill={entry.fill} />
+                                {(propertyStatusData || []).map((entry, index) => (
+                                    <Cell key={index} fill={entry.fill || propertyStatusConfig[entry.status]?.color || "#3B82F6"} />
                                 ))}
                                 <Label
                                     content={({ viewBox }) => {
@@ -85,7 +85,7 @@ export const Totalpropertychart = ({ propertyStatusData }) => {
                 </CardContent>
                 <CardFooter className="flex-col gap-2 text-sm">
                     <div className="flex items-center gap-2 leading-none font-medium">
-                        Total properties: {propertyStatusData.reduce((sum, item) => sum + item.count, 0)}
+                        Total properties: {(propertyStatusData || []).reduce((sum, item) => sum + item.count, 0)}
                     </div>
                     <div className="text-muted-foreground leading-none">
                         Status breakdown: Available, Sold, Rented, Maintenance, Pending
@@ -114,6 +114,9 @@ export const Totalactiveinactivechart = ({ activeInactiveData }) => {
                                 content={<ChartTooltipContent nameKey="label" hideLabel />}
                             />
                             <Pie data={activeInactiveData} dataKey="count" nameKey="label" strokeWidth={5}>
+                                {(activeInactiveData || []).map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={index === 0 ? "#10B981" : "#94A3B8"} />
+                                ))}
                                 <LabelList
                                     dataKey="browser"
                                     className="fill-background"

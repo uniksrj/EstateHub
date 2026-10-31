@@ -116,10 +116,10 @@ export const filterOptions = {
   ],
 
   propertyStatusData: [
-    { status: "Available", count: 50, fill: "var(--green)" },
-    { status: "Sold", count: 30, fill: "var(--green)" },
-    { status: "Rented", count: 15, fill: "var(--border)" },
-    { status: "Maintenance", count: 5, fill: "var(--green-deep)" },
-    { status: "Pending", count: 10, fill: "var(--green-deep)" },
+    { status: "Available", count: 50, fill: "#10B981" },
+    { status: "Sold", count: 30, fill: "#3B82F6" },
+    { status: "Rented", count: 15, fill: "#8B5CF6" },
+    { status: "Maintenance", count: 5, fill: "#F59E0B" },
+    { status: "Pending", count: 10, fill: "#EC4899" },
   ]
 };
